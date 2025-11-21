@@ -86,7 +86,7 @@ if (contactForm) {
             submitBtn.disabled = true;
 
             setTimeout(() => {
-                alert(`Thank you, ${name}! Your message has been sent successfully. We will get back to you at ${email} shortly.`);
+                alert(Thank you, ${name}! Your message has been sent successfully. We will get back to you at ${email} shortly.);
                 contactForm.reset();
                 submitBtn.innerText = originalText;
                 submitBtn.disabled = false;
@@ -95,21 +95,53 @@ if (contactForm) {
     });
 }
 
-// Registration Form Handling
+// Backend API Configuration
+const API_BASE_URL = 'https://razorpay-api-474336699934.asia-south1.run.app';
+
+// Razorpay Key ID - Set this to your Razorpay Key ID from dashboard
+// Or it will be fetched from backend endpoint /api/razorpay-key if available
+// Format: 'rzp_test_xxxxxxxxxxxxx' (for test) or 'rzp_live_xxxxxxxxxxxxx' (for live)
+let RAZORPAY_KEY_ID = 'rzp_test_Ri4TRiPWd8jb0Q'; // Update this with your Razorpay Key ID if backend endpoint doesn't exist
+
+// Fetch Razorpay Key ID from backend (if endpoint exists)
+async function fetchRazorpayKey() {
+    try {
+        const response = await fetch(${API_BASE_URL}/api/razorpay-key);
+        if (response.ok) {
+            const data = await response.json();
+            if (data.keyId) {
+                RAZORPAY_KEY_ID = data.keyId;
+                console.log('Razorpay Key ID fetched from backend');
+                return true;
+            }
+        }
+    } catch (error) {
+        console.log('Razorpay key endpoint not available. Using fallback or manual configuration.');
+    }
+    return false;
+}
+
+// Initialize on page load
+fetchRazorpayKey();
+
+// Registration Form Handling with Razorpay Integration
 const registrationForm = document.getElementById('registrationForm');
 
 if (registrationForm) {
-    registrationForm.addEventListener('submit', (e) => {
+    registrationForm.addEventListener('submit', async (e) => {
         e.preventDefault();
 
         // Get form values
         const name = document.getElementById('reg-name').value.trim();
         const age = parseInt(document.getElementById('reg-age').value);
+        const gender = document.getElementById('reg-gender').value;
         const category = document.getElementById('reg-category').value;
         const phone = document.getElementById('reg-phone').value.trim();
+        const email = document.getElementById('reg-email').value.trim();
+        const tshirtSize = document.getElementById('reg-tshirt').value;
 
         // Validation
-        if (!name || !category || !phone) {
+        if (!name || !category || !phone || !gender || !tshirtSize || !email) {
             alert('Please fill in all required fields.');
             return;
         }
@@ -132,20 +164,146 @@ if (registrationForm) {
             return;
         }
 
-        // Simulate processing
+        // Determine amount based on category
+        const amountMap = {
+            '3km': 399,
+            '5km': 499,
+            '10km': 499
+        };
+        const amount = amountMap[category];
+
         const submitBtn = registrationForm.querySelector('button[type="submit"]');
         const originalText = submitBtn.innerText;
 
-        submitBtn.innerText = 'Processing...';
-        submitBtn.disabled = true;
+        try {
+            submitBtn.innerText = 'Creating Order...';
+            submitBtn.disabled = true;
 
-        setTimeout(() => {
-            alert(`Thank you, ${name}! Your registration for the ${category.toUpperCase()} category has been received. Proceeding to payment gateway...`);
-            // In a real app, you would redirect to payment gateway here
-            registrationForm.reset();
+            // Step 1: Create Razorpay Order
+            const orderResponse = await fetch(${API_BASE_URL}/api/create-order, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    amount: amount,
+                    currency: 'INR',
+                    receipt: marathon_${Date.now()}_${category}
+                })
+            });
+
+            if (!orderResponse.ok) {
+                const errorData = await orderResponse.json().catch(() => ({}));
+                throw new Error(errorData.error || 'Failed to create order');
+            }
+
+            const orderData = await orderResponse.json();
+
+            if (!orderData.success) {
+                throw new Error('Failed to create order');
+            }
+
+            // Step 2: Prepare form data
+            const formData = {
+                name,
+                age,
+                gender,
+                category,
+                phone,
+                email,
+                tshirtSize,
+                amount
+            };
+
+            // Step 3: Get Razorpay Key ID (try fetching if not already set)
+            if (!RAZORPAY_KEY_ID) {
+                const fetched = await fetchRazorpayKey();
+                if (!fetched && !RAZORPAY_KEY_ID) {
+                    // Check if orderData contains keyId (backend might return it)
+                    if (orderData.keyId) {
+                        RAZORPAY_KEY_ID = orderData.keyId;
+                    } else {
+                        throw new Error('Razorpay Key ID not configured. Please set RAZORPAY_KEY_ID in script.js or add /api/razorpay-key endpoint to backend.');
+                    }
+                }
+            }
+
+            const razorpayKey = RAZORPAY_KEY_ID;
+
+            // Step 4: Initialize Razorpay Checkout
+            const options = {
+                key: razorpayKey,
+                amount: orderData.amount,
+                currency: orderData.currency,
+                name: 'Kavasa Foundation Marathon',
+                description: Registration for ${category.toUpperCase()} category,
+                order_id: orderData.orderId,
+                handler: async function (response) {
+                    try {
+                        submitBtn.innerText = 'Verifying Payment...';
+                        
+                        // Step 5: Verify Payment
+                        const verifyResponse = await fetch(${API_BASE_URL}/api/verify-payment, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({
+                                razorpay_order_id: response.razorpay_order_id,
+                                razorpay_payment_id: response.razorpay_payment_id,
+                                razorpay_signature: response.razorpay_signature,
+                                formData: formData
+                            })
+                        });
+
+                        const verifyData = await verifyResponse.json();
+
+                        if (verifyData.success) {
+                            alert(Payment Successful! Thank you ${name} for registering for the ${category.toUpperCase()} category. Your registration ID: ${verifyData.docId});
+                            registrationForm.reset();
+                        } else {
+                            alert('Payment verification failed. Please contact support.');
+                        }
+                    } catch (error) {
+                        console.error('Verification error:', error);
+                        alert('Payment verification failed. Please contact support with your payment ID: ' + response.razorpay_payment_id);
+                    } finally {
+                        submitBtn.innerText = originalText;
+                        submitBtn.disabled = false;
+                    }
+                },
+                prefill: {
+                    name: name,
+                    contact: phone,
+                    email: email
+                },
+                theme: {
+                    color: '#dc2626'
+                },
+                modal: {
+                    ondismiss: function() {
+                        submitBtn.innerText = originalText;
+                        submitBtn.disabled = false;
+                    }
+                }
+            };
+
+            const razorpay = new Razorpay(options);
+            razorpay.open();
+            
+            razorpay.on('payment.failed', function (response) {
+                console.error('Payment failed:', response);
+                alert('Payment failed: ' + (response.error.description || 'Please try again.'));
+                submitBtn.innerText = originalText;
+                submitBtn.disabled = false;
+            });
+
+        } catch (error) {
+            console.error('Error:', error);
+            alert('An error occurred: ' + error.message + '. Please try again later.');
             submitBtn.innerText = originalText;
             submitBtn.disabled = false;
-        }, 1500);
+        }
     });
 }
 
