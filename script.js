@@ -86,7 +86,7 @@ if (contactForm) {
             submitBtn.disabled = true;
 
             setTimeout(() => {
-                alert(Thank you, ${name}! Your message has been sent successfully. We will get back to you at ${email} shortly.);
+                alert(`Thank you, ${name}! Your message has been sent successfully. We will get back to you at ${email} shortly.`);
                 contactForm.reset();
                 submitBtn.innerText = originalText;
                 submitBtn.disabled = false;
@@ -106,7 +106,7 @@ let RAZORPAY_KEY_ID = 'rzp_test_Ri4TRiPWd8jb0Q'; // Update this with your Razorp
 // Fetch Razorpay Key ID from backend (if endpoint exists)
 async function fetchRazorpayKey() {
     try {
-        const response = await fetch(${API_BASE_URL}/api/razorpay-key);
+        const response = await fetch(`${API_BASE_URL}/api/razorpay-key`);
         if (response.ok) {
             const data = await response.json();
             if (data.keyId) {
@@ -180,7 +180,7 @@ if (registrationForm) {
             submitBtn.disabled = true;
 
             // Step 1: Create Razorpay Order
-            const orderResponse = await fetch(${API_BASE_URL}/api/create-order, {
+            const orderResponse = await fetch(`${API_BASE_URL}/api/create-order`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -188,7 +188,7 @@ if (registrationForm) {
                 body: JSON.stringify({
                     amount: amount,
                     currency: 'INR',
-                    receipt: marathon_${Date.now()}_${category}
+                    receipt: `marathon_${Date.now()}_${category}`
                 })
             });
 
@@ -236,14 +236,14 @@ if (registrationForm) {
                 amount: orderData.amount,
                 currency: orderData.currency,
                 name: 'Kavasa Foundation Marathon',
-                description: Registration for ${category.toUpperCase()} category,
+                description: `Registration for ${category.toUpperCase()} category`,
                 order_id: orderData.orderId,
                 handler: async function (response) {
                     try {
                         submitBtn.innerText = 'Verifying Payment...';
                         
                         // Step 5: Verify Payment
-                        const verifyResponse = await fetch(${API_BASE_URL}/api/verify-payment, {
+                        const verifyResponse = await fetch(`${API_BASE_URL}/api/verify-payment`, {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',
@@ -259,7 +259,7 @@ if (registrationForm) {
                         const verifyData = await verifyResponse.json();
 
                         if (verifyData.success) {
-                            alert(Payment Successful! Thank you ${name} for registering for the ${category.toUpperCase()} category. Your registration ID: ${verifyData.docId});
+                            alert(`Payment Successful! Thank you ${name} for registering for the ${category.toUpperCase()} category. Your registration ID: ${verifyData.docId}`);
                             registrationForm.reset();
                         } else {
                             alert('Payment verification failed. Please contact support.');
