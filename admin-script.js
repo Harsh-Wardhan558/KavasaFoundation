@@ -149,7 +149,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             // Order by timestamp if it exists at document level, otherwise get all documents
             let querySnapshot;
             try {
-                const q = window.firebaseQuery(registrationsRef, window.firebaseOrderBy('timestamp', 'desc'));
+                const q = window.firebaseQuery(registrationsRef, window.firebaseOrderBy('updatedAt', 'amount'));
                 querySnapshot = await window.firebaseGetDocs(q);
             } catch (error) {
                 // If timestamp ordering fails, get all documents without ordering

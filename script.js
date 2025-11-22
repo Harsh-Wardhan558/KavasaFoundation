@@ -145,9 +145,9 @@ async function fetchPricingFromFirebase() {
         }
 
         // Fetch pricing from Firestore
-        // Expected structure: settings/pricing
+        // Expected structure: settings/pricings
         const pricingDoc = await window.firebaseGetDoc(
-            window.firebaseDoc(window.firebaseDb, 'settings', 'pricing')
+            window.firebaseDoc(window.firebaseDb, 'settings', 'pricings')
         );
 
         if (pricingDoc.exists()) {
