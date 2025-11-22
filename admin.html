@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel | Kavasa Foundation</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .admin-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+            padding-top: 100px;
+        }
+
+        .admin-header {
+            background: var(--gradient-primary);
+            color: white;
+            padding: 2rem;
+            border-radius: var(--radius-xl);
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .admin-header h1 {
+            color: white;
+            margin: 0;
+            font-size: 2.5rem;
+        }
+
+        .admin-header p {
+            color: rgba(255, 255, 255, 0.9);
+            margin: 0.5rem 0 0;
+        }
+
+        .admin-content {
+            background: var(--white);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-lg);
+            padding: 2rem;
+            border: 1px solid var(--border);
+        }
+
+        .admin-section {
+            margin-bottom: 3rem;
+        }
+
+        .admin-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .admin-section h2 {
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--border);
+            font-size: 1.75rem;
+        }
+
+        .admin-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .admin-list-item {
+            background: var(--gray-50);
+            padding: 1.5rem;
+            border-radius: var(--radius-lg);
+            margin-bottom: 1rem;
+            border: 1px solid var(--border);
+            transition: var(--transition-all);
+        }
+
+        .admin-list-item:hover {
+            background: var(--white);
+            box-shadow: var(--shadow-md);
+            border-color: var(--primary);
+            transform: translateX(4px);
+        }
+
+        .admin-list-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .admin-list-placeholder {
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-secondary);
+            font-style: italic;
+        }
+
+        .admin-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .admin-btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--radius-lg);
+            border: none;
+            font-weight: var(--font-semibold);
+            cursor: pointer;
+            transition: var(--transition-all);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .admin-btn-primary {
+            background: var(--gradient-primary);
+            color: white;
+        }
+
+        .admin-btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .admin-btn-secondary {
+            background: var(--gray-100);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+        }
+
+        .admin-btn-secondary:hover {
+            background: var(--gray-200);
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--primary);
+            text-decoration: none;
+            margin-bottom: 2rem;
+            font-weight: var(--font-medium);
+            transition: var(--transition-colors);
+        }
+
+        .back-link:hover {
+            color: var(--primary-dark);
+        }
+
+        @media (max-width: 768px) {
+            .admin-container {
+                padding: 1rem;
+                padding-top: 90px;
+            }
+
+            .admin-header h1 {
+                font-size: 2rem;
+            }
+
+            .admin-content {
+                padding: 1.5rem;
+            }
+
+            .admin-actions {
+                flex-direction: column;
+            }
+
+            .admin-btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container nav-container">
+            <a href="index.html" class="logo">
+                <img src="image/kavasa.jpg" alt="Kavasa Foundation" style="height: 60px; vertical-align: middle;">
+            </a>
+            <button class="mobile-menu-toggle" aria-label="Toggle menu">
+                <i class="fas fa-bars"></i>
+            </button>
+            <ul class="nav-links">
+                <li><a href="index.html" class="nav-link">Home</a></li>
+                <li><a href="about.html" class="nav-link">About Us</a></li>
+                <li><a href="contact.html" class="nav-link">Contact</a></li>
+                <li><a href="#register" class="btn btn-primary">Register Now</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="admin-container">
+        <a href="index.html" class="back-link">
+            <i class="fas fa-arrow-left"></i>
+            Back to Home
+        </a>
+
+        <div class="admin-header">
+            <h1><i class="fas fa-shield-alt" style="margin-right: 0.5rem;"></i>Admin Panel</h1>
+            <p>Manage and monitor your marathon registrations and data</p>
+        </div>
+
+        <div class="admin-content">
+            <div class="admin-section">
+                <h2><i class="fas fa-list" style="color: var(--primary); margin-right: 0.5rem;"></i>Data List</h2>
+                <ul class="admin-list" id="adminList">
+                    <li class="admin-list-placeholder">
+                        <i class="fas fa-inbox" style="font-size: 3rem; color: var(--gray-400); margin-bottom: 1rem; display: block;"></i>
+                        <p>No data available yet. List will be populated here.</p>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="admin-actions">
+                <button class="admin-btn admin-btn-primary">
+                    <i class="fas fa-sync-alt"></i>
+                    Refresh Data
+                </button>
+                <button class="admin-btn admin-btn-secondary">
+                    <i class="fas fa-download"></i>
+                    Export Data
+                </button>
+                <button class="admin-btn admin-btn-secondary">
+                    <i class="fas fa-cog"></i>
+                    Settings
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
+

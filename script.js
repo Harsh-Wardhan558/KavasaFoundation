@@ -101,7 +101,7 @@ const API_BASE_URL = 'https://razorpay-api-474336699934.asia-south1.run.app';
 // Razorpay Key ID - Set this to your Razorpay Key ID from dashboard
 // Or it will be fetched from backend endpoint /api/razorpay-key if available
 // Format: 'rzp_test_xxxxxxxxxxxxx' (for test) or 'rzp_live_xxxxxxxxxxxxx' (for live)
-let RAZORPAY_KEY_ID = 'rzp_test_Ri4TRiPWd8jb0Q'; // Update this with your Razorpay Key ID if backend endpoint doesn't exist
+let RAZORPAY_KEY_ID = 'rzp_live_Ri3wbsv2HCMv4v'; // Update this with your Razorpay Key ID if backend endpoint doesn't exist
 
 // Fetch Razorpay Key ID from backend (if endpoint exists)
 async function fetchRazorpayKey() {
@@ -147,12 +147,12 @@ if (registrationForm) {
         }
 
         // Age validation based on category
-        if (category === '3km' && (age < 8 || age > 15)) {
+        if (category === '0km') {
+            // No age restriction for test run
+        } else if (category === '3km' && (age < 8 || age > 15)) {
             alert('3KM category is only for children aged 8-15 years.');
             return;
-        }
-
-        if ((category === '5km' || category === '10km') && age < 15) {
+        } else if ((category === '5km' || category === '10km') && age < 15) {
             alert('5KM and 10KM categories require participants to be 15 years or older.');
             return;
         }
@@ -166,6 +166,7 @@ if (registrationForm) {
 
         // Determine amount based on category
         const amountMap = {
+            '0km': 1,
             '3km': 399,
             '5km': 499,
             '10km': 499
