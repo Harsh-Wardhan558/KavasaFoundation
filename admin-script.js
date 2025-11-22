@@ -146,16 +146,9 @@ document.addEventListener('DOMContentLoaded', async () => {
             `;
 
             const registrationsRef = window.firebaseCollection(window.firebaseDb, 'marathon_registrations');
-            // Order by timestamp if it exists at document level, otherwise get all documents
-            let querySnapshot;
-            try {
-                const q = window.firebaseQuery(registrationsRef, window.firebaseOrderBy('updatedAt', 'amount'));
-                querySnapshot = await window.firebaseGetDocs(q);
-            } catch (error) {
-                // If timestamp ordering fails, get all documents without ordering
-                console.log('Timestamp ordering not available, fetching all documents');
-                querySnapshot = await window.firebaseGetDocs(registrationsRef);
-            }
+            // Fetch all documents without ordering (we'll sort client-side)
+            // This avoids Firestore errors if timestamp field is missing or inconsistent
+            const querySnapshot = await window.firebaseGetDocs(registrationsRef);
 
             if (querySnapshot.empty) {
                 adminList.innerHTML = `
@@ -283,16 +276,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                 exportBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Exporting...';
 
                 const registrationsRef = window.firebaseCollection(window.firebaseDb, 'marathon_registrations');
-                // Order by timestamp if it exists at document level, otherwise get all documents
-                let querySnapshot;
-                try {
-                    const q = window.firebaseQuery(registrationsRef, window.firebaseOrderBy('timestamp', 'desc'));
-                    querySnapshot = await window.firebaseGetDocs(q);
-                } catch (error) {
-                    // If timestamp ordering fails, get all documents without ordering
-                    console.log('Timestamp ordering not available, fetching all documents');
-                    querySnapshot = await window.firebaseGetDocs(registrationsRef);
-                }
+                // Fetch all documents without ordering (we'll sort client-side)
+                // This avoids Firestore errors if timestamp field is missing or inconsistent
+                const querySnapshot = await window.firebaseGetDocs(registrationsRef);
 
                 if (querySnapshot.empty) {
                     alert('No registrations to export.');

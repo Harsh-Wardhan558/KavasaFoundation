@@ -211,27 +211,26 @@ function updateCategoryDropdown() {
     
     sortedCategories.forEach(category => {
         const price = amountMap[category];
-        const label = categoryLabels[category] || formatCategoryLabel(category);
+        // Use the label directly from Firebase (it already contains the category name)
+        const label = categoryLabels[category];
+        
+        // Format: Use Firebase label directly with price, e.g., "0KM - Test Run (₹1)"
+        // If no label exists, use the category key as fallback
+        let displayText = label 
+            ? `${label} (₹${price})`
+            : `${category.toUpperCase()} (₹${price})`;
+        
         const option = document.createElement('option');
         option.value = category;
-        option.textContent = `${label} (₹${price})`;
+        option.textContent = displayText;
         categorySelect.appendChild(option);
     });
     
     console.log('Category dropdown updated with', Object.keys(amountMap).length, 'categories');
 }
 
-// Format category label (e.g., "3km" -> "3KM - Kids")
-function formatCategoryLabel(category) {
-    const upperCategory = category.toUpperCase();
-    const labels = {
-        '0KM': '0KM - Test Run',
-        '3KM': '3KM - Kids',
-        '5KM': '5KM - Adults',
-        '10KM': '10KM - Adults'
-    };
-    return labels[upperCategory] || upperCategory;
-}
+// Note: All category labels are now fetched from Firebase
+// No hardcoded fallback values - only Firebase data is used
 
 // Fetch pricing on page load
 fetchPricingFromFirebase();
