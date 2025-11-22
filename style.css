@@ -540,7 +540,7 @@ strong {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: var(--gradient-hero), url('image/banner.jpg');
+    background: url('image/banner.jpg');
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
@@ -555,7 +555,7 @@ strong {
     content: '';
     position: absolute;
     inset: 0;
-    background: radial-gradient(ellipse at center, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.7) 100%);
+    background: transparent;
     z-index: 0;
 }
 
@@ -578,6 +578,12 @@ strong {
     max-width: 900px;
     margin: 0 auto;
     padding: var(--space-8) var(--space-4);
+}
+
+/* Hero section with only poster - minimal content */
+.hero .hero-content:empty {
+    padding: 0;
+    min-height: 0;
 }
 
 .hero-content * {
