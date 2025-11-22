@@ -105,7 +105,7 @@
                 
                 <div style="margin-top: 3rem; display: flex; gap: 30px; justify-content: center; flex-wrap: wrap; font-size: 1.1rem; color: #333333; font-weight: 500;">
                     <span style="background: var(--gray-50); padding: 0.75rem 1.5rem; border-radius: 50px; border: 1px solid var(--border);">
-                        <i class="far fa-calendar-alt" style="margin-right: 0.5rem; color: var(--primary);"></i>1st Feb 2026
+                        <i class="far fa-calendar-alt" style="margin-right: 0.5rem; color: var(--primary);"></i>8th Feb 2026
                     </span>
                     <span style="background: var(--gray-50); padding: 0.75rem 1.5rem; border-radius: 50px; border: 1px solid var(--border);">
                         <i class="far fa-clock" style="margin-right: 0.5rem; color: var(--primary);"></i>6:00 am - 11:00 am
@@ -127,22 +127,8 @@
                     <p style="font-size: 1.1rem; color: #333333;">Experience a day filled with fitness, fun, and awareness.</p>
                 </div>
 
-                <!-- Schedule -->
                 <div class="details-grid"
                     style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-bottom: 3rem;">
-                    <div class="feature-card">
-                        <i class="fas fa-clock feature-icon"></i>
-                        <h3>Race Schedule</h3>
-                        <ul style="text-align: left; list-style: none; padding: 0;">
-                            <li style="margin-bottom: 10px;"><strong>4:30 AM:</strong> Reporting time (Fitness start)
-                            </li>
-                            <li style="margin-bottom: 10px;"><strong>5:00 AM:</strong> 10K Marathon starts</li>
-                            <li style="margin-bottom: 10px;"><strong>5:30 AM:</strong> 5K Marathon starts</li>
-                            <li style="margin-bottom: 10px;"><strong>6:00 AM:</strong> 3K Marathon starts</li>
-                        </ul>
-                        <p style="font-size: 0.9rem; margin-top: 10px;">*Each category begins with a 15 min gap.</p>
-                    </div>
-
                     <div class="feature-card">
                         <i class="fas fa-running feature-icon"></i>
                         <h3>Run Categories & Fees</h3>
@@ -169,12 +155,42 @@
                     </div>
                 </div>
 
-                <!-- Prizes -->
+                <!-- Prizes & Recognition -->
                 <div class="prizes-section" style="background: #ffffff; padding: 3rem; border-radius: var(--radius-md); box-shadow: var(--shadow-md); border-top: 4px solid var(--primary);">
                     <h3 style="text-align: center; margin-bottom: 2rem; color: #000000; font-size: 2rem;">
                         <i class="fas fa-trophy" style="color: var(--primary); margin-right: 0.5rem;"></i>
-                        Prize Pool
+                        Prizes & Recognition
                     </h3>
+                    
+                    <!-- Recognition Section -->
+                    <div style="margin-bottom: 3rem; padding: 2rem; background: linear-gradient(135deg, rgba(220, 38, 38, 0.05) 0%, rgba(220, 38, 38, 0.02) 100%); border-radius: var(--radius-lg); border-left: 4px solid var(--primary);">
+                        <h4 style="text-align: center; margin-bottom: 1.5rem; color: #000000; font-size: 1.5rem;">
+                            <i class="fas fa-medal" style="color: var(--primary); margin-right: 0.5rem;"></i>
+                            Recognition for All Participants
+                        </h4>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-top: 2rem;">
+                            <div style="text-align: center; padding: 1.5rem; background: white; border-radius: var(--radius-md); box-shadow: var(--shadow-sm);">
+                                <i class="fas fa-medal" style="font-size: 2.5rem; color: #FFD700; margin-bottom: 1rem; display: block;"></i>
+                                <h5 style="margin-bottom: 0.5rem; color: #000000;">Finisher Medal</h5>
+                                <p style="font-size: 0.9rem; color: #666; margin: 0;">For all participants who complete the race</p>
+                            </div>
+                            <div style="text-align: center; padding: 1.5rem; background: white; border-radius: var(--radius-md); box-shadow: var(--shadow-sm);">
+                                <i class="fas fa-certificate" style="font-size: 2.5rem; color: var(--primary); margin-bottom: 1rem; display: block;"></i>
+                                <h5 style="margin-bottom: 0.5rem; color: #000000;">Certificate</h5>
+                                <p style="font-size: 0.9rem; color: #666; margin: 0;">Official participation certificate</p>
+                            </div>
+                            <div style="text-align: center; padding: 1.5rem; background: white; border-radius: var(--radius-md); box-shadow: var(--shadow-sm);">
+                                <i class="fas fa-trophy" style="font-size: 2.5rem; color: #CD7F32; margin-bottom: 1rem; display: block;"></i>
+                                <h5 style="margin-bottom: 0.5rem; color: #000000;">Trophies</h5>
+                                <p style="font-size: 0.9rem; color: #666; margin: 0;">For top performers in each category</p>
+                            </div>
+                            <div style="text-align: center; padding: 1.5rem; background: white; border-radius: var(--radius-md); box-shadow: var(--shadow-sm);">
+                                <i class="fas fa-star" style="font-size: 2.5rem; color: #FF6B6B; margin-bottom: 1rem; display: block;"></i>
+                                <h5 style="margin-bottom: 0.5rem; color: #000000;">Special Recognition</h5>
+                                <p style="font-size: 0.9rem; color: #666; margin: 0;">Acknowledgment for outstanding achievement</p>
+                            </div>
+                        </div>
+                    </div>
                     
                     <!-- Desktop Table View -->
                     <div class="prize-table-desktop">
@@ -182,39 +198,24 @@
                             <thead>
                                 <tr style="background: var(--gradient-primary); color: white;">
                                     <th style="padding: var(--space-5) var(--space-6); text-align: left; font-weight: var(--font-semibold); text-transform: uppercase; letter-spacing: var(--tracking-wide); font-size: var(--text-xs);">Category</th>
-                                    <th style="padding: var(--space-5) var(--space-6); text-align: left; font-weight: var(--font-semibold); text-transform: uppercase; letter-spacing: var(--tracking-wide); font-size: var(--text-xs);">1st Prize</th>
-                                    <th style="padding: var(--space-5) var(--space-6); text-align: left; font-weight: var(--font-semibold); text-transform: uppercase; letter-spacing: var(--tracking-wide); font-size: var(--text-xs);">2nd Prize</th>
-                                    <th style="padding: var(--space-5) var(--space-6); text-align: left; font-weight: var(--font-semibold); text-transform: uppercase; letter-spacing: var(--tracking-wide); font-size: var(--text-xs);">3rd Prize</th>
-                                    <th style="padding: var(--space-5) var(--space-6); text-align: left; font-weight: var(--font-semibold); text-transform: uppercase; letter-spacing: var(--tracking-wide); font-size: var(--text-xs);">Total</th>
+                                    <th style="padding: var(--space-5) var(--space-6); text-align: left; font-weight: var(--font-semibold); text-transform: uppercase; letter-spacing: var(--tracking-wide); font-size: var(--text-xs);">Prize Amount</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr style="border-bottom: 1px solid var(--border); background: var(--white);">
                                     <td style="padding: var(--space-5) var(--space-6); font-weight: var(--font-semibold); color: var(--text-primary);"><i class="fas fa-running" style="color: var(--primary); margin-right: var(--space-2);"></i>Men - 10 KM</td>
-                                    <td style="padding: var(--space-5) var(--space-6); color: var(--text-primary); font-weight: var(--font-semibold);">₹15,000</td>
-                                    <td style="padding: var(--space-5) var(--space-6); color: var(--text-primary);">₹10,000</td>
-                                    <td style="padding: var(--space-5) var(--space-6); color: var(--text-primary);">₹5,000</td>
                                     <td style="padding: var(--space-5) var(--space-6); color: var(--primary); font-weight: var(--font-bold); font-size: var(--text-lg);">₹30,000</td>
                                 </tr>
                                 <tr style="border-bottom: 1px solid #e9ecef; background: #f8f9fa;">
                                     <td style="padding: var(--space-5) var(--space-6); font-weight: var(--font-semibold); color: var(--text-primary);"><i class="fas fa-running" style="color: var(--primary); margin-right: var(--space-2);"></i>Women - 10 KM</td>
-                                    <td style="padding: var(--space-5) var(--space-6); color: var(--text-primary); font-weight: var(--font-semibold);">₹15,000</td>
-                                    <td style="padding: var(--space-5) var(--space-6); color: var(--text-primary);">₹10,000</td>
-                                    <td style="padding: var(--space-5) var(--space-6); color: var(--text-primary);">₹5,000</td>
                                     <td style="padding: var(--space-5) var(--space-6); color: var(--primary); font-weight: var(--font-bold); font-size: var(--text-lg);">₹30,000</td>
                                 </tr>
                                 <tr style="border-bottom: 1px solid var(--border); background: var(--white);">
                                     <td style="padding: var(--space-5) var(--space-6); font-weight: var(--font-semibold); color: var(--text-primary);"><i class="fas fa-running" style="color: var(--primary); margin-right: var(--space-2);"></i>Men - 5 KM</td>
-                                    <td style="padding: var(--space-5) var(--space-6); color: var(--text-primary); font-weight: var(--font-semibold);">₹10,000</td>
-                                    <td style="padding: var(--space-5) var(--space-6); color: var(--text-primary);">₹6,000</td>
-                                    <td style="padding: var(--space-5) var(--space-6); color: var(--text-primary);">₹4,000</td>
                                     <td style="padding: var(--space-5) var(--space-6); color: var(--primary); font-weight: var(--font-bold); font-size: var(--text-lg);">₹20,000</td>
                                 </tr>
                                 <tr style="background: var(--gray-50);">
                                     <td style="padding: var(--space-5) var(--space-6); font-weight: var(--font-semibold); color: var(--text-primary);"><i class="fas fa-running" style="color: var(--primary); margin-right: var(--space-2);"></i>Women - 5 KM</td>
-                                    <td style="padding: var(--space-5) var(--space-6); color: var(--text-primary); font-weight: var(--font-semibold);">₹10,000</td>
-                                    <td style="padding: var(--space-5) var(--space-6); color: var(--text-primary);">₹6,000</td>
-                                    <td style="padding: var(--space-5) var(--space-6); color: var(--text-primary);">₹4,000</td>
                                     <td style="padding: var(--space-5) var(--space-6); color: var(--primary); font-weight: var(--font-bold); font-size: var(--text-lg);">₹20,000</td>
                                 </tr>
                             </tbody>
@@ -229,20 +230,8 @@
                                 <strong>Men - 10 KM</strong>
                             </div>
                             <div class="prize-card-body">
-                                <div class="prize-item">
-                                    <span class="prize-label">1st Prize</span>
-                                    <span class="prize-amount">₹15,000</span>
-                                </div>
-                                <div class="prize-item">
-                                    <span class="prize-label">2nd Prize</span>
-                                    <span class="prize-amount">₹10,000</span>
-                                </div>
-                                <div class="prize-item">
-                                    <span class="prize-label">3rd Prize</span>
-                                    <span class="prize-amount">₹5,000</span>
-                                </div>
-                                <div class="prize-total">
-                                    <span>Total</span>
+                                <div class="prize-total" style="border-top: none; margin-top: 0;">
+                                    <span>Prize Amount</span>
                                     <span>₹30,000</span>
                                 </div>
                             </div>
@@ -254,20 +243,8 @@
                                 <strong>Women - 10 KM</strong>
                             </div>
                             <div class="prize-card-body">
-                                <div class="prize-item">
-                                    <span class="prize-label">1st Prize</span>
-                                    <span class="prize-amount">₹15,000</span>
-                                </div>
-                                <div class="prize-item">
-                                    <span class="prize-label">2nd Prize</span>
-                                    <span class="prize-amount">₹10,000</span>
-                                </div>
-                                <div class="prize-item">
-                                    <span class="prize-label">3rd Prize</span>
-                                    <span class="prize-amount">₹5,000</span>
-                                </div>
-                                <div class="prize-total">
-                                    <span>Total</span>
+                                <div class="prize-total" style="border-top: none; margin-top: 0;">
+                                    <span>Prize Amount</span>
                                     <span>₹30,000</span>
                                 </div>
                             </div>
@@ -279,20 +256,8 @@
                                 <strong>Men - 5 KM</strong>
                             </div>
                             <div class="prize-card-body">
-                                <div class="prize-item">
-                                    <span class="prize-label">1st Prize</span>
-                                    <span class="prize-amount">₹10,000</span>
-                                </div>
-                                <div class="prize-item">
-                                    <span class="prize-label">2nd Prize</span>
-                                    <span class="prize-amount">₹6,000</span>
-                                </div>
-                                <div class="prize-item">
-                                    <span class="prize-label">3rd Prize</span>
-                                    <span class="prize-amount">₹4,000</span>
-                                </div>
-                                <div class="prize-total">
-                                    <span>Total</span>
+                                <div class="prize-total" style="border-top: none; margin-top: 0;">
+                                    <span>Prize Amount</span>
                                     <span>₹20,000</span>
                                 </div>
                             </div>
@@ -304,32 +269,14 @@
                                 <strong>Women - 5 KM</strong>
                             </div>
                             <div class="prize-card-body">
-                                <div class="prize-item">
-                                    <span class="prize-label">1st Prize</span>
-                                    <span class="prize-amount">₹10,000</span>
-                                </div>
-                                <div class="prize-item">
-                                    <span class="prize-label">2nd Prize</span>
-                                    <span class="prize-amount">₹6,000</span>
-                                </div>
-                                <div class="prize-item">
-                                    <span class="prize-label">3rd Prize</span>
-                                    <span class="prize-amount">₹4,000</span>
-                                </div>
-                                <div class="prize-total">
-                                    <span>Total</span>
+                                <div class="prize-total" style="border-top: none; margin-top: 0;">
+                                    <span>Prize Amount</span>
                                     <span>₹20,000</span>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <div style="text-align: center; margin-top: 2rem; padding-top: 2rem; border-top: 2px solid #e0e0e0;">
-                        <p style="font-size: 1.1rem; color: #000000;">
-                            <i class="fas fa-trophy" style="color: var(--primary); margin-right: 0.5rem;"></i>
-                            <strong>3KM Run:</strong> Trophies for Top 3 Boys & Girls
-                        </p>
-                    </div>
                 </div>
             </div>
         </section>
