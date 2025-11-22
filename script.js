@@ -352,7 +352,7 @@ if (registrationForm) {
                 key: razorpayKey,
                 amount: orderData.amount,
                 currency: orderData.currency,
-                name: 'Kavasa Foundation Marathon',
+                name: 'Madras Marathon 2026 - Organised by Kavasa Foundation',
                 description: `Registration for ${category.toUpperCase()} category`,
                 order_id: orderData.orderId,
                 handler: async function (response) {
