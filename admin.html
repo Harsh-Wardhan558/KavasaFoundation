@@ -11,6 +11,49 @@
         rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Firebase SDK -->
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-analytics.js";
+        import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, collection, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        // Your web app's Firebase configuration
+        // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+        const firebaseConfig = {
+            apiKey: "AIzaSyBMlMgTHAhzFsCSlg3PQHhtFAeUiDvq2jE",
+            authDomain: "kavasa-9cdba.firebaseapp.com",
+            projectId: "kavasa-9cdba",
+            storageBucket: "kavasa-9cdba.firebasestorage.app",
+            messagingSenderId: "474336699934",
+            appId: "1:474336699934:web:b51b450970f66a4f63700f",
+            measurementId: "G-PKTEY6ZL2R"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // Make Firebase available globally
+        window.firebaseAuth = auth;
+        window.firebaseDb = db;
+        window.firebaseSignIn = signInWithEmailAndPassword;
+        window.firebaseSignOut = signOut;
+        window.firebaseOnAuthStateChanged = onAuthStateChanged;
+        window.firebaseGetDoc = getDoc;
+        window.firebaseDoc = doc;
+        window.firebaseCollection = collection;
+        window.firebaseGetDocs = getDocs;
+        window.firebaseQuery = query;
+        window.firebaseOrderBy = orderBy;
+        
+        // Signal that Firebase is ready
+        window.firebaseReady = true;
+        window.dispatchEvent(new Event('firebaseReady'));
+    </script>
     <style>
         .admin-container {
             max-width: 1400px;
@@ -168,11 +211,171 @@
                 flex-direction: column;
             }
 
-            .admin-btn {
-                width: 100%;
-                justify-content: center;
-            }
+        .admin-btn {
+            width: 100%;
+            justify-content: center;
         }
+    }
+
+    /* Login Form Styles */
+    .login-container {
+        max-width: 450px;
+        margin: 100px auto;
+        padding: 2rem;
+        background: var(--white);
+        border-radius: var(--radius-xl);
+        box-shadow: var(--shadow-xl);
+        border: 1px solid var(--border);
+    }
+
+    .login-header {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+
+    .login-header h1 {
+        color: var(--text-primary);
+        margin-bottom: 0.5rem;
+    }
+
+    .login-header p {
+        color: var(--text-secondary);
+        margin: 0;
+    }
+
+    .login-form {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+
+    .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .form-label {
+        font-weight: var(--font-semibold);
+        color: var(--text-primary);
+        font-size: var(--text-sm);
+    }
+
+    .form-input {
+        padding: 0.875rem 1rem;
+        border: 1.5px solid var(--border);
+        border-radius: var(--radius-lg);
+        font-size: var(--text-base);
+        font-family: inherit;
+        transition: var(--transition-all);
+    }
+
+    .form-input:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.1);
+    }
+
+    .error-message {
+        background: #fee2e2;
+        color: #dc2626;
+        padding: 1rem;
+        border-radius: var(--radius-lg);
+        border: 1px solid #fecaca;
+        font-size: var(--text-sm);
+        display: none;
+    }
+
+    .error-message.show {
+        display: block;
+    }
+
+    .loading {
+        opacity: 0.6;
+        pointer-events: none;
+    }
+
+    .registration-item {
+        display: grid;
+        grid-template-columns: auto 1fr auto;
+        gap: 1.5rem;
+        align-items: start;
+        padding: 1.5rem;
+        background: var(--gray-50);
+        border-radius: var(--radius-lg);
+        border: 1px solid var(--border);
+        margin-bottom: 1rem;
+        transition: var(--transition-all);
+    }
+
+    .registration-item:hover {
+        background: var(--white);
+        box-shadow: var(--shadow-md);
+        border-color: var(--primary);
+    }
+
+    .registration-number {
+        font-size: 1.5rem;
+        font-weight: var(--font-bold);
+        color: var(--primary);
+        min-width: 40px;
+    }
+
+    .registration-details {
+        flex: 1;
+    }
+
+    .registration-details h3 {
+        margin: 0 0 0.5rem 0;
+        color: var(--text-primary);
+        font-size: var(--text-lg);
+    }
+
+    .registration-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        margin-top: 0.75rem;
+        font-size: var(--text-sm);
+        color: var(--text-secondary);
+    }
+
+    .registration-meta span {
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+    }
+
+    .registration-category {
+        background: var(--gradient-primary);
+        color: white;
+        padding: 0.5rem 1rem;
+        border-radius: var(--radius-full);
+        font-size: var(--text-sm);
+        font-weight: var(--font-semibold);
+        white-space: nowrap;
+    }
+
+    .logout-btn {
+        position: fixed;
+        top: 90px;
+        right: 2rem;
+        z-index: 100;
+    }
+
+    @media (max-width: 768px) {
+        .logout-btn {
+            position: relative;
+            top: auto;
+            right: auto;
+            margin-bottom: 1rem;
+            width: 100%;
+        }
+    }
+
+    .hidden {
+        display: none !important;
+    }
     </style>
 </head>
 
@@ -195,7 +398,36 @@
         </div>
     </nav>
 
-    <div class="admin-container">
+    <!-- Login Form (shown when not authenticated) -->
+    <div id="loginContainer" class="login-container">
+        <div class="login-header">
+            <h1><i class="fas fa-shield-alt" style="color: var(--primary); margin-right: 0.5rem;"></i>Admin Login</h1>
+            <p>Enter your credentials to access the admin panel</p>
+        </div>
+        <div id="errorMessage" class="error-message"></div>
+        <form id="loginForm" class="login-form">
+            <div class="form-group">
+                <label for="loginEmail" class="form-label">Email</label>
+                <input type="email" id="loginEmail" class="form-input" required autocomplete="email">
+            </div>
+            <div class="form-group">
+                <label for="loginPassword" class="form-label">Password</label>
+                <input type="password" id="loginPassword" class="form-input" required autocomplete="current-password">
+            </div>
+            <button type="submit" class="admin-btn admin-btn-primary">
+                <i class="fas fa-sign-in-alt"></i>
+                Sign In
+            </button>
+        </form>
+    </div>
+
+    <!-- Admin Panel (shown when authenticated) -->
+    <div id="adminPanel" class="admin-container hidden">
+        <button id="logoutBtn" class="admin-btn admin-btn-secondary logout-btn">
+            <i class="fas fa-sign-out-alt"></i>
+            Logout
+        </button>
+        
         <a href="index.html" class="back-link">
             <i class="fas fa-arrow-left"></i>
             Back to Home
@@ -208,33 +440,30 @@
 
         <div class="admin-content">
             <div class="admin-section">
-                <h2><i class="fas fa-list" style="color: var(--primary); margin-right: 0.5rem;"></i>Data List</h2>
-                <ul class="admin-list" id="adminList">
-                    <li class="admin-list-placeholder">
-                        <i class="fas fa-inbox" style="font-size: 3rem; color: var(--gray-400); margin-bottom: 1rem; display: block;"></i>
-                        <p>No data available yet. List will be populated here.</p>
-                    </li>
-                </ul>
+                <h2><i class="fas fa-list" style="color: var(--primary); margin-right: 0.5rem;"></i>Marathon Registrations</h2>
+                <div id="adminList" class="admin-list">
+                    <div class="admin-list-placeholder">
+                        <i class="fas fa-spinner fa-spin" style="font-size: 3rem; color: var(--gray-400); margin-bottom: 1rem; display: block;"></i>
+                        <p>Loading registrations...</p>
+                    </div>
+                </div>
             </div>
 
             <div class="admin-actions">
-                <button class="admin-btn admin-btn-primary">
+                <button id="refreshBtn" class="admin-btn admin-btn-primary">
                     <i class="fas fa-sync-alt"></i>
                     Refresh Data
                 </button>
-                <button class="admin-btn admin-btn-secondary">
+                <button id="exportBtn" class="admin-btn admin-btn-secondary">
                     <i class="fas fa-download"></i>
                     Export Data
-                </button>
-                <button class="admin-btn admin-btn-secondary">
-                    <i class="fas fa-cog"></i>
-                    Settings
                 </button>
             </div>
         </div>
     </div>
 
     <script src="script.js"></script>
+    <script type="module" src="admin-script.js"></script>
 </body>
 
 </html>
