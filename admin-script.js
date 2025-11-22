@@ -146,14 +146,56 @@ document.addEventListener('DOMContentLoaded', async () => {
             `;
 
             const registrationsRef = window.firebaseCollection(window.firebaseDb, 'marathon_registrations');
-            const q = window.firebaseQuery(registrationsRef, window.firebaseOrderBy('timestamp', 'desc'));
-            const querySnapshot = await window.firebaseGetDocs(q);
+            // Order by timestamp if it exists at document level, otherwise get all documents
+            let querySnapshot;
+            try {
+                const q = window.firebaseQuery(registrationsRef, window.firebaseOrderBy('timestamp', 'desc'));
+                querySnapshot = await window.firebaseGetDocs(q);
+            } catch (error) {
+                // If timestamp ordering fails, get all documents without ordering
+                console.log('Timestamp ordering not available, fetching all documents');
+                querySnapshot = await window.firebaseGetDocs(registrationsRef);
+            }
 
             if (querySnapshot.empty) {
                 adminList.innerHTML = `
                     <div class="admin-list-placeholder">
                         <i class="fas fa-inbox" style="font-size: 3rem; color: var(--gray-400); margin-bottom: 1rem; display: block;"></i>
-                        <p>No registrations found yet.</p>
+                        <p>No captured registrations found yet.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            // Convert to array and filter by status "captured"
+            const registrations = [];
+            querySnapshot.forEach((doc) => {
+                const docData = doc.data();
+                // Only include registrations with status "captured"
+                if (docData.status === 'captured') {
+                    registrations.push({ id: doc.id, data: docData });
+                }
+            });
+            
+            // Sort by timestamp (newest first) if available
+            registrations.sort((a, b) => {
+                const timestampA = a.data.timestamp || (a.data.registrationData && a.data.registrationData.timestamp);
+                const timestampB = b.data.timestamp || (b.data.registrationData && b.data.registrationData.timestamp);
+                
+                if (timestampA && timestampB) {
+                    const dateA = timestampA.toDate ? timestampA.toDate() : new Date(timestampA);
+                    const dateB = timestampB.toDate ? timestampB.toDate() : new Date(timestampB);
+                    return dateB - dateA; // Descending order (newest first)
+                }
+                return 0;
+            });
+
+            // Check if any captured registrations found
+            if (registrations.length === 0) {
+                adminList.innerHTML = `
+                    <div class="admin-list-placeholder">
+                        <i class="fas fa-inbox" style="font-size: 3rem; color: var(--gray-400); margin-bottom: 1rem; display: block;"></i>
+                        <p>No captured registrations found. Only registrations with status "captured" are displayed.</p>
                     </div>
                 `;
                 return;
@@ -161,12 +203,20 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             let html = '';
             let index = 1;
-            querySnapshot.forEach((doc) => {
-                const data = doc.data();
-                const registrationId = doc.id;
+            registrations.forEach((reg) => {
+                const docData = reg.data;
+                const registrationId = reg.id;
                 
-                // Format timestamp
-                const timestamp = data.timestamp ? (data.timestamp.toDate ? data.timestamp.toDate() : new Date(data.timestamp)) : new Date();
+                // Get registration data from registrationData field
+                const data = docData.registrationData || docData;
+                
+                // Format timestamp - check both document level and registrationData level
+                let timestamp = docData.timestamp || data.timestamp;
+                if (timestamp) {
+                    timestamp = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
+                } else {
+                    timestamp = new Date();
+                }
                 const formattedDate = timestamp.toLocaleString('en-IN', {
                     day: '2-digit',
                     month: 'short',
@@ -233,8 +283,16 @@ document.addEventListener('DOMContentLoaded', async () => {
                 exportBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Exporting...';
 
                 const registrationsRef = window.firebaseCollection(window.firebaseDb, 'marathon_registrations');
-                const q = window.firebaseQuery(registrationsRef, window.firebaseOrderBy('timestamp', 'desc'));
-                const querySnapshot = await window.firebaseGetDocs(q);
+                // Order by timestamp if it exists at document level, otherwise get all documents
+                let querySnapshot;
+                try {
+                    const q = window.firebaseQuery(registrationsRef, window.firebaseOrderBy('timestamp', 'desc'));
+                    querySnapshot = await window.firebaseGetDocs(q);
+                } catch (error) {
+                    // If timestamp ordering fails, get all documents without ordering
+                    console.log('Timestamp ordering not available, fetching all documents');
+                    querySnapshot = await window.firebaseGetDocs(registrationsRef);
+                }
 
                 if (querySnapshot.empty) {
                     alert('No registrations to export.');
@@ -243,15 +301,37 @@ document.addEventListener('DOMContentLoaded', async () => {
                     return;
                 }
 
-                // Convert to CSV
+                // Convert to CSV - filter by status "captured"
                 let csv = 'Name,Email,Phone,Age,Gender,Category,T-Shirt Size,Amount,Registration Date\n';
+                let hasCapturedData = false;
+                
                 querySnapshot.forEach((doc) => {
-                    const data = doc.data();
-                    const timestamp = data.timestamp ? (data.timestamp.toDate ? data.timestamp.toDate() : new Date(data.timestamp)) : new Date();
-                    const formattedDate = timestamp.toLocaleString('en-IN');
-                    
-                    csv += `"${data.name || ''}","${data.email || ''}","${data.phone || ''}",${data.age || ''},"${data.gender || ''}","${data.category || ''}","${data.tshirtSize || ''}",${data.amount || 0},"${formattedDate}"\n`;
+                    const docData = doc.data();
+                    // Only export registrations with status "captured"
+                    if (docData.status === 'captured') {
+                        hasCapturedData = true;
+                        // Get registration data from registrationData field
+                        const data = docData.registrationData || docData;
+                        
+                        // Format timestamp - check both document level and registrationData level
+                        let timestamp = docData.timestamp || data.timestamp;
+                        if (timestamp) {
+                            timestamp = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
+                        } else {
+                            timestamp = new Date();
+                        }
+                        const formattedDate = timestamp.toLocaleString('en-IN');
+                        
+                        csv += `"${data.name || ''}","${data.email || ''}","${data.phone || ''}",${data.age || ''},"${data.gender || ''}","${data.category || ''}","${data.tshirtSize || ''}",${data.amount || 0},"${formattedDate}"\n`;
+                    }
                 });
+                
+                if (!hasCapturedData) {
+                    alert('No captured registrations to export.');
+                    exportBtn.innerHTML = originalText;
+                    exportBtn.disabled = false;
+                    return;
+                }
 
                 // Download CSV
                 const blob = new Blob([csv], { type: 'text/csv' });

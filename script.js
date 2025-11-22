@@ -124,6 +124,118 @@ async function fetchRazorpayKey() {
 // Initialize on page load
 fetchRazorpayKey();
 
+// Pricing data - fetched from Firebase
+let amountMap = {};
+let categoryLabels = {}; // Store category labels for display
+
+// Fetch pricing from Firebase
+async function fetchPricingFromFirebase() {
+    try {
+        // Wait for Firebase to be ready
+        if (!window.firebaseReady) {
+            await new Promise(resolve => {
+                window.addEventListener('firebaseReady', resolve, { once: true });
+                setTimeout(resolve, 5000); // Timeout after 5 seconds
+            });
+        }
+
+        if (!window.firebaseDb || !window.firebaseGetDoc || !window.firebaseDoc) {
+            console.error('Firebase not available');
+            return;
+        }
+
+        // Fetch pricing from Firestore
+        // Expected structure: settings/pricing
+        const pricingDoc = await window.firebaseGetDoc(
+            window.firebaseDoc(window.firebaseDb, 'settings', 'pricing')
+        );
+
+        if (pricingDoc.exists()) {
+            const pricingData = pricingDoc.data();
+            
+            // Clear existing maps
+            amountMap = {};
+            categoryLabels = {};
+            
+            // Process all fields in the document
+            Object.keys(pricingData).forEach(key => {
+                const value = pricingData[key];
+                // Check if it's a number (price)
+                if (typeof value === 'number') {
+                    amountMap[key.toLowerCase()] = value;
+                } else if (typeof value === 'object' && value !== null) {
+                    // If it's an object with price and label
+                    if (value.price !== undefined) {
+                        amountMap[key.toLowerCase()] = value.price;
+                        if (value.label) {
+                            categoryLabels[key.toLowerCase()] = value.label;
+                        }
+                    }
+                }
+            });
+            
+            console.log('Pricing fetched from Firebase:', amountMap);
+            console.log('Category labels:', categoryLabels);
+            
+            // Update the category dropdown
+            updateCategoryDropdown();
+        } else {
+            console.error('Pricing document not found in Firestore');
+        }
+    } catch (error) {
+        console.error('Error fetching pricing from Firebase:', error);
+    }
+}
+
+// Update category dropdown with pricing from Firebase
+function updateCategoryDropdown() {
+    const categorySelect = document.getElementById('reg-category');
+    if (!categorySelect) return;
+    
+    // Clear all existing options
+    categorySelect.innerHTML = '';
+    
+    // Add default "Select Category" option
+    const defaultOption = document.createElement('option');
+    defaultOption.value = '';
+    defaultOption.textContent = 'Select Category';
+    categorySelect.appendChild(defaultOption);
+    
+    // Add options from Firebase data, sorted by numeric value
+    const sortedCategories = Object.keys(amountMap).sort((a, b) => {
+        // Extract numeric value from category (e.g., "3km" -> 3, "10km" -> 10)
+        const numA = parseFloat(a) || 0;
+        const numB = parseFloat(b) || 0;
+        return numA - numB;
+    });
+    
+    sortedCategories.forEach(category => {
+        const price = amountMap[category];
+        const label = categoryLabels[category] || formatCategoryLabel(category);
+        const option = document.createElement('option');
+        option.value = category;
+        option.textContent = `${label} (₹${price})`;
+        categorySelect.appendChild(option);
+    });
+    
+    console.log('Category dropdown updated with', Object.keys(amountMap).length, 'categories');
+}
+
+// Format category label (e.g., "3km" -> "3KM - Kids")
+function formatCategoryLabel(category) {
+    const upperCategory = category.toUpperCase();
+    const labels = {
+        '0KM': '0KM - Test Run',
+        '3KM': '3KM - Kids',
+        '5KM': '5KM - Adults',
+        '10KM': '10KM - Adults'
+    };
+    return labels[upperCategory] || upperCategory;
+}
+
+// Fetch pricing on page load
+fetchPricingFromFirebase();
+
 // Registration Form Handling with Razorpay Integration
 const registrationForm = document.getElementById('registrationForm');
 
@@ -147,6 +259,7 @@ if (registrationForm) {
         }
 
         // Age validation based on category
+        // Note: Age validation can be extended in Firebase if needed
         if (category === '0km') {
             // No age restriction for test run
         } else if (category === '3km' && (age < 8 || age > 15)) {
@@ -164,14 +277,18 @@ if (registrationForm) {
             return;
         }
 
-        // Determine amount based on category
-        const amountMap = {
-            '0km': 1,
-            '3km': 399,
-            '5km': 499,
-            '10km': 499
-        };
+        // Determine amount based on category from Firebase
+        if (Object.keys(amountMap).length === 0) {
+            alert('Pricing data is loading. Please wait a moment and try again.');
+            return;
+        }
+        
         const amount = amountMap[category];
+        
+        if (!amount) {
+            alert('Invalid category selected. Please select a valid category.');
+            return;
+        }
 
         const submitBtn = registrationForm.querySelector('button[type="submit"]');
         const originalText = submitBtn.innerText;

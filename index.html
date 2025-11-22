@@ -15,6 +15,31 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <!-- Razorpay Checkout Script -->
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <!-- Firebase SDK -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBMlMgTHAhzFsCSlg3PQHhtFAeUiDvq2jE",
+            authDomain: "kavasa-9cdba.firebaseapp.com",
+            projectId: "kavasa-9cdba",
+            storageBucket: "kavasa-9cdba.firebasestorage.app",
+            messagingSenderId: "474336699934",
+            appId: "1:474336699934:web:b51b450970f66a4f63700f",
+            measurementId: "G-PKTEY6ZL2R"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Make Firebase available globally
+        window.firebaseDb = db;
+        window.firebaseGetDoc = getDoc;
+        window.firebaseDoc = doc;
+        window.firebaseReady = true;
+        window.dispatchEvent(new Event('firebaseReady'));
+    </script>
 </head>
 
 <body>
@@ -431,11 +456,7 @@
                         <div class="form-group">
                             <label for="reg-category" class="form-label">Run Category</label>
                             <select id="reg-category" class="form-control" required>
-                                <option value="">Select Category</option>
-                                <option value="0km">0KM - Test Run (₹1)</option>
-                                <option value="3km">3KM - Kids (₹399)</option>
-                                <option value="5km">5KM - Adults (₹499)</option>
-                                <option value="10km">10KM - Adults (₹499)</option>
+                                <option value="">Loading categories...</option>
                             </select>
                         </div>
                         <div class="form-group">
