@@ -589,6 +589,191 @@
         </footer>
 
         <script src="script.js"></script>
+        
+        <!-- Popup Modal -->
+        <div id="welcomePopup" class="popup-overlay" style="display: none;">
+            <div class="popup-content">
+                <button class="popup-close" id="closePopup" aria-label="Close popup">
+                    <i class="fas fa-times"></i>
+                </button>
+                <div class="popup-poster">
+                    <img src="image/banner.jpg" alt="Madras Marathon 2026 Poster">
+                </div>
+                <div class="popup-info">
+                    <h2 style="color: #000000; margin-bottom: 1rem; font-size: 1.75rem;">Madras Marathon 2026</h2>
+                    <p style="color: #666; margin-bottom: 0.5rem; font-size: 1rem;">
+                        <i class="far fa-calendar-alt" style="color: var(--primary); margin-right: 0.5rem;"></i>
+                        <strong>8th Feb 2026</strong>
+                    </p>
+                    <p style="color: #666; margin-bottom: 1.5rem; font-size: 0.95rem;">
+                        <i class="far fa-clock" style="color: var(--primary); margin-right: 0.5rem;"></i>
+                        4:00 am - 11:00 am
+                    </p>
+                    <p style="color: #333; margin-bottom: 1.5rem; font-size: 0.9rem; font-weight: 500;">
+                        Organised by <strong style="color: var(--primary);">Kavasa Foundation</strong>
+                    </p>
+                    <a href="#register" class="btn btn-primary" style="width: 100%; justify-content: center; font-size: 1.1rem; padding: 1rem 2rem;" onclick="closeWelcomePopup(); setTimeout(function() { document.querySelector('#register').scrollIntoView({ behavior: 'smooth' }); }, 100);">
+                        <i class="fas fa-running" style="margin-right: 0.5rem;"></i>Register Now
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <style>
+            .popup-overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.8);
+                backdrop-filter: blur(5px);
+                z-index: 10000;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 1rem;
+                animation: fadeIn 0.3s ease-in-out;
+            }
+
+            @keyframes fadeIn {
+                from {
+                    opacity: 0;
+                }
+                to {
+                    opacity: 1;
+                }
+            }
+
+            .popup-content {
+                background: white;
+                border-radius: var(--radius-xl);
+                max-width: 500px;
+                width: 100%;
+                max-height: 90vh;
+                overflow-y: auto;
+                position: relative;
+                box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+                animation: slideUp 0.3s ease-out;
+            }
+
+            @keyframes slideUp {
+                from {
+                    transform: translateY(50px);
+                    opacity: 0;
+                }
+                to {
+                    transform: translateY(0);
+                    opacity: 1;
+                }
+            }
+
+            .popup-close {
+                position: absolute;
+                top: 1rem;
+                right: 1rem;
+                background: rgba(0, 0, 0, 0.5);
+                color: white;
+                border: none;
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 10001;
+                transition: var(--transition-all);
+                font-size: 1.2rem;
+            }
+
+            .popup-close:hover {
+                background: var(--primary);
+                transform: rotate(90deg);
+            }
+
+            .popup-poster {
+                width: 100%;
+                border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+                overflow: hidden;
+            }
+
+            .popup-poster img {
+                width: 100%;
+                height: auto;
+                display: block;
+                object-fit: cover;
+            }
+
+            .popup-info {
+                padding: 2rem;
+                text-align: center;
+            }
+
+            .popup-info h2 {
+                margin-bottom: 1rem;
+            }
+
+            @media (max-width: 768px) {
+                .popup-content {
+                    max-width: 95%;
+                    max-height: 95vh;
+                }
+
+                .popup-info {
+                    padding: 1.5rem;
+                }
+
+                .popup-info h2 {
+                    font-size: 1.5rem;
+                }
+            }
+        </style>
+
+        <script>
+            // Show popup after 2 seconds
+            setTimeout(function() {
+                const popup = document.getElementById('welcomePopup');
+                if (popup) {
+                    popup.style.display = 'flex';
+                    document.body.style.overflow = 'hidden'; // Prevent background scrolling
+                }
+            }, 2000);
+
+            // Close popup function
+            function closeWelcomePopup() {
+                const popup = document.getElementById('welcomePopup');
+                if (popup) {
+                    popup.style.display = 'none';
+                    document.body.style.overflow = ''; // Restore scrolling
+                }
+            }
+
+            // Close button event
+            document.addEventListener('DOMContentLoaded', function() {
+                const closeBtn = document.getElementById('closePopup');
+                if (closeBtn) {
+                    closeBtn.addEventListener('click', closeWelcomePopup);
+                }
+
+                // Close on overlay click (outside the popup)
+                const overlay = document.getElementById('welcomePopup');
+                if (overlay) {
+                    overlay.addEventListener('click', function(e) {
+                        if (e.target === overlay) {
+                            closeWelcomePopup();
+                        }
+                    });
+                }
+
+                // Close on Escape key
+                document.addEventListener('keydown', function(e) {
+                    if (e.key === 'Escape') {
+                        closeWelcomePopup();
+                    }
+                });
+            });
+        </script>
 </body>
 
 </html>
