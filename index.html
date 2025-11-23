@@ -7,6 +7,10 @@
     <title>Madras Marathon 2026 | Organised by Kavasa Foundation</title>
     <meta name="description"
         content="Join the Madras Marathon 2026 organised by Kavasa Foundation. Run for a cause, support our NGO, and be part of a movement for change. Register now!">
+    <!-- Favicon -->
+    <link rel="icon" type="image/jpeg" href="image/kavasa.jpg">
+    <link rel="shortcut icon" type="image/jpeg" href="image/kavasa.jpg">
+    <link rel="apple-touch-icon" href="image/kavasa.jpg">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
@@ -61,15 +65,63 @@
         </div>
     </nav>
 
-    <!-- Hero Section -->
-    <section class="hero">
+    <!-- Hero Section - Desktop (Poster Only) -->
+    <section class="hero hero-desktop">
         <div class="container hero-content">
             <!-- Poster only - all content moved below -->
         </div>
     </section>
 
-    <!-- Hero Content Section (moved from hero) -->
-    <section class="section-padding" style="background: #ffffff;">
+    <!-- Hero Section - Mobile (Content with Overlay) -->
+    <section class="hero hero-mobile">
+        <div class="container hero-content">
+            <div style="margin-bottom: 1rem;">
+                <span style="background: rgba(255, 255, 255, 0.2); color: white; padding: 0.625rem 1.5rem; border-radius: var(--radius-full); font-weight: 600; font-size: 0.875rem; text-transform: none; letter-spacing: 0.025em; display: inline-block; border: 1px solid rgba(255, 255, 255, 0.3); backdrop-filter: blur(10px);">
+                    <i class="fas fa-ribbon" style="margin-right: 0.5rem;"></i>Annual Charity Marathon
+                </span>
+            </div>
+            <h1 style="color: white;">Madras Marathon 2026<br><span style="font-size: 0.6em; font-weight: 500;">Organised by Kavasa Foundation</span></h1>
+            <p style="font-size: 1.2rem; font-weight: 400; max-width: 800px; margin: 0 auto 2rem; color: white;">Run for a Cause. Every step counts in our fight against cancer. Join thousands of runners making a difference.</p>
+            <div style="margin-top: 3rem; display: flex; gap: 2rem; justify-content: center; flex-wrap: wrap;">
+                <a href="#register" class="btn btn-primary" style="font-size: 1.1rem; padding: 1.2rem 2.5rem;">
+                    <i class="fas fa-running" style="margin-right: 0.5rem;"></i>Register Now
+                </a>
+                <a href="about.html" class="btn btn-secondary" style="font-size: 1.1rem; padding: 1.2rem 2.5rem; background: rgba(255,255,255,0.2); border: 2px solid white; color: white;">
+                    <i class="fas fa-info-circle" style="margin-right: 0.5rem;"></i>Learn More
+                </a>
+            </div>
+            
+            <div style="margin-top: 4rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; max-width: 1000px; margin-left: auto; margin-right: auto;">
+                <div style="background: rgba(255,255,255,0.15); padding: 2rem; border-radius: var(--radius-md); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.2);">
+                    <h3 style="color: white; margin-bottom: 1rem; font-size: 1.125rem; font-weight: 600;">
+                        <i class="fas fa-running" style="color: var(--primary); margin-right: 0.5rem;"></i>Run Categories
+                    </h3>
+                    <p style="color: white; font-size: 1.75rem; font-weight: 700; margin: 0; letter-spacing: 0.05em;">10 KM / 5 KM / 3 KM</p>
+                </div>
+                <div style="background: rgba(255,255,255,0.12); padding: 2rem; border-radius: var(--radius-lg); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.15);">
+                    <h3 style="color: white; margin-bottom: 1rem; font-size: 1.125rem; font-weight: 600;">
+                        <i class="fas fa-gift" style="color: var(--primary); margin-right: 0.5rem;"></i>Inclusions
+                    </h3>
+                    <p style="color: rgba(255,255,255,0.95); margin: 0; font-size: 0.95rem; line-height: 1.6;">Bag, T-Shirt, BIB (Chip for 5/10 KM), Refreshment, Medal & Certificate</p>
+                </div>
+            </div>
+            
+            <div style="margin-top: 3rem; display: flex; gap: 30px; justify-content: center; flex-wrap: wrap; font-size: 1.1rem; color: rgba(255,255,255,0.95); font-weight: 500;">
+                <span style="background: rgba(255,255,255,0.1); padding: 0.75rem 1.5rem; border-radius: 50px; backdrop-filter: blur(5px);">
+                    <i class="far fa-calendar-alt" style="margin-right: 0.5rem; color: var(--primary);"></i>8th Feb 2026
+                </span>
+                <span style="background: rgba(255,255,255,0.1); padding: 0.75rem 1.5rem; border-radius: 50px; backdrop-filter: blur(5px);">
+                    <i class="far fa-clock" style="margin-right: 0.5rem; color: var(--primary);"></i>4:00 am - 11:00 am
+                </span>
+                <span style="background: rgba(255,255,255,0.1); padding: 0.75rem 1.5rem; border-radius: 50px; backdrop-filter: blur(5px);">
+                    <i class="fas fa-map-marker-alt" style="margin-right: 0.5rem; color: var(--primary);"></i>Presidency College, Chennai
+                </span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Hero Content Section (Desktop Only) -->
+    <section class="section-padding hero-content-desktop" style="background: #ffffff;">
         <div class="container">
             <div style="text-align: center; max-width: 900px; margin: 0 auto;">
                 <div style="margin-bottom: 1rem;">

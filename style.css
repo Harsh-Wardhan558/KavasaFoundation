@@ -559,6 +559,25 @@ strong {
     z-index: 0;
 }
 
+/* Desktop Hero - Poster Only */
+.hero-desktop {
+    display: flex;
+}
+
+/* Mobile Hero - Content with Overlay */
+.hero-mobile {
+    display: none;
+    background: var(--gradient-hero), url('image/banner.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: scroll;
+}
+
+.hero-mobile::before {
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.75) 0%, rgba(220, 38, 38, 0.85) 100%);
+    z-index: 0;
+}
+
 .hero::after {
     content: '';
     position: absolute;
@@ -1126,6 +1145,28 @@ textarea.form-control {
         min-height: 90vh;
         padding-top: 70px;
         background-attachment: scroll;
+    }
+
+    /* Show mobile hero, hide desktop hero on mobile */
+    .hero-desktop {
+        display: none !important;
+    }
+
+    .hero-mobile {
+        display: flex !important;
+        background: var(--gradient-hero), url('image/banner.jpg') !important;
+        background-size: cover !important;
+        background-position: center !important;
+        background-attachment: scroll !important;
+    }
+
+    .hero-mobile::before {
+        background: linear-gradient(135deg, rgba(0, 0, 0, 0.75) 0%, rgba(220, 38, 38, 0.85) 100%) !important;
+    }
+
+    /* Hide desktop content section on mobile */
+    .hero-content-desktop {
+        display: none !important;
     }
 
     header.hero {
