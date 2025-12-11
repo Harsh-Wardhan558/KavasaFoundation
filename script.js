@@ -289,7 +289,7 @@ if (registrationForm) {
                 },
 
                 prefill: { name, email, contact: phone },
-                theme: { color: "#dc2626" },
+                theme: { color: "#ff6b7a" },
 
                 modal: {
                     ondismiss: function () {
