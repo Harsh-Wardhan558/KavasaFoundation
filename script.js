@@ -84,7 +84,7 @@ if (contactForm) {
         btn.disabled = true;
 
         setTimeout(() => {
-            alert(`Thank you, ${name}! Your message has been sent.`);
+            console.log(`Thank you, ${name}! Your message has been sent.`);
             contactForm.reset();
             btn.innerText = old;
             btn.disabled = false;
@@ -200,12 +200,12 @@ if (registrationForm) {
         const tshirtSize = document.getElementById('reg-tshirt').value;
 
         if (!name || !email || !phone || !gender || !category || !tshirtSize) {
-            alert("Please fill all fields.");
+            console.log("Please fill all fields.");
             return;
         }
 
         if (!amountMap[category]) {
-            alert("Pricing not loaded yet.");
+            console.log("Pricing not loaded yet.");
             return;
         }
 
@@ -278,10 +278,10 @@ if (registrationForm) {
                     const verify = await verifyRes.json();
 
                     if (verify.success) {
-                        alert(`Payment Success! Your registration ID: ${verify.docId}`);
+                        console.log(`Payment Success! Your registration ID: ${verify.docId}`);
                         registrationForm.reset();
                     } else {
-                        alert("Payment verification failed.");
+                        console.log("Payment verification failed.");
                     }
 
                     btn.innerText = old;
@@ -303,13 +303,13 @@ if (registrationForm) {
             rzp.open();
 
             rzp.on("payment.failed", function (resp) {
-                alert("Payment failed: " + resp.error.description);
+                console.log("Payment failed: " + resp.error.description);
                 btn.innerText = old;
                 btn.disabled = false;
             });
 
         } catch (err) {
-            alert("Error: " + err.message);
+            console.log("Error: " + err.message);
             btn.innerText = old;
             btn.disabled = false;
         }
