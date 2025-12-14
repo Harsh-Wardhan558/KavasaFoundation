@@ -137,7 +137,7 @@
                 <!-- Event Info Cards -->
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; max-width: 1100px; margin: 0 auto 3rem;">
                     <div style="background: white; padding: 2.5rem; border-radius: var(--radius-xl); border: 1px solid var(--border); box-shadow: var(--shadow-sm); transition: all 0.3s ease;">
-                        <div style="width: 60px; height: 60px; background: linear-gradient(135deg, rgba(255, 107, 122, 0.1) 0%, rgba(255, 107, 122, 0.05) 100%); border-radius: var(--radius-lg); display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem;">
+                        <div style="width: 60px; height: 60px; background: linear-gradient(135deg, rgba(37, 99, 235, 0.1) 0%, rgba(37, 99, 235, 0.05) 100%); border-radius: var(--radius-lg); display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem;">
                             <i class="fas fa-route" style="font-size: 1.75rem; color: var(--primary);"></i>
                         </div>
                         <h3 style="color: #1a1a1a; margin-bottom: 1rem; font-size: 1.15rem; font-weight: 600;">
@@ -146,7 +146,7 @@
                         <p style="color: #1a1a1a; font-size: 1.5rem; font-weight: 700; margin: 0; letter-spacing: 0.03em;">10 KM / 5 KM / 3 KM</p>
                     </div>
                     <div style="background: white; padding: 2.5rem; border-radius: var(--radius-xl); border: 1px solid var(--border); box-shadow: var(--shadow-sm); transition: all 0.3s ease;">
-                        <div style="width: 60px; height: 60px; background: linear-gradient(135deg, rgba(255, 107, 122, 0.1) 0%, rgba(255, 107, 122, 0.05) 100%); border-radius: var(--radius-lg); display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem;">
+                        <div style="width: 60px; height: 60px; background: linear-gradient(135deg, rgba(37, 99, 235, 0.1) 0%, rgba(37, 99, 235, 0.05) 100%); border-radius: var(--radius-lg); display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem;">
                             <i class="fas fa-gift" style="font-size: 1.75rem; color: var(--primary);"></i>
                         </div>
                         <h3 style="color: #1a1a1a; margin-bottom: 1rem; font-size: 1.15rem; font-weight: 600;">
@@ -155,109 +155,282 @@
                         <p style="color: var(--text-secondary); margin: 0; font-size: 0.95rem; line-height: 1.7;">Bag, T-Shirt, BIB (Chip for 5/10 KM), Refreshment, Medal & Certificate</p>
                     </div>
                 </div>
-                
-                <!-- Event Details Badges -->
-                <div style="display: flex; gap: 1.5rem; justify-content: center; flex-wrap: wrap; font-size: 1rem; color: var(--text-secondary); font-weight: 500;">
-                    <div style="background: white; padding: 1rem 2rem; border-radius: var(--radius-full); border: 1px solid var(--border); box-shadow: var(--shadow-xs); display: flex; align-items: center; gap: 0.75rem;">
-                        <i class="far fa-calendar-alt" style="color: var(--primary); font-size: 1.1rem;"></i>
-                        <span>8th Feb 2026</span>
+            </div>
+        </div>
+        </section>
+
+        <!-- Event Schedule & Venue Section -->
+        <section class="section-padding" style="background: #f8f9fa;">
+            <div class="container">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2.5rem; max-width: 1200px; margin: 0 auto;">
+                    <!-- Event Schedule Card -->
+                    <div style="background: white; padding: 2.5rem; border-radius: var(--radius-xl); box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08); border: 1px solid var(--border);">
+                        <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem;">
+                            <i class="far fa-clock" style="color: var(--primary); font-size: 1.5rem;"></i>
+                            <h3 style="color: #1a1a1a; font-size: 1.5rem; font-weight: 600; margin: 0;">Event Schedule</h3>
+                        </div>
+                        <p style="color: var(--text-secondary); font-size: 0.95rem; margin: 0 0 2rem 2.25rem;">8th Feb 2026</p>
+                        
+                        <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+                            <div style="background: #f8f9fa; padding: 1rem 1.25rem; border-radius: var(--radius-md); display: flex; align-items: center; gap: 1.5rem;">
+                                <span style="color: var(--primary); font-weight: 600; font-size: 0.95rem; min-width: 80px;">4:00 AM</span>
+                                <span style="color: #1a1a1a; font-size: 0.95rem;">Gates Open & Bib Collection</span>
+                            </div>
+                            <div style="background: #f8f9fa; padding: 1rem 1.25rem; border-radius: var(--radius-md); display: flex; align-items: center; gap: 1.5rem;">
+                                <span style="color: var(--primary); font-weight: 600; font-size: 0.95rem; min-width: 80px;">5:00 AM</span>
+                                <span style="color: #1a1a1a; font-size: 0.95rem;">10K Challenge Flag-off</span>
+                            </div>
+                            <div style="background: #f8f9fa; padding: 1rem 1.25rem; border-radius: var(--radius-md); display: flex; align-items: center; gap: 1.5rem;">
+                                <span style="color: var(--primary); font-weight: 600; font-size: 0.95rem; min-width: 80px;">5:30 AM</span>
+                                <span style="color: #1a1a1a; font-size: 0.95rem;">5K Challenge Flag-off</span>
+                            </div>
+                            <div style="background: #f8f9fa; padding: 1rem 1.25rem; border-radius: var(--radius-md); display: flex; align-items: center; gap: 1.5rem;">
+                                <span style="color: var(--primary); font-weight: 600; font-size: 0.95rem; min-width: 80px;">6:00 AM</span>
+                                <span style="color: #1a1a1a; font-size: 0.95rem;">3K Fun Run Flag-off</span>
+                            </div>
+                            <div style="background: #f8f9fa; padding: 1rem 1.25rem; border-radius: var(--radius-md); display: flex; align-items: center; gap: 1.5rem;">
+                                <span style="color: var(--primary); font-weight: 600; font-size: 0.95rem; min-width: 80px;">10:00 AM</span>
+                                <span style="color: #1a1a1a; font-size: 0.95rem;">Prize Distribution Ceremony</span>
+                            </div>
+                        </div>
                     </div>
-                    <div style="background: white; padding: 1rem 2rem; border-radius: var(--radius-full); border: 1px solid var(--border); box-shadow: var(--shadow-xs); display: flex; align-items: center; gap: 0.75rem;">
-                        <i class="far fa-clock" style="color: var(--primary); font-size: 1.1rem;"></i>
-                        <span>4:00 am - 11:00 am</span>
-                    </div>
-                    <div style="background: white; padding: 1rem 2rem; border-radius: var(--radius-full); border: 1px solid var(--border); box-shadow: var(--shadow-xs); display: flex; align-items: center; gap: 0.75rem;">
-                        <i class="fas fa-map-marker-alt" style="color: var(--primary); font-size: 1.1rem;"></i>
-                        <span>Presidency College, Chennai</span>
+
+                    <!-- Venue Card -->
+                    <div style="background: white; padding: 2.5rem; border-radius: var(--radius-xl); box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08); border: 1px solid var(--border);">
+                        <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem;">
+                            <i class="fas fa-map-marker-alt" style="color: #fb923c; font-size: 1.5rem;"></i>
+                            <h3 style="color: #1a1a1a; font-size: 1.5rem; font-weight: 600; margin: 0;">Venue</h3>
+                        </div>
+                        <p style="color: #1a1a1a; font-size: 1.15rem; font-weight: 700; margin: 0 0 1.5rem 2.25rem;">Presidency College, Chennai</p>
+                        
+                        <p style="color: var(--text-secondary); font-size: 0.95rem; line-height: 1.7; margin-bottom: 2rem;">
+                            The marathon route takes you through the scenic heart of Chennai, passing historical landmarks and vibrant neighborhoods. Well-marked routes with hydration stations every 2km.
+                        </p>
+                        
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                            <div style="background: #f8f9fa; padding: 1.5rem; border-radius: var(--radius-md); text-align: center;">
+                                <div style="color: #1a1a1a; font-size: 2rem; font-weight: 700; margin-bottom: 0.25rem;">10+</div>
+                                <div style="color: #1a1a1a; font-size: 0.9rem;">Aid Stations</div>
+                            </div>
+                            <div style="background: #f8f9fa; padding: 1.5rem; border-radius: var(--radius-md); text-align: center;">
+                                <div style="color: #1a1a1a; font-size: 2rem; font-weight: 700; margin-bottom: 0.25rem;">5</div>
+                                <div style="color: #1a1a1a; font-size: 0.9rem;">Medical Posts</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-        <!-- Event Details Section - Complete Information -->
-        <section id="event-details" class="section-padding animated-gradient" style="position: relative; overflow: hidden;">
-            <div style="position: absolute; top: -50%; right: -10%; width: 500px; height: 500px; background: radial-gradient(circle, rgba(255, 107, 122, 0.1) 0%, transparent 70%); border-radius: 50%; filter: blur(60px);"></div>
-            <div style="position: absolute; bottom: -30%; left: -10%; width: 400px; height: 400px; background: radial-gradient(circle, rgba(255, 107, 122, 0.08) 0%, transparent 70%); border-radius: 50%; filter: blur(50px);"></div>
-            <div class="container" style="position: relative; z-index: 1;">
-                <!-- Why We Run Section -->
-                <div style="max-width: 900px; margin: 0 auto 6rem; background: white; padding: 4rem; border-radius: var(--radius-2xl); box-shadow: 0 20px 60px rgba(255, 107, 122, 0.1); border: 2px solid rgba(255, 107, 122, 0.1); position: relative; overflow: hidden;">
-                    <div style="position: absolute; top: -50px; right: -50px; width: 200px; height: 200px; background: radial-gradient(circle, rgba(255, 107, 122, 0.1) 0%, transparent 70%); border-radius: 50%;"></div>
-                    <div style="position: relative; z-index: 1;">
-                        <h2 style="color: #1a1a1a; font-size: 2.5rem; margin-bottom: 2rem; font-weight: 800; text-align: center;">
-                            <i class="fas fa-heart" style="color: var(--primary); margin-right: 0.75rem;"></i>
-                            Why We Run
-                        </h2>
-                        <div style="width: 100px; height: 4px; background: var(--gradient-primary); margin: 0 auto 2.5rem; border-radius: var(--radius-full);"></div>
-                        <p style="font-size: 1.15rem; line-height: 1.9; color: var(--text-secondary); text-align: justify; margin-bottom: 1.5rem;">
-                            The Madras Marathon 2026 is more than just a race—it's a movement dedicated to making a meaningful difference in the fight against cancer. Every step you take, every kilometer you run, contributes directly to supporting cancer patients who cannot afford life-saving treatment. Our aim is to create a platform where fitness meets philanthropy, where your passion for running transforms into hope for those battling cancer.
-                        </p>
-                        <p style="font-size: 1.15rem; line-height: 1.9; color: var(--text-secondary); text-align: justify; margin-bottom: 1.5rem;">
-                            Our primary goal is to raise awareness about early cancer detection and the importance of regular health check-ups. Through this marathon, we strive to educate communities, break the stigma surrounding cancer, and empower individuals to take charge of their health. We believe that prevention and early detection can save countless lives, and this event serves as a powerful reminder of that message.
-                        </p>
-                        <p style="font-size: 1.15rem; line-height: 1.9; color: var(--text-secondary); text-align: justify; margin: 0;">
-                            Together, we are building a stronger, healthier community—one that stands united in support of cancer patients and their families. Your participation doesn't just help us raise funds; it helps us spread hope, create awareness, and make a lasting impact. Join us in this noble cause and be part of a movement that truly matters.
-                        </p>
-                    </div>
-                </div>
-                
-
-                <div style="text-align: center; margin-bottom: 5rem;">
-                    <h2 style="color: #1a1a1a; font-size: 3.5rem; margin-bottom: 1.5rem; font-weight: 900; line-height: 1.1;">
-                        Run Categories
+        <!-- Why We Run Section -->
+        <section class="section-padding" style="background: #ffffff;">
+            <div class="container">
+                <div style="max-width: 900px; margin: 0 auto;">
+                    <h2 style="color: #1a1a1a; font-size: 2rem; margin-bottom: 2rem; font-weight: 600; text-align: center;">
+                        <i class="fas fa-heart" style="color: var(--primary); margin-right: 0.75rem;"></i>
+                        Why We Run
                     </h2>
-                    <div style="width: 100px; height: 4px; background: var(--gradient-primary); margin: 0 auto 2rem; border-radius: var(--radius-full);"></div>
-                    <p style="font-size: 1.3rem; color: var(--text-secondary); max-width: 800px; margin: 0 auto; line-height: 1.8;">Choose your distance and join the race</p>
+                    <div style="width: 100px; height: 4px; background: var(--gradient-primary); margin: 0 auto 2.5rem; border-radius: var(--radius-full);"></div>
+                    <p style="font-size: 1.15rem; line-height: 1.9; color: var(--text-secondary); text-align: justify; margin-bottom: 1.5rem;">
+                        The Madras Marathon 2026 is more than just a race—it's a movement dedicated to making a meaningful difference in the fight against cancer. Every step you take, every kilometer you run, contributes directly to supporting cancer patients who cannot afford life-saving treatment. Our aim is to create a platform where fitness meets philanthropy, where your passion for running transforms into hope for those battling cancer.
+                    </p>
+                    <p style="font-size: 1.15rem; line-height: 1.9; color: var(--text-secondary); text-align: justify; margin-bottom: 1.5rem;">
+                        Our primary goal is to raise awareness about early cancer detection and the importance of regular health check-ups. Through this marathon, we strive to educate communities, break the stigma surrounding cancer, and empower individuals to take charge of their health. We believe that prevention and early detection can save countless lives, and this event serves as a powerful reminder of that message.
+                    </p>
+                    <p style="font-size: 1.15rem; line-height: 1.9; color: var(--text-secondary); text-align: justify; margin: 0;">
+                        Together, we are building a stronger, healthier community—one that stands united in support of cancer patients and their families. Your participation doesn't just help us raise funds; it helps us spread hope, create awareness, and make a lasting impact. Join us in this noble cause and be part of a movement that truly matters.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Event Details Section -->
+        <section id="event-details" class="section-padding" style="background: #ffffff;">
+            <div class="container">
+
+                <!-- More Than a Marathon Section -->
+                <div style="max-width: 1200px; margin: 0 auto 8rem;">
+                    <!-- Top Section -->
+                    <div style="text-align: center; margin-bottom: 4rem;">
+                        <div style="display: inline-block; padding: 0.5rem 1.5rem; background: rgba(37, 99, 235, 0.1); color: var(--primary); border-radius: var(--radius-full); font-size: 0.875rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 1.5rem;">
+                            OUR PURPOSE
+                        </div>
+                        <h2 style="color: #1a1a1a; font-size: 2.25rem; margin-bottom: 1.5rem; font-weight: 600; line-height: 1.2;">
+                            More Than a Marathon
+                        </h2>
+                        <p style="font-size: 1.2rem; color: var(--text-secondary); max-width: 800px; margin: 0 auto; line-height: 1.8;">
+                            For over 8 years, Kavasa Foundation has been transforming lives across India. Your participation in this marathon directly funds our mission.
+                        </p>
+                    </div>
+
+                    <!-- Main Content Area -->
+                    <div class="purpose-content-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: center;">
+                        <!-- Left Side - Image -->
+                        <div style="position: relative; border-radius: var(--radius-xl); overflow: hidden; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); border: 1px solid var(--border);">
+                            <img src="/image/kavasango.png" 
+                                 alt="Kavasa Foundation helping children" 
+                                 style="width: 100%; height: 100%; object-fit: cover; display: block;">
+                            <div style="position: absolute; bottom: 2rem; left: 2rem; background: var(--primary); padding: 1.5rem 2rem; border-radius: var(--radius-lg);">
+                                <div style="color: white; font-size: 0.875rem; font-weight: 600; margin-bottom: 0.5rem; opacity: 0.9;">Since 2016</div>
+                                <div style="color: white; font-size: 1.25rem; font-weight: 600;">Creating Change</div>
+                            </div>
+                        </div>
+
+                        <!-- Right Side - Three Blocks -->
+                        <div style="display: flex; flex-direction: column; gap: 2rem;">
+                            <!-- Block 1: Education -->
+                            <div style="background: #f8f9fa; padding: 2.5rem; border-radius: var(--radius-xl); box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08); border: 1px solid var(--border); display: flex; align-items: flex-start; gap: 1.5rem;">
+                                <div style="flex-shrink: 0; width: 60px; height: 60px; background: var(--gradient-primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5rem; font-weight: 600;">
+                                    1
+                                </div>
+                                <div>
+                                    <h3 style="color: #1a1a1a; font-size: 1.25rem; font-weight: 600; margin-bottom: 0.75rem;">Education</h3>
+                                    <p style="color: var(--text-secondary); font-size: 1rem; line-height: 1.7; margin: 0;">
+                                        Providing quality education to underprivileged children across rural India.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- Block 2: Healthcare -->
+                            <div style="background: #f8f9fa; padding: 2.5rem; border-radius: var(--radius-xl); box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08); border: 1px solid var(--border); display: flex; align-items: flex-start; gap: 1.5rem;">
+                                <div style="flex-shrink: 0; width: 60px; height: 60px; background: var(--gradient-primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5rem; font-weight: 600;">
+                                    2
+                                </div>
+                                <div>
+                                    <h3 style="color: #1a1a1a; font-size: 1.25rem; font-weight: 600; margin-bottom: 0.75rem;">Healthcare</h3>
+                                    <p style="color: var(--text-secondary); font-size: 1rem; line-height: 1.7; margin: 0;">
+                                        Free medical camps and healthcare access for those who need it most.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- Block 3: Empowerment -->
+                            <div style="background: #f8f9fa; padding: 2.5rem; border-radius: var(--radius-xl); box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08); border: 1px solid var(--border); display: flex; align-items: flex-start; gap: 1.5rem;">
+                                <div style="flex-shrink: 0; width: 60px; height: 60px; background: var(--gradient-primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5rem; font-weight: 600;">
+                                    3
+                                </div>
+                                <div>
+                                    <h3 style="color: #1a1a1a; font-size: 1.25rem; font-weight: 600; margin-bottom: 0.75rem;">Empowerment</h3>
+                                    <p style="color: var(--text-secondary); font-size: 1rem; line-height: 1.7; margin: 0;">
+                                        Skill development programs creating sustainable livelihoods.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-                <!-- Categories - Horizontal Card Layout -->
-                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 2.5rem; max-width: 1200px; margin: 0 auto 6rem;">
-                    <div class="hover-lift card-3d stagger-item" style="background: white; padding: 3rem; border-radius: var(--radius-2xl); box-shadow: 0 15px 50px rgba(255, 107, 122, 0.12); border: 2px solid rgba(255, 107, 122, 0.1); position: relative; overflow: hidden;">
-                        <div style="position: absolute; top: -30px; right: -30px; width: 120px; height: 120px; background: radial-gradient(circle, rgba(255, 107, 122, 0.15) 0%, transparent 70%); border-radius: 50%;"></div>
-                        <div style="position: relative; z-index: 1; text-align: center;">
-                            <div style="width: 100px; height: 100px; margin: 0 auto 2rem; background: var(--gradient-primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 15px 40px rgba(255, 107, 122, 0.3);">
-                                <span style="color: white; font-size: 2.5rem; font-weight: 900;">3</span>
-                            </div>
-                            <h3 style="margin: 0 0 0.5rem; color: #1a1a1a; font-size: 2rem; font-weight: 800;">3KM</h3>
-                            <p style="margin: 0 0 1rem; color: var(--text-secondary); font-size: 1rem;">8yrs to 18yrs</p>
-                            <div style="display: inline-block; padding: 0.5rem 1.25rem; background: rgba(255, 107, 122, 0.1); color: var(--primary); border-radius: var(--radius-full); font-size: 0.875rem; font-weight: 700; margin-bottom: 2rem;">Fun Run</div>
-                            <div style="padding-top: 2rem; border-top: 2px solid var(--gray-200);">
-                                <div style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 0.5rem;">Registration Fee</div>
-                                <div style="color: var(--primary); font-size: 2.5rem; font-weight: 900;">₹399</div>
-                            </div>
+                <!-- Event Details Section -->
+                <div style="max-width: 1200px; margin: 0 auto 6rem;">
+                    <!-- Top Section -->
+                    <div style="text-align: center; margin-bottom: 4rem;">
+                        <div style="display: inline-block; padding: 0.5rem 1.5rem; background: rgba(37, 99, 235, 0.1); color: var(--primary); border-radius: var(--radius-full); font-size: 0.875rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 1.5rem;">
+                            EVENT DETAILS
                         </div>
+                        <h2 style="color: #1a1a1a; font-size: 2.25rem; margin-bottom: 1.5rem; font-weight: 600; line-height: 1.2;">
+                            Choose Your Challenge
+                        </h2>
                     </div>
 
-                    <div class="hover-lift card-3d stagger-item" style="background: linear-gradient(135deg, rgba(255, 107, 122, 0.08) 0%, white 100%); padding: 3rem; border-radius: var(--radius-2xl); box-shadow: 0 20px 60px rgba(255, 107, 122, 0.2); border: 3px solid var(--primary); position: relative; overflow: hidden; transform: scale(1.05);">
-                        <div style="position: absolute; top: 1rem; right: 1rem; background: var(--primary); color: white; padding: 0.5rem 1.25rem; border-radius: var(--radius-full); font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; z-index: 2;">Popular</div>
-                        <div style="position: absolute; top: -30px; right: -30px; width: 120px; height: 120px; background: radial-gradient(circle, rgba(255, 107, 122, 0.2) 0%, transparent 70%); border-radius: 50%;"></div>
-                        <div style="position: relative; z-index: 1; text-align: center;">
-                            <div style="width: 100px; height: 100px; margin: 0 auto 2rem; background: var(--gradient-primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 15px 40px rgba(255, 107, 122, 0.4);">
-                                <span style="color: white; font-size: 2.5rem; font-weight: 900;">5</span>
+                    <!-- Challenge Cards -->
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; max-width: 1200px; margin: 0 auto;">
+                        <!-- 3KM Fun Run Card -->
+                        <div class="challenge-card" style="background: white; padding: 2.5rem; border-radius: var(--radius-xl); box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08); border: 1px solid var(--border);">
+                            <div style="text-align: center; margin-bottom: 2rem;">
+                                <div style="font-size: 2.25rem; font-weight: 600; color: var(--primary); margin-bottom: 0.5rem;">3KM</div>
+                                <div style="font-size: 0.9rem; color: #1a1a1a; font-weight: 500;">Fun Run</div>
                             </div>
-                            <h3 style="margin: 0 0 0.5rem; color: #1a1a1a; font-size: 2rem; font-weight: 800;">5KM</h3>
-                            <p style="margin: 0 0 1rem; color: var(--text-secondary); font-size: 1rem;">Above 18yrs</p>
-                            <div style="display: inline-block; padding: 0.5rem 1.25rem; background: var(--primary); color: white; border-radius: var(--radius-full); font-size: 0.875rem; font-weight: 700; margin-bottom: 2rem;">Timed Run</div>
-                            <div style="padding-top: 2rem; border-top: 2px solid rgba(255, 107, 122, 0.2);">
-                                <div style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 0.5rem;">Registration Fee</div>
-                                <div style="color: var(--primary); font-size: 2.5rem; font-weight: 900;">₹499</div>
+                            <div style="text-align: center; margin-bottom: 2rem;">
+                                <div style="font-size: 2rem; font-weight: 700; color: #1a1a1a;">₹399</div>
                             </div>
+                            <div style="margin-bottom: 2rem;">
+                                <div style="display: flex; align-items: center; margin-bottom: 0.75rem;">
+                                    <i class="fas fa-check" style="color: var(--primary); margin-right: 0.75rem; font-size: 1rem;"></i>
+                                    <span style="color: var(--text-secondary); font-size: 0.95rem;">Premium T-Shirt</span>
+                                </div>
+                                <div style="display: flex; align-items: center; margin-bottom: 0.75rem;">
+                                    <i class="fas fa-check" style="color: var(--primary); margin-right: 0.75rem; font-size: 1rem;"></i>
+                                    <span style="color: var(--text-secondary); font-size: 0.95rem;">Finisher Medal</span>
+                                </div>
+                                <div style="display: flex; align-items: center; margin-bottom: 0.75rem;">
+                                    <i class="fas fa-check" style="color: var(--primary); margin-right: 0.75rem; font-size: 1rem;"></i>
+                                    <span style="color: var(--text-secondary); font-size: 0.95rem;">Goodie Bag</span>
+                                </div>
+                                <div style="display: flex; align-items: center;">
+                                    <i class="fas fa-check" style="color: var(--primary); margin-right: 0.75rem; font-size: 1rem;"></i>
+                                    <span style="color: var(--text-secondary); font-size: 0.95rem;">E-Certificate</span>
+                                </div>
+                            </div>
+                            <button onclick="document.getElementById('reg-category').value='3km'; document.getElementById('register').scrollIntoView({behavior: 'smooth'});" style="width: 100%; padding: 1rem; background: #e5e7eb; color: #1a1a1a; border: none; border-radius: var(--radius-md); font-weight: 600; font-size: 1rem; cursor: pointer; transition: all 0.3s ease;">
+                                Select Category
+                            </button>
                         </div>
-                    </div>
 
-                    <div class="hover-lift card-3d stagger-item" style="background: white; padding: 3rem; border-radius: var(--radius-2xl); box-shadow: 0 15px 50px rgba(255, 107, 122, 0.12); border: 2px solid rgba(255, 107, 122, 0.1); position: relative; overflow: hidden;">
-                        <div style="position: absolute; top: -30px; right: -30px; width: 120px; height: 120px; background: radial-gradient(circle, rgba(255, 107, 122, 0.15) 0%, transparent 70%); border-radius: 50%;"></div>
-                        <div style="position: relative; z-index: 1; text-align: center;">
-                            <div style="width: 100px; height: 100px; margin: 0 auto 2rem; background: var(--gradient-primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 15px 40px rgba(255, 107, 122, 0.3);">
-                                <span style="color: white; font-size: 2.5rem; font-weight: 900;">10</span>
+                        <!-- 5KM Challenge Card (Most Popular) -->
+                        <div class="challenge-card" style="background: white; padding: 2.5rem; border-radius: var(--radius-xl); box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08); border: 2px solid var(--primary);">
+                            <div style="position: absolute; top: 0; left: 0; right: 0; background: var(--primary); color: white; padding: 0.5rem; text-align: center; border-radius: var(--radius-xl) var(--radius-xl) 0 0; font-size: 0.75rem; font-weight: 700; text-transform: uppercase;">
+                                Most Popular
                             </div>
-                            <h3 style="margin: 0 0 0.5rem; color: #1a1a1a; font-size: 2rem; font-weight: 800;">10KM</h3>
-                            <p style="margin: 0 0 1rem; color: var(--text-secondary); font-size: 1rem;">Above 18yrs</p>
-                            <div style="display: inline-block; padding: 0.5rem 1.25rem; background: var(--primary); color: white; border-radius: var(--radius-full); font-size: 0.875rem; font-weight: 700; margin-bottom: 2rem;">Timed Run</div>
-                            <div style="padding-top: 2rem; border-top: 2px solid var(--gray-200);">
-                                <div style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 0.5rem;">Registration Fee</div>
-                                <div style="color: var(--primary); font-size: 2.5rem; font-weight: 900;">₹499</div>
+                            <div style="padding-top: 2rem; text-align: center; margin-bottom: 2rem;">
+                                <div style="font-size: 2.25rem; font-weight: 600; color: var(--primary); margin-bottom: 0.5rem;">5KM</div>
+                                <div style="font-size: 0.9rem; color: #1a1a1a; font-weight: 500;">Challenge</div>
                             </div>
+                            <div style="text-align: center; margin-bottom: 2rem;">
+                                <div style="font-size: 2rem; font-weight: 700; color: #1a1a1a;">₹499</div>
+                            </div>
+                            <div style="margin-bottom: 2rem;">
+                                <div style="display: flex; align-items: center; margin-bottom: 0.75rem;">
+                                    <i class="fas fa-check" style="color: var(--primary); margin-right: 0.75rem; font-size: 1rem;"></i>
+                                    <span style="color: var(--text-secondary); font-size: 0.95rem;">Premium T-Shirt</span>
+                                </div>
+                                <div style="display: flex; align-items: center; margin-bottom: 0.75rem;">
+                                    <i class="fas fa-check" style="color: var(--primary); margin-right: 0.75rem; font-size: 1rem;"></i>
+                                    <span style="color: var(--text-secondary); font-size: 0.95rem;">Finisher Medal</span>
+                                </div>
+                                <div style="display: flex; align-items: center; margin-bottom: 0.75rem;">
+                                    <i class="fas fa-check" style="color: var(--primary); margin-right: 0.75rem; font-size: 1rem;"></i>
+                                    <span style="color: var(--text-secondary); font-size: 0.95rem;">Goodie Bag</span>
+                                </div>
+                                <div style="display: flex; align-items: center;">
+                                    <i class="fas fa-check" style="color: var(--primary); margin-right: 0.75rem; font-size: 1rem;"></i>
+                                    <span style="color: var(--text-secondary); font-size: 0.95rem;">E-Certificate</span>
+                                </div>
+                            </div>
+                            <button onclick="document.getElementById('reg-category').value='5km'; document.getElementById('register').scrollIntoView({behavior: 'smooth'});" style="width: 100%; padding: 1rem; background: var(--primary); color: white; border: none; border-radius: var(--radius-md); font-weight: 600; font-size: 1rem; cursor: pointer; transition: all 0.3s ease;">
+                                Select Category
+                            </button>
+                        </div>
+
+                        <!-- 10KM Challenge Card -->
+                        <div class="challenge-card" style="background: white; padding: 2.5rem; border-radius: var(--radius-xl); box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08); border: 1px solid var(--border);">
+                            <div style="text-align: center; margin-bottom: 2rem;">
+                                <div style="font-size: 2.25rem; font-weight: 600; color: var(--primary); margin-bottom: 0.5rem;">10KM</div>
+                                <div style="font-size: 0.9rem; color: #1a1a1a; font-weight: 500;">Challenge</div>
+                            </div>
+                            <div style="text-align: center; margin-bottom: 2rem;">
+                                <div style="font-size: 2rem; font-weight: 700; color: #1a1a1a;">₹499</div>
+                            </div>
+                            <div style="margin-bottom: 2rem;">
+                                <div style="display: flex; align-items: center; margin-bottom: 0.75rem;">
+                                    <i class="fas fa-check" style="color: var(--primary); margin-right: 0.75rem; font-size: 1rem;"></i>
+                                    <span style="color: var(--text-secondary); font-size: 0.95rem;">Premium T-Shirt</span>
+                                </div>
+                                <div style="display: flex; align-items: center; margin-bottom: 0.75rem;">
+                                    <i class="fas fa-check" style="color: var(--primary); margin-right: 0.75rem; font-size: 1rem;"></i>
+                                    <span style="color: var(--text-secondary); font-size: 0.95rem;">Finisher Medal</span>
+                                </div>
+                                <div style="display: flex; align-items: center; margin-bottom: 0.75rem;">
+                                    <i class="fas fa-check" style="color: var(--primary); margin-right: 0.75rem; font-size: 1rem;"></i>
+                                    <span style="color: var(--text-secondary); font-size: 0.95rem;">Goodie Bag</span>
+                                </div>
+                                <div style="display: flex; align-items: center;">
+                                    <i class="fas fa-check" style="color: var(--primary); margin-right: 0.75rem; font-size: 1rem;"></i>
+                                    <span style="color: var(--text-secondary); font-size: 0.95rem;">E-Certificate</span>
+                                </div>
+                            </div>
+                            <button onclick="document.getElementById('reg-category').value='10km'; document.getElementById('register').scrollIntoView({behavior: 'smooth'});" style="width: 100%; padding: 1rem; background: #e5e7eb; color: #1a1a1a; border: none; border-radius: var(--radius-md); font-weight: 600; font-size: 1rem; cursor: pointer; transition: all 0.3s ease;">
+                                Select Category
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -265,64 +438,58 @@
                 <!-- What's Included - Grid Layout -->
                 <div style="max-width: 1000px; margin: 0 auto;">
                     <div style="text-align: center; margin-bottom: 4rem;">
-                        <h3 style="color: #1a1a1a; font-size: 2.5rem; margin-bottom: 1rem; font-weight: 800;">What's Included</h3>
+                        <h3 style="color: #1a1a1a; font-size: 2rem; margin-bottom: 1rem; font-weight: 600;">What's Included</h3>
                         <p style="color: var(--text-secondary); font-size: 1.15rem;">Every participant receives these premium items</p>
                     </div>
                     <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; margin-bottom: 3rem;">
-                        <div class="hover-lift card-3d stagger-item" style="background: white; padding: 2.5rem; border-radius: var(--radius-2xl); text-align: center; box-shadow: 0 10px 30px rgba(255, 107, 122, 0.1); border: 2px solid rgba(255, 107, 122, 0.1); position: relative; overflow: hidden;">
-                            <div style="position: absolute; top: -50px; right: -50px; width: 150px; height: 150px; background: radial-gradient(circle, rgba(255, 107, 122, 0.1) 0%, transparent 70%); border-radius: 50%;"></div>
-                            <div style="position: relative; z-index: 1;">
-                                <div style="width: 80px; height: 80px; margin: 0 auto 1.5rem; background: var(--gradient-primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 25px rgba(255, 107, 122, 0.3);">
+                        <div style="background: white; padding: 2.5rem; border-radius: var(--radius-xl); text-align: center; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08); border: 1px solid var(--border);">
+                            <div>
+                                <div style="width: 80px; height: 80px; margin: 0 auto 1.5rem; background: var(--gradient-primary); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
                                     <i class="fas fa-shopping-bag" style="color: white; font-size: 2rem;"></i>
                                 </div>
                                 <h4 style="margin: 0 0 0.5rem; color: #1a1a1a; font-size: 1.25rem; font-weight: 700;">Bag</h4>
                                 <p style="margin: 0; color: var(--text-secondary); font-size: 0.9rem;">Event bag included</p>
                             </div>
                         </div>
-                        <div class="hover-lift card-3d stagger-item" style="background: white; padding: 2.5rem; border-radius: var(--radius-2xl); text-align: center; box-shadow: 0 10px 30px rgba(255, 107, 122, 0.1); border: 2px solid rgba(255, 107, 122, 0.1); position: relative; overflow: hidden;">
-                            <div style="position: absolute; top: -50px; right: -50px; width: 150px; height: 150px; background: radial-gradient(circle, rgba(255, 107, 122, 0.1) 0%, transparent 70%); border-radius: 50%;"></div>
-                            <div style="position: relative; z-index: 1;">
-                                <div style="width: 80px; height: 80px; margin: 0 auto 1.5rem; background: var(--gradient-primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 25px rgba(255, 107, 122, 0.3);">
+                        <div style="background: white; padding: 2.5rem; border-radius: var(--radius-xl); text-align: center; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08); border: 1px solid var(--border);">
+                            <div>
+                                <div style="width: 80px; height: 80px; margin: 0 auto 1.5rem; background: var(--gradient-primary); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
                                     <i class="fas fa-tshirt" style="color: white; font-size: 2rem;"></i>
                                 </div>
                                 <h4 style="margin: 0 0 0.5rem; color: #1a1a1a; font-size: 1.25rem; font-weight: 700;">T-Shirt</h4>
                                 <p style="margin: 0; color: var(--text-secondary); font-size: 0.9rem;">Premium quality</p>
                             </div>
                         </div>
-                        <div class="hover-lift card-3d stagger-item" style="background: white; padding: 2.5rem; border-radius: var(--radius-2xl); text-align: center; box-shadow: 0 10px 30px rgba(255, 107, 122, 0.1); border: 2px solid rgba(255, 107, 122, 0.1); position: relative; overflow: hidden;">
-                            <div style="position: absolute; top: -50px; right: -50px; width: 150px; height: 150px; background: radial-gradient(circle, rgba(255, 107, 122, 0.1) 0%, transparent 70%); border-radius: 50%;"></div>
-                            <div style="position: relative; z-index: 1;">
-                                <div style="width: 80px; height: 80px; margin: 0 auto 1.5rem; background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 25px rgba(255, 215, 0, 0.3);">
+                        <div style="background: white; padding: 2.5rem; border-radius: var(--radius-xl); text-align: center; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08); border: 1px solid var(--border);">
+                            <div>
+                                <div style="width: 80px; height: 80px; margin: 0 auto 1.5rem; background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
                                     <i class="fas fa-medal" style="color: white; font-size: 2rem;"></i>
                                 </div>
                                 <h4 style="margin: 0 0 0.5rem; color: #1a1a1a; font-size: 1.25rem; font-weight: 700;">Medal</h4>
                                 <p style="margin: 0; color: var(--text-secondary); font-size: 0.9rem;">Finisher medal</p>
                             </div>
                         </div>
-                        <div class="hover-lift card-3d stagger-item" style="background: white; padding: 2.5rem; border-radius: var(--radius-2xl); text-align: center; box-shadow: 0 10px 30px rgba(255, 107, 122, 0.1); border: 2px solid rgba(255, 107, 122, 0.1); position: relative; overflow: hidden;">
-                            <div style="position: absolute; top: -50px; right: -50px; width: 150px; height: 150px; background: radial-gradient(circle, rgba(255, 107, 122, 0.1) 0%, transparent 70%); border-radius: 50%;"></div>
-                            <div style="position: relative; z-index: 1;">
-                                <div style="width: 80px; height: 80px; margin: 0 auto 1.5rem; background: var(--gradient-primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 25px rgba(255, 107, 122, 0.3);">
+                        <div style="background: white; padding: 2.5rem; border-radius: var(--radius-xl); text-align: center; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08); border: 1px solid var(--border);">
+                            <div>
+                                <div style="width: 80px; height: 80px; margin: 0 auto 1.5rem; background: var(--gradient-primary); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
                                     <i class="fas fa-certificate" style="color: white; font-size: 2rem;"></i>
                                 </div>
                                 <h4 style="margin: 0 0 0.5rem; color: #1a1a1a; font-size: 1.25rem; font-weight: 700;">Certificate</h4>
                                 <p style="margin: 0; color: var(--text-secondary); font-size: 0.9rem;">Official document</p>
                             </div>
                         </div>
-                        <div class="hover-lift card-3d stagger-item" style="background: white; padding: 2.5rem; border-radius: var(--radius-2xl); text-align: center; box-shadow: 0 10px 30px rgba(255, 107, 122, 0.1); border: 2px solid rgba(255, 107, 122, 0.1); position: relative; overflow: hidden;">
-                            <div style="position: absolute; top: -50px; right: -50px; width: 150px; height: 150px; background: radial-gradient(circle, rgba(255, 107, 122, 0.1) 0%, transparent 70%); border-radius: 50%;"></div>
-                            <div style="position: relative; z-index: 1;">
-                                <div style="width: 80px; height: 80px; margin: 0 auto 1.5rem; background: var(--gradient-primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 25px rgba(255, 107, 122, 0.3);">
+                        <div style="background: white; padding: 2.5rem; border-radius: var(--radius-xl); text-align: center; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08); border: 1px solid var(--border);">
+                            <div>
+                                <div style="width: 80px; height: 80px; margin: 0 auto 1.5rem; background: var(--gradient-primary); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
                                     <i class="fas fa-id-badge" style="color: white; font-size: 2rem;"></i>
                                 </div>
                                 <h4 style="margin: 0 0 0.5rem; color: #1a1a1a; font-size: 1.25rem; font-weight: 700;">BIB</h4>
                                 <p style="margin: 0; color: var(--text-secondary); font-size: 0.9rem;">Chip for 5k/10k</p>
                             </div>
                         </div>
-                        <div class="hover-lift card-3d stagger-item" style="background: white; padding: 2.5rem; border-radius: var(--radius-2xl); text-align: center; box-shadow: 0 10px 30px rgba(255, 107, 122, 0.1); border: 2px solid rgba(255, 107, 122, 0.1); position: relative; overflow: hidden;">
-                            <div style="position: absolute; top: -50px; right: -50px; width: 150px; height: 150px; background: radial-gradient(circle, rgba(255, 107, 122, 0.1) 0%, transparent 70%); border-radius: 50%;"></div>
-                            <div style="position: relative; z-index: 1;">
-                                <div style="width: 80px; height: 80px; margin: 0 auto 1.5rem; background: var(--gradient-primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 25px rgba(255, 107, 122, 0.3);">
+                        <div style="background: white; padding: 2.5rem; border-radius: var(--radius-xl); text-align: center; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08); border: 1px solid var(--border);">
+                            <div>
+                                <div style="width: 80px; height: 80px; margin: 0 auto 1.5rem; background: var(--gradient-primary); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
                                     <i class="fas fa-utensils" style="color: white; font-size: 2rem;"></i>
                                 </div>
                                 <h4 style="margin: 0 0 0.5rem; color: #1a1a1a; font-size: 1.25rem; font-weight: 700;">Refreshment</h4>
@@ -330,7 +497,7 @@
                             </div>
                         </div>
                     </div>
-                    <div style="text-align: center; padding: 1.5rem 2rem; background: rgba(255, 107, 122, 0.05); border-radius: var(--radius-xl); border-left: 4px solid var(--primary); max-width: 800px; margin: 0 auto;">
+                    <div style="text-align: center; padding: 1.5rem 2rem; background: rgba(37, 99, 235, 0.05); border-radius: var(--radius-xl); border-left: 4px solid var(--primary); max-width: 800px; margin: 0 auto;">
                         <p style="margin: 0; color: var(--text-secondary); font-size: 0.95rem;">
                             <i class="fas fa-info-circle" style="color: var(--primary); margin-right: 0.5rem;"></i>
                             <strong>Note:</strong> T-shirt size once selected cannot be changed. BIB with chip is provided for 5KM and 10KM categories only.
@@ -341,108 +508,100 @@
         </section>
 
         <!-- Prizes Section -->
-        <section class="section-padding animated-gradient" style="position: relative; overflow: hidden; background: linear-gradient(180deg, #ffffff 0%, #fafafa 50%, #ffffff 100%);">
-            <div style="position: absolute; top: 0; left: 0; width: 100%; height: 2px; background: var(--gradient-primary);"></div>
-            <div style="position: absolute; top: -100px; right: -100px; width: 400px; height: 400px; background: radial-gradient(circle, rgba(255, 107, 122, 0.12) 0%, transparent 70%); border-radius: 50%; filter: blur(80px);"></div>
-            <div class="container" style="position: relative; z-index: 1;">
-                <div style="text-align: center; margin-bottom: 5rem;">
-                    <div class="float-animation" style="display: inline-block; margin-bottom: 2rem;">
-                        <div style="width: 100px; height: 100px; background: var(--gradient-primary); border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; box-shadow: 0 15px 40px rgba(255, 107, 122, 0.4);">
-                            <i class="fas fa-trophy" style="color: white; font-size: 3rem;"></i>
-                        </div>
-                    </div>
-                    <h2 style="color: #1a1a1a; font-size: 3rem; margin-bottom: 1rem; font-weight: 800;">
-                        Prize Money<br><span style="color: var(--primary); font-size: 1.5rem;">Total Prize Pool: ₹1,00,000</span>
+        <section class="section-padding" style="background: #ffffff;">
+            <div class="container">
+                <div style="text-align: center; margin-bottom: 4rem;">
+                    <h2 style="color: #1a1a1a; font-size: 2rem; margin-bottom: 0.75rem; font-weight: 600; letter-spacing: -0.02em;">
+                        Prize Money
                     </h2>
-                    <p style="font-size: 1.2rem; color: var(--text-secondary); max-width: 600px; margin: 0 auto;">Rewarding excellence across all categories</p>
+                    <p style="font-size: 1rem; color: var(--text-secondary); margin-bottom: 0.5rem;">Total Prize Pool</p>
+                    <p style="font-size: 1.75rem; color: var(--primary); font-weight: 700; margin: 0;">₹1,00,000</p>
                 </div>
 
-                <!-- Prize Money - Clean Table Design -->
-                <div style="max-width: 1000px; margin: 0 auto 5rem;">
-                    <div style="background: white; padding: 3rem; border-radius: var(--radius-2xl); box-shadow: 0 20px 60px rgba(255, 107, 122, 0.15); border: 1px solid rgba(255, 107, 122, 0.1); position: relative; overflow: hidden;">
-                        <div style="position: absolute; top: 0; left: 0; right: 0; height: 5px; background: var(--gradient-primary);"></div>
-                        
+                <!-- Prize Money - Professional Table Design -->
+                <div style="max-width: 1100px; margin: 0 auto 4rem;">
+                    <div style="background: white; padding: 3rem; border-radius: var(--radius-xl); box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08); border: 1px solid var(--border);">
                         <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 3rem;">
                             <!-- Men - 10 KM -->
                             <div>
-                                <h4 style="margin: 0 0 2rem; color: #1a1a1a; font-size: 1.5rem; font-weight: 700; text-align: center; padding-bottom: 1rem; border-bottom: 3px solid var(--primary);">
-                                    <i class="fas fa-mars" style="color: var(--primary); margin-right: 0.5rem;"></i>Men - 10 KM
+                                <h4 style="margin: 0 0 1.75rem; color: #1a1a1a; font-size: 1.125rem; font-weight: 600; text-align: center; padding-bottom: 0.875rem; border-bottom: 2px solid var(--border); text-transform: uppercase; letter-spacing: 0.05em;">
+                                    <i class="fas fa-mars" style="color: var(--primary); margin-right: 0.5rem; font-size: 1rem;"></i>Men - 10 KM
                                 </h4>
-                                <div style="display: flex; flex-direction: column; gap: 1rem;">
-                                    <div class="hover-lift" style="display: flex; justify-content: space-between; align-items: center; padding: 1.25rem 1.5rem; background: var(--primary); border-radius: var(--radius-lg);">
-                                        <span style="font-weight: 700; color: white; font-size: 1.1rem;">1st</span>
-                                        <span style="font-weight: 900; color: white; font-size: 1.75rem;">₹15,000</span>
+                                <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+                                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 1rem 1.25rem; background: var(--primary); border-radius: var(--radius-md);">
+                                        <span style="font-weight: 600; color: white; font-size: 0.95rem; letter-spacing: 0.02em;">1st Place</span>
+                                        <span style="font-weight: 700; color: white; font-size: 1.25rem; letter-spacing: 0.01em;">₹15,000</span>
                                     </div>
-                                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 1.25rem 1.5rem; background: rgba(255, 107, 122, 0.1); border-radius: var(--radius-lg); border: 2px solid rgba(255, 107, 122, 0.2);">
-                                        <span style="font-weight: 700; color: #1a1a1a; font-size: 1.1rem;">2nd</span>
-                                        <span style="font-weight: 800; color: #1a1a1a; font-size: 1.5rem;">₹10,000</span>
+                                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 1rem 1.25rem; background: #f8f9fa; border-radius: var(--radius-md); border: 1px solid var(--border);">
+                                        <span style="font-weight: 600; color: #1a1a1a; font-size: 0.95rem; letter-spacing: 0.02em;">2nd Place</span>
+                                        <span style="font-weight: 700; color: #1a1a1a; font-size: 1.125rem; letter-spacing: 0.01em;">₹10,000</span>
                                     </div>
-                                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 1.25rem 1.5rem; background: rgba(255, 107, 122, 0.05); border-radius: var(--radius-lg); border: 2px solid rgba(255, 107, 122, 0.15);">
-                                        <span style="font-weight: 700; color: #1a1a1a; font-size: 1.1rem;">3rd</span>
-                                        <span style="font-weight: 800; color: #1a1a1a; font-size: 1.5rem;">₹5,000</span>
+                                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 1rem 1.25rem; background: #f8f9fa; border-radius: var(--radius-md); border: 1px solid var(--border);">
+                                        <span style="font-weight: 600; color: #1a1a1a; font-size: 0.95rem; letter-spacing: 0.02em;">3rd Place</span>
+                                        <span style="font-weight: 700; color: #1a1a1a; font-size: 1.125rem; letter-spacing: 0.01em;">₹5,000</span>
                                     </div>
                                 </div>
                             </div>
 
                             <!-- Women - 10 KM -->
                             <div>
-                                <h4 style="margin: 0 0 2rem; color: #1a1a1a; font-size: 1.5rem; font-weight: 700; text-align: center; padding-bottom: 1rem; border-bottom: 3px solid var(--primary);">
-                                    <i class="fas fa-venus" style="color: var(--primary); margin-right: 0.5rem;"></i>Women - 10 KM
+                                <h4 style="margin: 0 0 1.75rem; color: #1a1a1a; font-size: 1.125rem; font-weight: 600; text-align: center; padding-bottom: 0.875rem; border-bottom: 2px solid var(--border); text-transform: uppercase; letter-spacing: 0.05em;">
+                                    <i class="fas fa-venus" style="color: var(--primary); margin-right: 0.5rem; font-size: 1rem;"></i>Women - 10 KM
                                 </h4>
-                                <div style="display: flex; flex-direction: column; gap: 1rem;">
-                                    <div class="hover-lift" style="display: flex; justify-content: space-between; align-items: center; padding: 1.25rem 1.5rem; background: var(--primary); border-radius: var(--radius-lg);">
-                                        <span style="font-weight: 700; color: white; font-size: 1.1rem;">1st</span>
-                                        <span style="font-weight: 900; color: white; font-size: 1.75rem;">₹15,000</span>
+                                <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+                                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 1rem 1.25rem; background: var(--primary); border-radius: var(--radius-md);">
+                                        <span style="font-weight: 600; color: white; font-size: 0.95rem; letter-spacing: 0.02em;">1st Place</span>
+                                        <span style="font-weight: 700; color: white; font-size: 1.25rem; letter-spacing: 0.01em;">₹15,000</span>
                                     </div>
-                                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 1.25rem 1.5rem; background: rgba(255, 107, 122, 0.1); border-radius: var(--radius-lg); border: 2px solid rgba(255, 107, 122, 0.2);">
-                                        <span style="font-weight: 700; color: #1a1a1a; font-size: 1.1rem;">2nd</span>
-                                        <span style="font-weight: 800; color: #1a1a1a; font-size: 1.5rem;">₹10,000</span>
+                                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 1rem 1.25rem; background: #f8f9fa; border-radius: var(--radius-md); border: 1px solid var(--border);">
+                                        <span style="font-weight: 600; color: #1a1a1a; font-size: 0.95rem; letter-spacing: 0.02em;">2nd Place</span>
+                                        <span style="font-weight: 700; color: #1a1a1a; font-size: 1.125rem; letter-spacing: 0.01em;">₹10,000</span>
                                     </div>
-                                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 1.25rem 1.5rem; background: rgba(255, 107, 122, 0.05); border-radius: var(--radius-lg); border: 2px solid rgba(255, 107, 122, 0.15);">
-                                        <span style="font-weight: 700; color: #1a1a1a; font-size: 1.1rem;">3rd</span>
-                                        <span style="font-weight: 800; color: #1a1a1a; font-size: 1.5rem;">₹5,000</span>
+                                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 1rem 1.25rem; background: #f8f9fa; border-radius: var(--radius-md); border: 1px solid var(--border);">
+                                        <span style="font-weight: 600; color: #1a1a1a; font-size: 0.95rem; letter-spacing: 0.02em;">3rd Place</span>
+                                        <span style="font-weight: 700; color: #1a1a1a; font-size: 1.125rem; letter-spacing: 0.01em;">₹5,000</span>
                                     </div>
                                 </div>
                             </div>
 
                             <!-- Men - 5 KM -->
                             <div>
-                                <h4 style="margin: 0 0 2rem; color: #1a1a1a; font-size: 1.5rem; font-weight: 700; text-align: center; padding-bottom: 1rem; border-bottom: 3px solid var(--primary);">
-                                    <i class="fas fa-mars" style="color: var(--primary); margin-right: 0.5rem;"></i>Men - 5 KM
+                                <h4 style="margin: 0 0 1.75rem; color: #1a1a1a; font-size: 1.125rem; font-weight: 600; text-align: center; padding-bottom: 0.875rem; border-bottom: 2px solid var(--border); text-transform: uppercase; letter-spacing: 0.05em;">
+                                    <i class="fas fa-mars" style="color: var(--primary); margin-right: 0.5rem; font-size: 1rem;"></i>Men - 5 KM
                                 </h4>
-                                <div style="display: flex; flex-direction: column; gap: 1rem;">
-                                    <div class="hover-lift" style="display: flex; justify-content: space-between; align-items: center; padding: 1.25rem 1.5rem; background: var(--primary); border-radius: var(--radius-lg);">
-                                        <span style="font-weight: 700; color: white; font-size: 1.1rem;">1st</span>
-                                        <span style="font-weight: 900; color: white; font-size: 1.75rem;">₹10,000</span>
+                                <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+                                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 1rem 1.25rem; background: var(--primary); border-radius: var(--radius-md);">
+                                        <span style="font-weight: 600; color: white; font-size: 0.95rem; letter-spacing: 0.02em;">1st Place</span>
+                                        <span style="font-weight: 700; color: white; font-size: 1.25rem; letter-spacing: 0.01em;">₹10,000</span>
                                     </div>
-                                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 1.25rem 1.5rem; background: rgba(255, 107, 122, 0.1); border-radius: var(--radius-lg); border: 2px solid rgba(255, 107, 122, 0.2);">
-                                        <span style="font-weight: 700; color: #1a1a1a; font-size: 1.1rem;">2nd</span>
-                                        <span style="font-weight: 800; color: #1a1a1a; font-size: 1.5rem;">₹6,000</span>
+                                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 1rem 1.25rem; background: #f8f9fa; border-radius: var(--radius-md); border: 1px solid var(--border);">
+                                        <span style="font-weight: 600; color: #1a1a1a; font-size: 0.95rem; letter-spacing: 0.02em;">2nd Place</span>
+                                        <span style="font-weight: 700; color: #1a1a1a; font-size: 1.125rem; letter-spacing: 0.01em;">₹6,000</span>
                                     </div>
-                                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 1.25rem 1.5rem; background: rgba(255, 107, 122, 0.05); border-radius: var(--radius-lg); border: 2px solid rgba(255, 107, 122, 0.15);">
-                                        <span style="font-weight: 700; color: #1a1a1a; font-size: 1.1rem;">3rd</span>
-                                        <span style="font-weight: 800; color: #1a1a1a; font-size: 1.5rem;">₹4,000</span>
+                                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 1rem 1.25rem; background: #f8f9fa; border-radius: var(--radius-md); border: 1px solid var(--border);">
+                                        <span style="font-weight: 600; color: #1a1a1a; font-size: 0.95rem; letter-spacing: 0.02em;">3rd Place</span>
+                                        <span style="font-weight: 700; color: #1a1a1a; font-size: 1.125rem; letter-spacing: 0.01em;">₹4,000</span>
                                     </div>
                                 </div>
                             </div>
 
                             <!-- Women - 5 KM -->
                             <div>
-                                <h4 style="margin: 0 0 2rem; color: #1a1a1a; font-size: 1.5rem; font-weight: 700; text-align: center; padding-bottom: 1rem; border-bottom: 3px solid var(--primary);">
-                                    <i class="fas fa-venus" style="color: var(--primary); margin-right: 0.5rem;"></i>Women - 5 KM
+                                <h4 style="margin: 0 0 1.75rem; color: #1a1a1a; font-size: 1.125rem; font-weight: 600; text-align: center; padding-bottom: 0.875rem; border-bottom: 2px solid var(--border); text-transform: uppercase; letter-spacing: 0.05em;">
+                                    <i class="fas fa-venus" style="color: var(--primary); margin-right: 0.5rem; font-size: 1rem;"></i>Women - 5 KM
                                 </h4>
-                                <div style="display: flex; flex-direction: column; gap: 1rem;">
-                                    <div class="hover-lift" style="display: flex; justify-content: space-between; align-items: center; padding: 1.25rem 1.5rem; background: var(--primary); border-radius: var(--radius-lg);">
-                                        <span style="font-weight: 700; color: white; font-size: 1.1rem;">1st</span>
-                                        <span style="font-weight: 900; color: white; font-size: 1.75rem;">₹10,000</span>
+                                <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+                                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 1rem 1.25rem; background: var(--primary); border-radius: var(--radius-md);">
+                                        <span style="font-weight: 600; color: white; font-size: 0.95rem; letter-spacing: 0.02em;">1st Place</span>
+                                        <span style="font-weight: 700; color: white; font-size: 1.25rem; letter-spacing: 0.01em;">₹10,000</span>
                                     </div>
-                                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 1.25rem 1.5rem; background: rgba(255, 107, 122, 0.1); border-radius: var(--radius-lg); border: 2px solid rgba(255, 107, 122, 0.2);">
-                                        <span style="font-weight: 700; color: #1a1a1a; font-size: 1.1rem;">2nd</span>
-                                        <span style="font-weight: 800; color: #1a1a1a; font-size: 1.5rem;">₹6,000</span>
+                                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 1rem 1.25rem; background: #f8f9fa; border-radius: var(--radius-md); border: 1px solid var(--border);">
+                                        <span style="font-weight: 600; color: #1a1a1a; font-size: 0.95rem; letter-spacing: 0.02em;">2nd Place</span>
+                                        <span style="font-weight: 700; color: #1a1a1a; font-size: 1.125rem; letter-spacing: 0.01em;">₹6,000</span>
                                     </div>
-                                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 1.25rem 1.5rem; background: rgba(255, 107, 122, 0.05); border-radius: var(--radius-lg); border: 2px solid rgba(255, 107, 122, 0.15);">
-                                        <span style="font-weight: 700; color: #1a1a1a; font-size: 1.1rem;">3rd</span>
-                                        <span style="font-weight: 800; color: #1a1a1a; font-size: 1.5rem;">₹4,000</span>
+                                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 1rem 1.25rem; background: #f8f9fa; border-radius: var(--radius-md); border: 1px solid var(--border);">
+                                        <span style="font-weight: 600; color: #1a1a1a; font-size: 0.95rem; letter-spacing: 0.02em;">3rd Place</span>
+                                        <span style="font-weight: 700; color: #1a1a1a; font-size: 1.125rem; letter-spacing: 0.01em;">₹4,000</span>
                                     </div>
                                 </div>
                             </div>
@@ -450,25 +609,23 @@
                     </div>
                 </div>
 
-                <!-- Kids Trophies Section - Redesigned -->
+                <!-- Kids Trophies Section -->
                 <div style="max-width: 800px; margin: 0 auto;">
-                    <div style="background: white; padding: 3rem; border-radius: var(--radius-2xl); box-shadow: 0 20px 60px rgba(255, 107, 122, 0.15); border: 2px solid rgba(255, 107, 122, 0.1); position: relative; overflow: hidden;">
-                        <div style="position: absolute; top: 0; left: 0; right: 0; height: 5px; background: linear-gradient(90deg, #FFD700 0%, #FFA500 50%, #FFD700 100%);"></div>
+                    <div style="background: white; padding: 3rem; border-radius: var(--radius-xl); box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08); border: 1px solid var(--border);">
                         <div style="text-align: center; margin-bottom: 3rem;">
-                            <h4 style="color: #1a1a1a; font-size: 2rem; font-weight: 800; margin-bottom: 0.5rem;">
+                            <h4 style="color: #1a1a1a; font-size: 1.75rem; font-weight: 600; margin-bottom: 0.5rem;">
                                 <i class="fas fa-trophy" style="color: #FFD700; margin-right: 0.75rem;"></i>
                                 3KM Kids Category
                             </h4>
                             <p style="color: var(--text-secondary); font-size: 1rem; margin: 0;">Trophies for Top Performers</p>
                         </div>
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2.5rem;">
-                            <div class="hover-lift" style="text-align: center; padding: 2.5rem; background: linear-gradient(135deg, rgba(255, 215, 0, 0.08) 0%, rgba(255, 215, 0, 0.03) 100%); border-radius: var(--radius-xl); border: 2px solid rgba(255, 215, 0, 0.2); position: relative; overflow: hidden;">
-                                <div style="position: absolute; top: -30px; right: -30px; width: 100px; height: 100px; background: radial-gradient(circle, rgba(255, 215, 0, 0.2) 0%, transparent 70%); border-radius: 50%;"></div>
-                                <div style="position: relative; z-index: 1;">
-                                    <div style="width: 80px; height: 80px; margin: 0 auto 1.5rem; background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 30px rgba(255, 215, 0, 0.4);">
+                            <div style="text-align: center; padding: 2.5rem; background: #f8f9fa; border-radius: var(--radius-xl); border: 1px solid var(--border);">
+                                <div>
+                                    <div style="width: 80px; height: 80px; margin: 0 auto 1.5rem; background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
                                         <i class="fas fa-trophy" style="color: white; font-size: 2rem;"></i>
                                     </div>
-                                    <h5 style="margin: 0 0 0.75rem; color: #1a1a1a; font-size: 1.5rem; font-weight: 800;">Top 3 Boys</h5>
+                                    <h5 style="margin: 0 0 0.75rem; color: #1a1a1a; font-size: 1.25rem; font-weight: 600;">Top 3 Boys</h5>
                                     <div style="display: flex; justify-content: center; gap: 0.5rem; margin-top: 1rem;">
                                         <span style="display: inline-block; width: 40px; height: 40px; background: #FFD700; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 800; font-size: 1.1rem;">1</span>
                                         <span style="display: inline-block; width: 40px; height: 40px; background: #C0C0C0; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 800; font-size: 1.1rem;">2</span>
@@ -477,13 +634,12 @@
                                     <p style="margin: 1rem 0 0; color: var(--primary); font-weight: 700; font-size: 1rem;">Trophies Awarded</p>
                                 </div>
                             </div>
-                            <div class="hover-lift" style="text-align: center; padding: 2.5rem; background: linear-gradient(135deg, rgba(255, 107, 122, 0.08) 0%, rgba(255, 107, 122, 0.03) 100%); border-radius: var(--radius-xl); border: 2px solid rgba(255, 107, 122, 0.2); position: relative; overflow: hidden;">
-                                <div style="position: absolute; top: -30px; right: -30px; width: 100px; height: 100px; background: radial-gradient(circle, rgba(255, 107, 122, 0.2) 0%, transparent 70%); border-radius: 50%;"></div>
-                                <div style="position: relative; z-index: 1;">
-                                    <div style="width: 80px; height: 80px; margin: 0 auto 1.5rem; background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 30px rgba(255, 215, 0, 0.4);">
+                            <div style="text-align: center; padding: 2.5rem; background: #f8f9fa; border-radius: var(--radius-xl); border: 1px solid var(--border);">
+                                <div>
+                                    <div style="width: 80px; height: 80px; margin: 0 auto 1.5rem; background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
                                         <i class="fas fa-trophy" style="color: white; font-size: 2rem;"></i>
                                     </div>
-                                    <h5 style="margin: 0 0 0.75rem; color: #1a1a1a; font-size: 1.5rem; font-weight: 800;">Top 3 Girls</h5>
+                                    <h5 style="margin: 0 0 0.75rem; color: #1a1a1a; font-size: 1.25rem; font-weight: 600;">Top 3 Girls</h5>
                                     <div style="display: flex; justify-content: center; gap: 0.5rem; margin-top: 1rem;">
                                         <span style="display: inline-block; width: 40px; height: 40px; background: #FFD700; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 800; font-size: 1.1rem;">1</span>
                                         <span style="display: inline-block; width: 40px; height: 40px; background: #C0C0C0; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 800; font-size: 1.1rem;">2</span>
@@ -499,30 +655,28 @@
         </section>
 
         <!-- Sponsors Section -->
-        <section class="section-padding animated-gradient" style="position: relative; overflow: hidden;">
-            <div style="position: absolute; top: -50%; right: -10%; width: 500px; height: 500px; background: radial-gradient(circle, rgba(255, 107, 122, 0.15) 0%, transparent 70%); border-radius: 50%; filter: blur(60px);"></div>
-            <div style="position: absolute; bottom: -30%; left: -10%; width: 400px; height: 400px; background: radial-gradient(circle, rgba(255, 107, 122, 0.1) 0%, transparent 70%); border-radius: 50%; filter: blur(50px);"></div>
-            <div class="container" style="position: relative; z-index: 1;">
+        <section class="section-padding" style="background: #ffffff;">
+            <div class="container">
                 <div style="text-align: center; margin-bottom: 4rem;">
-                    <h2 style="color: #1a1a1a; font-size: 2.5rem; margin-bottom: 1rem; font-weight: 800;">
+                    <h2 style="color: #1a1a1a; font-size: 2rem; margin-bottom: 1rem; font-weight: 600;">
                         Our Sponsors
                     </h2>
                     <div style="width: 100px; height: 4px; background: var(--gradient-primary); margin: 0 auto 2rem; border-radius: var(--radius-full);"></div>
                 </div>
                 <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 2.5rem; max-width: 1000px; margin: 0 auto;">
-                    <div class="hover-lift" style="text-align: center; background: white; padding: 2.5rem; border-radius: var(--radius-xl); box-shadow: 0 10px 30px rgba(255, 107, 122, 0.15); border: 2px solid rgba(255, 107, 122, 0.1);">
+                    <div style="text-align: center; background: white; padding: 2.5rem; border-radius: var(--radius-xl); box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08); border: 1px solid var(--border);">
                         <div style="margin-bottom: 1.5rem;">
                             <span style="display: inline-block; padding: 0.5rem 1rem; background: var(--gradient-primary); color: white; border-radius: var(--radius-full); font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;">Title Sponsor</span>
                         </div>
                         <h4 style="margin: 0; color: #1a1a1a; font-size: 1.2rem; font-weight: 700; line-height: 1.5;">Agilisum Consulting<br>Pvt Limited</h4>
                     </div>
-                    <div class="hover-lift" style="text-align: center; background: white; padding: 2.5rem; border-radius: var(--radius-xl); box-shadow: 0 10px 30px rgba(255, 107, 122, 0.15); border: 2px solid rgba(255, 107, 122, 0.1);">
+                    <div style="text-align: center; background: white; padding: 2.5rem; border-radius: var(--radius-xl); box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08); border: 1px solid var(--border);">
                         <div style="margin-bottom: 1.5rem;">
                             <span style="display: inline-block; padding: 0.5rem 1rem; background: var(--gradient-primary); color: white; border-radius: var(--radius-full); font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;">Sports Partner</span>
                         </div>
                         <h4 style="margin: 0; color: #1a1a1a; font-size: 1.2rem; font-weight: 700;">Decathlon</h4>
                     </div>
-                    <div class="hover-lift" style="text-align: center; background: white; padding: 2.5rem; border-radius: var(--radius-xl); box-shadow: 0 10px 30px rgba(255, 107, 122, 0.15); border: 2px solid rgba(255, 107, 122, 0.1);">
+                    <div style="text-align: center; background: white; padding: 2.5rem; border-radius: var(--radius-xl); box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08); border: 1px solid var(--border);">
                         <div style="margin-bottom: 1.5rem;">
                             <span style="display: inline-block; padding: 0.5rem 1rem; background: var(--gradient-primary); color: white; border-radius: var(--radius-full); font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;">Event Partner</span>
                         </div>
@@ -616,21 +770,21 @@
                 </div>
                 <div class="features-grid">
                     <div class="feature-card">
-                        <div style="width: 90px; height: 90px; background: linear-gradient(135deg, rgba(255, 107, 122, 0.12) 0%, rgba(255, 107, 122, 0.06) 100%); border-radius: var(--radius-lg); display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem; border: 2px solid rgba(255, 107, 122, 0.15);">
+                        <div style="width: 90px; height: 90px; background: linear-gradient(135deg, rgba(37, 99, 235, 0.12) 0%, rgba(37, 99, 235, 0.06) 100%); border-radius: var(--radius-lg); display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem; border: 2px solid rgba(37, 99, 235, 0.15);">
                             <i class="fas fa-heartbeat" style="font-size: 2.25rem; color: var(--primary);"></i>
                         </div>
                         <h3 style="margin-bottom: 1rem; color: #1a1a1a;">Healthcare Support</h3>
                         <p style="color: var(--text-secondary); line-height: 1.7;">Providing financial assistance for cancer treatment to underprivileged patients who cannot afford medical care.</p>
                     </div>
                     <div class="feature-card">
-                        <div style="width: 90px; height: 90px; background: linear-gradient(135deg, rgba(255, 107, 122, 0.12) 0%, rgba(255, 107, 122, 0.06) 100%); border-radius: var(--radius-lg); display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem; border: 2px solid rgba(255, 107, 122, 0.15);">
+                        <div style="width: 90px; height: 90px; background: linear-gradient(135deg, rgba(37, 99, 235, 0.12) 0%, rgba(37, 99, 235, 0.06) 100%); border-radius: var(--radius-lg); display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem; border: 2px solid rgba(37, 99, 235, 0.15);">
                             <i class="fas fa-lightbulb" style="font-size: 2.25rem; color: var(--primary);"></i>
                         </div>
                         <h3 style="margin-bottom: 1rem; color: #1a1a1a;">Awareness & Education</h3>
                         <p style="color: var(--text-secondary); line-height: 1.7;">Spreading awareness about early cancer detection, symptoms, and the importance of regular health check-ups.</p>
                     </div>
                     <div class="feature-card">
-                        <div style="width: 90px; height: 90px; background: linear-gradient(135deg, rgba(255, 107, 122, 0.12) 0%, rgba(255, 107, 122, 0.06) 100%); border-radius: var(--radius-lg); display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem; border: 2px solid rgba(255, 107, 122, 0.15);">
+                        <div style="width: 90px; height: 90px; background: linear-gradient(135deg, rgba(37, 99, 235, 0.12) 0%, rgba(37, 99, 235, 0.06) 100%); border-radius: var(--radius-lg); display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem; border: 2px solid rgba(37, 99, 235, 0.15);">
                             <i class="fas fa-hands-helping" style="font-size: 2.25rem; color: var(--primary);"></i>
                         </div>
                         <h3 style="margin-bottom: 1rem; color: #1a1a1a;">Community Impact</h3>
@@ -645,16 +799,16 @@
             <div class="container">
                 <div class="about-grid">
                     <div class="about-img" style="position: relative;">
-                        <div style="position: absolute; top: -20px; right: -20px; width: 200px; height: 200px; background: linear-gradient(135deg, rgba(255, 107, 122, 0.1) 0%, transparent 100%); border-radius: 50%; z-index: 0; opacity: 0.5;"></div>
+                        <div style="position: absolute; top: -20px; right: -20px; width: 200px; height: 200px; background: linear-gradient(135deg, rgba(37, 99, 235, 0.1) 0%, transparent 100%); border-radius: 50%; z-index: 0; opacity: 0.5;"></div>
                         <img src="https://images.unsplash.com/photo-1452626038306-9aae5e071dd3?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80"
                             alt="Marathon runners" style="position: relative; z-index: 1;">
                     </div>
                     <div class="about-content">
-                        <div style="display: inline-flex; align-items: center; gap: 0.75rem; margin-bottom: 1.5rem; padding: 0.75rem 1.5rem; background: rgba(255, 107, 122, 0.08); border-radius: var(--radius-full);">
+                        <div style="display: inline-flex; align-items: center; gap: 0.75rem; margin-bottom: 1.5rem; padding: 0.75rem 1.5rem; background: rgba(37, 99, 235, 0.08); border-radius: var(--radius-full);">
                             <i class="fas fa-building" style="color: var(--primary); font-size: 1.25rem;"></i>
                             <span style="color: var(--primary); font-weight: 600; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.05em;">About Us</span>
                         </div>
-                        <h2 style="color: #1a1a1a; margin-bottom: 1.5rem; font-size: 2.5rem;">About Kavasa Foundation</h2>
+                        <h2 style="color: #1a1a1a; margin-bottom: 1.5rem; font-size: 2rem; font-weight: 600;">About Kavasa Foundation</h2>
                         <div class="section-divider" style="max-width: 100px; margin: 0 0 2rem 0;"></div>
                         <p style="font-size: 1.1rem; line-height: 1.8; color: var(--text-secondary); margin-bottom: 1.5rem;">We are dedicated to creating sustainable change in underprivileged communities. Through
                             education, healthcare, and empowerment initiatives, we strive to build a better future for

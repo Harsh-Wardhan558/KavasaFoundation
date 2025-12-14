@@ -1,10 +1,10 @@
 /* Professional Design System - Enterprise Grade UI/UX */
 :root {
-    /* Color Palette - Light Red */
-    --primary: #ff6b7a;
-    --primary-dark: #ff4757;
-    --primary-light: #ff8a95;
-    --primary-hover: #ff4757;
+    /* Color Palette - Blue */
+    --primary: #2563eb;
+    --primary-dark: #1d4ed8;
+    --primary-light: #3b82f6;
+    --primary-hover: #1d4ed8;
     
     /* Neutral Colors - Professional Grayscale */
     --white: #ffffff;
@@ -35,11 +35,11 @@
     --footer-text: #ffffff;
     --footer-text-muted: rgba(255, 255, 255, 0.7);
     
-    /* Gradients - Light Red */
-    --gradient-primary: linear-gradient(135deg, #ff6b7a 0%, #ff4757 100%);
-    --gradient-hero: linear-gradient(135deg, rgba(0, 0, 0, 0.65) 0%, rgba(255, 107, 122, 0.75) 100%);
-    --gradient-card-border: linear-gradient(135deg, #4ade80 0%, #fbbf24 25%, #fb923c 50%, #ff6b7a 100%);
-    --gradient-soft: linear-gradient(135deg, rgba(255, 107, 122, 0.08) 0%, rgba(255, 107, 122, 0.03) 100%);
+    /* Gradients - Blue */
+    --gradient-primary: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+    --gradient-hero: linear-gradient(135deg, rgba(0, 0, 0, 0.65) 0%, rgba(37, 99, 235, 0.75) 100%);
+    --gradient-card-border: linear-gradient(135deg, #3b82f6 0%, #2563eb 50%, #1d4ed8 100%);
+    --gradient-soft: linear-gradient(135deg, rgba(37, 99, 235, 0.08) 0%, rgba(37, 99, 235, 0.03) 100%);
     --gradient-glass: linear-gradient(135deg, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0.1) 100%);
     
     /* Professional Shadows */
@@ -504,7 +504,7 @@ strong {
 .nav-link.active {
     color: var(--primary);
     font-weight: var(--font-semibold);
-    background: rgba(255, 107, 122, 0.1);
+    background: rgba(37, 99, 235, 0.1);
 }
 
 .nav-link.active::after {
@@ -562,7 +562,7 @@ strong {
 }
 
 .hero-mobile::before {
-    background: linear-gradient(135deg, rgba(0, 0, 0, 0.65) 0%, rgba(255, 107, 122, 0.75) 100%);
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.65) 0%, rgba(37, 99, 235, 0.75) 100%);
     z-index: 0;
 }
 
@@ -669,7 +669,7 @@ strong {
     content: '';
     position: absolute;
     inset: 0;
-    background: linear-gradient(135deg, rgba(255, 107, 122, 0.08) 0%, transparent 100%);
+    background: linear-gradient(135deg, rgba(37, 99, 235, 0.08) 0%, transparent 100%);
     z-index: 1;
     opacity: 0;
     transition: var(--transition-opacity);
@@ -845,7 +845,7 @@ strong {
 .form-control:focus {
     border-color: var(--primary);
     outline: none;
-    box-shadow: 0 0 0 4px rgba(255, 107, 122, 0.1);
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
     background: var(--white);
 }
 
@@ -898,8 +898,8 @@ textarea.form-control {
     right: 0;
     bottom: 0;
     background: 
-        radial-gradient(circle at 20% 50%, rgba(255, 107, 122, 0.08) 0%, transparent 50%),
-        radial-gradient(circle at 80% 80%, rgba(255, 107, 122, 0.08) 0%, transparent 50%);
+        radial-gradient(circle at 20% 50%, rgba(37, 99, 235, 0.08) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(37, 99, 235, 0.08) 0%, transparent 50%);
     opacity: 1;
     z-index: 0;
 }
@@ -1117,6 +1117,20 @@ textarea.form-control {
 
 /* Mobile and Tablet */
 @media (max-width: 768px) {
+    /* More Than a Marathon Section - Mobile */
+    .purpose-content-grid {
+        grid-template-columns: 1fr !important;
+        gap: 2rem !important;
+    }
+    
+    .purpose-content-grid h2 {
+        font-size: 2rem !important;
+    }
+    
+    .purpose-content-grid [style*="padding: 2.5rem"] {
+        padding: 1.5rem !important;
+    }
+
     h1 {
         font-size: 2.2rem;
     }
@@ -1944,4 +1958,18 @@ textarea.form-control {
 .sponsors-section .hover-lift:hover img {
     filter: grayscale(0%) !important;
     transform: scale(1.1);
+}
+
+/* Challenge Cards */
+.challenge-card {
+    transition: all 0.3s ease;
+}
+
+.challenge-card button:hover {
+    background: var(--primary-dark) !important;
+}
+
+.challenge-card button[style*="#e5e7eb"]:hover {
+    background: var(--primary) !important;
+    color: white !important;
 }
