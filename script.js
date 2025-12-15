@@ -117,8 +117,7 @@ async function fetchRazorpayKey() {
     }
 
     // fallback
-    //RAZORPAY_KEY_ID = "rzp_live_Ri3wbsv2HCMv4v";
-    RAZORPAY_KEY_ID = "rzp_test_Ri4TRiPWd8jb0Q";
+    RAZORPAY_KEY_ID = "rzp_live_Ri3wbsv2HCMv4v";
 }
 
 fetchRazorpayKey();
