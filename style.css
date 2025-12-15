@@ -528,10 +528,12 @@ strong {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: url('image/banner.jpg');
-    background-size: cover;
-    background-position: center;
-    background-attachment: fixed;
+    /* Desktop / laptop hero poster */
+    background: url('image/Agilisium marathon poster banner 1920x1080.jpg');
+    background-size: contain;           /* show full poster without cropping */
+    background-position: center center; /* center the full image */
+    background-repeat: no-repeat;
+    background-attachment: scroll;      /* avoid awkward cropping on some devices */
     color: var(--white);
     text-align: center;
     padding-top: 72px;
@@ -552,17 +554,19 @@ strong {
     display: flex;
 }
 
-/* Mobile Hero - Content with Overlay */
+/* Mobile Hero - Image only */
 .hero-mobile {
     display: none;
-    background: var(--gradient-hero), url('image/banner.jpg');
-    background-size: cover;
-    background-position: center;
+    background: url('image/mobile.jpg');
+    background-size: contain;           /* show full mobile poster without cropping */
+    background-position: center top;
+    background-repeat: no-repeat;
     background-attachment: scroll;
 }
 
 .hero-mobile::before {
-    background: linear-gradient(135deg, rgba(0, 0, 0, 0.65) 0%, rgba(37, 99, 235, 0.75) 100%);
+    /* No overlay on mobile hero – show only the image */
+    background: transparent;
     z-index: 0;
 }
 
@@ -1156,19 +1160,16 @@ textarea.form-control {
 
     .hero-mobile {
         display: flex !important;
-        background: var(--gradient-hero), url('image/banner.jpg') !important;
+        /* Mobile-specific hero poster */
+        background: url('image/mobile.jpg') !important;
         background-size: cover !important;
         background-position: center !important;
         background-attachment: scroll !important;
     }
 
     .hero-mobile::before {
-        background: linear-gradient(135deg, rgba(0, 0, 0, 0.65) 0%, rgba(255, 107, 122, 0.75) 100%) !important;
-    }
-
-    /* Hide desktop content section on mobile */
-    .hero-content-desktop {
-        display: none !important;
+        /* Keep mobile hero as a plain image */
+        background: transparent !important;
     }
 
     header.hero {
@@ -1972,4 +1973,78 @@ textarea.form-control {
 .challenge-card button[style*="#e5e7eb"]:hover {
     background: var(--primary) !important;
     color: white !important;
+}
+
+/* Responsive grids for inline sections on home page */
+.event-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2.5rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.kids-trophies-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2.5rem;
+}
+
+.challenge-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* What's Included grid */
+.whats-included-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+}
+
+/* Venue stats small grid */
+.venue-stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+/* Prize money grid */
+.prize-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 3rem;
+}
+
+@media (max-width: 1024px) {
+    .event-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+
+    .whats-included-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .kids-trophies-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+
+    .whats-included-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .venue-stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .prize-grid {
+        grid-template-columns: 1fr;
+    }
 }
