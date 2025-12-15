@@ -95,7 +95,7 @@ if (contactForm) {
 /* ------------------------------
    BACKEND BASE URL
 ------------------------------ */
-const API_BASE_URL = 'https://razorpay-api-474336699934.asia-south1.run.app';
+const API_BASE_URL = 'https://razorpay-backend-474336699934.asia-south1.run.app';
 
 /* ------------------------------
    RAZORPAY KEY
@@ -185,6 +185,9 @@ fetchPricingFromFirebase();
    REGISTRATION + RAZORPAY PROCESS
 ------------------------------ */
 const registrationForm = document.getElementById('registrationForm');
+const registrationSuccessBox = document.getElementById('registrationSuccess');
+const downloadReceiptBtn = document.getElementById('downloadReceiptBtn');
+let lastSuccessfulOrderId = null;
 
 if (registrationForm) {
     registrationForm.addEventListener('submit', async (e) => {
@@ -210,6 +213,11 @@ if (registrationForm) {
         }
 
         const amount = amountMap[category];
+
+        // Hide previous success message when starting a new payment
+        if (registrationSuccessBox) {
+            registrationSuccessBox.style.display = 'none';
+        }
 
         const btn = registrationForm.querySelector("button[type=submit]");
         const old = btn.innerText;
@@ -278,8 +286,20 @@ if (registrationForm) {
                     const verify = await verifyRes.json();
 
                     if (verify.success) {
-                        console.log(`Payment Success! Your registration ID: ${verify.docId}`);
+                        const orderId = verify.orderId || response.razorpay_order_id || options.order_id;
+                        lastSuccessfulOrderId = orderId;
+
+                        console.log(`Payment Success! Order ID: ${orderId}`);
                         registrationForm.reset();
+
+                        if (registrationSuccessBox && downloadReceiptBtn && lastSuccessfulOrderId) {
+                            registrationSuccessBox.style.display = 'block';
+
+                            downloadReceiptBtn.onclick = () => {
+                                const url = `${API_BASE_URL}/api/download-pdf/${lastSuccessfulOrderId}`;
+                                window.open(url, '_blank');
+                            };
+                        }
                     } else {
                         console.log("Payment verification failed.");
                     }

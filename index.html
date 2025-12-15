@@ -750,6 +750,17 @@
                             <button type="submit" class="btn btn-primary">Proceed to Pay</button>
                         </div>
                     </form>
+
+                    <!-- Success message & receipt download -->
+                    <div id="registrationSuccess" style="display: none; margin-top: 2rem; text-align: center;">
+                        <div style="margin-bottom: 1rem; font-size: 1rem; color: var(--text-secondary);">
+                            Payment successful! Your registration is confirmed.
+                        </div>
+                        <button id="downloadReceiptBtn" class="btn btn-secondary">
+                            <i class="fas fa-file-download" style="margin-right: 0.5rem;"></i>
+                            Download Receipt (PDF)
+                        </button>
+                    </div>
                 </div>
             </div>
         </section>

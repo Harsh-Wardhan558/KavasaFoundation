@@ -443,13 +443,76 @@
         </div>
 
         <div class="admin-content">
+            <!-- Payment Summary Section -->
             <div class="admin-section">
-                <h2><i class="fas fa-list" style="color: var(--primary); margin-right: 0.5rem;"></i>Marathon Registrations</h2>
+                <h2>
+                    <i class="fas fa-rupee-sign" style="color: var(--primary); margin-right: 0.5rem;"></i>
+                    Payment Summary
+                </h2>
+                <div style="display: flex; flex-wrap: wrap; gap: 1.5rem;">
+                    <div style="flex: 1 1 260px; background: var(--gray-50); border-radius: var(--radius-xl); padding: 1.5rem 1.75rem; border: 1px solid var(--border); box-shadow: var(--shadow-sm); display: flex; align-items: center; justify-content: space-between;">
+                        <div>
+                            <div style="font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-secondary); font-weight: var(--font-semibold); margin-bottom: 0.25rem;">
+                                Successful Payments Collected
+                            </div>
+                            <div style="font-size: 0.8rem; color: var(--text-secondary);">
+                                Total amount received so far (status: captured)
+                            </div>
+                        </div>
+                        <div style="text-align: right;">
+                            <div id="successfulTotalAmount" style="font-size: 1.75rem; font-weight: var(--font-bold); color: var(--primary);">
+                                ₹0
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="admin-section">
+                <h2><i class="fas fa-list" style="color: var(--primary); margin-right: 0.5rem;"></i>Successful Payments</h2>
                 <div id="adminList" class="admin-list">
                     <div class="admin-list-placeholder">
                         <i class="fas fa-spinner fa-spin" style="font-size: 3rem; color: var(--gray-400); margin-bottom: 1rem; display: block;"></i>
-                        <p>Loading registrations...</p>
+                        <p>Loading successful payments...</p>
                     </div>
+                </div>
+                <div style="margin-top: 1.5rem; text-align: center;">
+                    <button id="exportSuccessfulBtn" class="admin-btn admin-btn-primary">
+                        <i class="fas fa-download"></i>
+                        Export Successful Payments
+                    </button>
+                </div>
+            </div>
+
+            <div class="admin-section">
+                <h2><i class="fas fa-times-circle" style="color: #dc2626; margin-right: 0.5rem;"></i>Failed Payments</h2>
+                <div id="failedList" class="admin-list">
+                    <div class="admin-list-placeholder">
+                        <i class="fas fa-spinner fa-spin" style="font-size: 3rem; color: var(--gray-400); margin-bottom: 1rem; display: block;"></i>
+                        <p>Loading failed payments...</p>
+                    </div>
+                </div>
+                <div style="margin-top: 1.5rem; text-align: center;">
+                    <button id="exportFailedBtn" class="admin-btn admin-btn-secondary" style="background: linear-gradient(135deg,#dc2626,#b91c1c); color: white;">
+                        <i class="fas fa-download"></i>
+                        Export Failed Payments
+                    </button>
+                </div>
+            </div>
+
+            <div class="admin-section">
+                <h2><i class="fas fa-question-circle" style="color: #f59e0b; margin-right: 0.5rem;"></i>Other Status</h2>
+                <div id="otherList" class="admin-list">
+                    <div class="admin-list-placeholder">
+                        <i class="fas fa-spinner fa-spin" style="font-size: 3rem; color: var(--gray-400); margin-bottom: 1rem; display: block;"></i>
+                        <p>Loading other status records...</p>
+                    </div>
+                </div>
+                <div style="margin-top: 1.5rem; text-align: center;">
+                    <button id="exportOtherBtn" class="admin-btn admin-btn-secondary" style="background: linear-gradient(135deg,#f59e0b,#d97706); color: white;">
+                        <i class="fas fa-download"></i>
+                        Export Other Status
+                    </button>
                 </div>
             </div>
 

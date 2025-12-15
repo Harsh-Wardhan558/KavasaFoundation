@@ -18,8 +18,19 @@ document.addEventListener('DOMContentLoaded', async () => {
     const logoutBtn = document.getElementById('logoutBtn');
     const errorMessage = document.getElementById('errorMessage');
     const adminList = document.getElementById('adminList');
+    const failedList = document.getElementById('failedList');
+    const otherList = document.getElementById('otherList');
     const refreshBtn = document.getElementById('refreshBtn');
     const exportBtn = document.getElementById('exportBtn');
+    const exportSuccessfulBtn = document.getElementById('exportSuccessfulBtn');
+    const exportFailedBtn = document.getElementById('exportFailedBtn');
+    const exportOtherBtn = document.getElementById('exportOtherBtn');
+    const successfulTotalAmountEl = document.getElementById('successfulTotalAmount');
+
+    // Store registration arrays globally for export functions
+    let currentSuccessfulRegistrations = [];
+    let currentFailedRegistrations = [];
+    let currentOtherRegistrations = [];
 
     // Check authentication state
     if (window.firebaseOnAuthStateChanged) {
@@ -135,43 +146,126 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     }
 
-    // Load registrations from Firestore
+    // Load registrations from Firestore (successful + failed + other statuses)
     async function loadRegistrations() {
         try {
-            adminList.innerHTML = `
-                <div class="admin-list-placeholder">
-                    <i class="fas fa-spinner fa-spin" style="font-size: 3rem; color: var(--gray-400); margin-bottom: 1rem; display: block;"></i>
-                    <p>Loading registrations...</p>
-                </div>
-            `;
+            if (adminList) {
+                adminList.innerHTML = `
+                    <div class="admin-list-placeholder">
+                        <i class="fas fa-spinner fa-spin" style="font-size: 3rem; color: var(--gray-400); margin-bottom: 1rem; display: block;"></i>
+                        <p>Loading successful payments...</p>
+                    </div>
+                `;
+            }
+
+            if (failedList) {
+                failedList.innerHTML = `
+                    <div class="admin-list-placeholder">
+                        <i class="fas fa-spinner fa-spin" style="font-size: 3rem; color: var(--gray-400); margin-bottom: 1rem; display: block;"></i>
+                        <p>Loading failed payments...</p>
+                    </div>
+                `;
+            }
+
+            if (otherList) {
+                otherList.innerHTML = `
+                    <div class="admin-list-placeholder">
+                        <i class="fas fa-spinner fa-spin" style="font-size: 3rem; color: var(--gray-400); margin-bottom: 1rem; display: block;"></i>
+                        <p>Loading other status records...</p>
+                    </div>
+                `;
+            }
 
             const registrationsRef = window.firebaseCollection(window.firebaseDb, 'marathon_registrations');
             // Fetch all documents without ordering (we'll sort client-side)
             // This avoids Firestore errors if timestamp field is missing or inconsistent
             const querySnapshot = await window.firebaseGetDocs(registrationsRef);
+            console.log("Query Snapshot",querySnapshot);
 
             if (querySnapshot.empty) {
-                adminList.innerHTML = `
-                    <div class="admin-list-placeholder">
-                        <i class="fas fa-inbox" style="font-size: 3rem; color: var(--gray-400); margin-bottom: 1rem; display: block;"></i>
-                        <p>No captured registrations found yet.</p>
-                    </div>
-                `;
+                // Reset arrays when no data
+                currentSuccessfulRegistrations = [];
+                currentFailedRegistrations = [];
+                currentOtherRegistrations = [];
+
+                // Reset total amount display
+                if (successfulTotalAmountEl) {
+                    successfulTotalAmountEl.textContent = '₹0';
+                }
+
+                if (adminList) {
+                    adminList.innerHTML = `
+                        <div class="admin-list-placeholder">
+                            <i class="fas fa-inbox" style="font-size: 3rem; color: var(--gray-400); margin-bottom: 1rem; display: block;"></i>
+                            <p>No successful payments found yet.</p>
+                        </div>
+                    `;
+                }
+
+                if (failedList) {
+                    failedList.innerHTML = `
+                        <div class="admin-list-placeholder">
+                            <i class="fas fa-inbox" style="font-size: 3rem; color: var(--gray-400); margin-bottom: 1rem; display: block;"></i>
+                            <p>No failed payments found yet.</p>
+                        </div>
+                    `;
+                }
+
+                if (otherList) {
+                    otherList.innerHTML = `
+                        <div class="admin-list-placeholder">
+                            <i class="fas fa-inbox" style="font-size: 3rem; color: var(--gray-400); margin-bottom: 1rem; display: block;"></i>
+                            <p>No other status records found yet.</p>
+                        </div>
+                    `;
+                }
                 return;
             }
 
-            // Convert to array and filter by status "captured"
-            const registrations = [];
+            // Split into successful, failed and other based on status
+            const successfulRegistrations = [];
+            const failedRegistrations = [];
+            const otherRegistrations = [];
             querySnapshot.forEach((doc) => {
                 const docData = doc.data();
-                // Only include registrations with status "captured"
                 if (docData.status === 'captured') {
-                    registrations.push({ id: doc.id, data: docData });
+                    successfulRegistrations.push({ id: doc.id, data: docData });
+                } else if (docData.status === 'failed') {
+                    failedRegistrations.push({ id: doc.id, data: docData });
+                } else {
+                    otherRegistrations.push({ id: doc.id, data: docData });
                 }
             });
-            
-            // Sort by timestamp (newest first) if available
-            registrations.sort((a, b) => {
+
+            const totalCount = querySnapshot.size;
+            const countedTotal = successfulRegistrations.length + failedRegistrations.length + otherRegistrations.length;
+            console.log("Successful registrations", successfulRegistrations.length);
+            console.log("Failed registrations", failedRegistrations.length);
+            console.log("Other registrations", otherRegistrations.length);
+            console.log("Total from snapshot", totalCount, "Sum of buckets", countedTotal, "Match:", totalCount === countedTotal);
+
+            // Store in global variables for export functions
+            currentSuccessfulRegistrations = successfulRegistrations;
+            currentFailedRegistrations = failedRegistrations;
+            currentOtherRegistrations = otherRegistrations;
+
+            // Calculate total amount from successful payments
+            let totalSuccessfulAmount = 0;
+            successfulRegistrations.forEach((reg) => {
+                const docData = reg.data || {};
+                const data = docData.registrationData || docData || {};
+                const amount = docData.amount != null ? docData.amount : (data.amount != null ? data.amount : 0);
+                const numericAmount = typeof amount === 'string' ? parseFloat(amount) : amount;
+                if (!isNaN(numericAmount)) {
+                    totalSuccessfulAmount += numericAmount;
+                }
+            });
+
+            if (successfulTotalAmountEl) {
+                successfulTotalAmountEl.textContent = `₹${totalSuccessfulAmount.toLocaleString('en-IN')}`;
+            }
+
+            const sortByTimestampDesc = (a, b) => {
                 const timestampA = a.data.timestamp || (a.data.registrationData && a.data.registrationData.timestamp);
                 const timestampB = b.data.timestamp || (b.data.registrationData && b.data.registrationData.timestamp);
                 
@@ -181,77 +275,254 @@ document.addEventListener('DOMContentLoaded', async () => {
                     return dateB - dateA; // Descending order (newest first)
                 }
                 return 0;
-            });
+            };
 
-            // Check if any captured registrations found
-            if (registrations.length === 0) {
-                adminList.innerHTML = `
-                    <div class="admin-list-placeholder">
-                        <i class="fas fa-inbox" style="font-size: 3rem; color: var(--gray-400); margin-bottom: 1rem; display: block;"></i>
-                        <p>No captured registrations found. Only registrations with status "captured" are displayed.</p>
-                    </div>
-                `;
-                return;
+            // Sort by timestamp (newest first) if available
+            successfulRegistrations.sort(sortByTimestampDesc);
+            failedRegistrations.sort(sortByTimestampDesc);
+            otherRegistrations.sort(sortByTimestampDesc);
+
+            // Render successful payments
+            if (adminList) {
+                if (successfulRegistrations.length === 0) {
+                    adminList.innerHTML = `
+                        <div class="admin-list-placeholder">
+                            <i class="fas fa-inbox" style="font-size: 3rem; color: var(--gray-400); margin-bottom: 1rem; display: block;"></i>
+                            <p>No successful payments found. Only registrations with status "captured" are displayed here.</p>
+                        </div>
+                    `;
+                } else {
+                    let html = '';
+                    html += `
+                        <div style="margin-bottom: 1rem; font-weight: var(--font-semibold); color: var(--text-secondary);">
+                            Total successful payments: ${successfulRegistrations.length}
+                        </div>
+                    `;
+                    let index = 1;
+                    successfulRegistrations.forEach((reg) => {
+                        const amount = reg.data.amount;
+                        const docData = reg.data;
+                        const registrationId = reg.id;
+
+                        // Get registration data from registrationData field (fallback to document root)
+                        const data = docData.registrationData || docData || {};
+                        console.log("Successful registration doc", registrationId, docData);
+                        console.log("Parsed successful registration data", data);
+
+                        // Format timestamp - prefer createdAt, fall back to timestamp fields
+                        let timestamp = docData.createdAt || docData.timestamp || (data && data.timestamp);
+                        if (timestamp) {
+                            timestamp = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
+                        } else {
+                            console.log("Timestamp not found for", registrationId);
+                            timestamp = new Date();
+                        }
+                        const formattedDate = timestamp.toLocaleString('en-IN', {
+                            day: '2-digit',
+                            month: 'short',
+                            year: 'numeric',
+                            hour: '2-digit',
+                            minute: '2-digit'
+                        });
+
+                        html += `
+                            <div class="registration-item">
+                                <div class="registration-number">#${index}</div>
+                                <div class="registration-details">
+                                    <h3>${data.name || 'N/A'}</h3>
+                                    <div class="registration-meta">
+                                        <span><i class="fas fa-envelope"></i> ${data.email || 'N/A'}</span>
+                                        <span><i class="fas fa-phone"></i> ${data.phone || 'N/A'}</span>
+                                        <span><i class="fas fa-birthday-cake"></i> Age: ${data.age || 'N/A'}</span>
+                                        <span><i class="fas fa-venus-mars"></i> ${data.gender || 'N/A'}</span>
+                                        <span><i class="fas fa-tshirt"></i> Size: ${data.tshirtSize || 'N/A'}</span>
+                                        <span><i class="fas fa-calendar"></i> ${formattedDate}</span>
+                                    </div>
+                                </div>
+                                <div>
+                                    <span class="registration-category">${(data.category || 'N/A').toUpperCase()}</span>
+                                    <div style="margin-top: 0.5rem; font-weight: var(--font-semibold); color: var(--text-primary);">
+                                        ₹${amount}
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                        index++;
+                    });
+
+                    adminList.innerHTML = html;
+                }
             }
 
-            let html = '';
-            let index = 1;
-            registrations.forEach((reg) => {
-                const docData = reg.data;
-                const registrationId = reg.id;
-                
-                // Get registration data from registrationData field
-                const data = docData.registrationData || docData;
-                
-                // Format timestamp - check both document level and registrationData level
-                let timestamp = docData.timestamp || data.timestamp;
-                if (timestamp) {
-                    timestamp = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
+            // Render failed payments
+            if (failedList) {
+                if (failedRegistrations.length === 0) {
+                    failedList.innerHTML = `
+                        <div class="admin-list-placeholder">
+                            <i class="fas fa-inbox" style="font-size: 3rem; color: var(--gray-400); margin-bottom: 1rem; display: block;"></i>
+                            <p>No failed payments found. Only registrations with status "failed" are displayed here.</p>
+                        </div>
+                    `;
                 } else {
-                    timestamp = new Date();
+                    let htmlFailed = '';
+                    htmlFailed += `
+                        <div style="margin-bottom: 1rem; font-weight: var(--font-semibold); color: var(--text-secondary);">
+                            Total failed payments: ${failedRegistrations.length}
+                        </div>
+                    `;
+                    let failedIndex = 1;
+                    failedRegistrations.forEach((reg) => {
+                        const amount = reg.data.amount;
+                        const docData = reg.data;
+                        const registrationId = reg.id;
+
+                        const data = docData.registrationData || docData || {};
+                        console.log("Failed registration doc", registrationId, docData);
+                        console.log("Parsed failed registration data", data);
+
+                        let timestamp = docData.createdAt || docData.timestamp || (data && data.timestamp);
+                        if (timestamp) {
+                            timestamp = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
+                        } else {
+                            console.log("Timestamp not found for failed", registrationId);
+                            timestamp = new Date();
+                        }
+                        const formattedDate = timestamp.toLocaleString('en-IN', {
+                            day: '2-digit',
+                            month: 'short',
+                            year: 'numeric',
+                            hour: '2-digit',
+                            minute: '2-digit'
+                        });
+
+                        htmlFailed += `
+                            <div class="registration-item">
+                                <div class="registration-number">#${failedIndex}</div>
+                                <div class="registration-details">
+                                    <h3>${data.name || 'N/A'}</h3>
+                                    <div class="registration-meta">
+                                        <span><i class="fas fa-envelope"></i> ${data.email || 'N/A'}</span>
+                                        <span><i class="fas fa-phone"></i> ${data.phone || 'N/A'}</span>
+                                        <span><i class="fas fa-birthday-cake"></i> Age: ${data.age || 'N/A'}</span>
+                                        <span><i class="fas fa-venus-mars"></i> ${data.gender || 'N/A'}</span>
+                                        <span><i class="fas fa-tshirt"></i> Size: ${data.tshirtSize || 'N/A'}</span>
+                                        <span><i class="fas fa-calendar"></i> ${formattedDate}</span>
+                                        <span><i class="fas fa-exclamation-circle" style="color:#dc2626;"></i> Status: ${docData.status || 'failed'}</span>
+                                    </div>
+                                </div>
+                                <div>
+                                    <span class="registration-category" style="background: linear-gradient(135deg,#dc2626,#b91c1c);">FAILED</span>
+                                    <div style="margin-top: 0.5rem; font-weight: var(--font-semibold); color: var(--text-primary);">
+                                        ₹${amount}
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                        failedIndex++;
+                    });
+
+                    failedList.innerHTML = htmlFailed;
                 }
-                const formattedDate = timestamp.toLocaleString('en-IN', {
-                    day: '2-digit',
-                    month: 'short',
-                    year: 'numeric',
-                    hour: '2-digit',
-                    minute: '2-digit'
-                });
+            }
 
-                html += `
-                    <div class="registration-item">
-                        <div class="registration-number">#${index}</div>
-                        <div class="registration-details">
-                            <h3>${data.name || 'N/A'}</h3>
-                            <div class="registration-meta">
-                                <span><i class="fas fa-envelope"></i> ${data.email || 'N/A'}</span>
-                                <span><i class="fas fa-phone"></i> ${data.phone || 'N/A'}</span>
-                                <span><i class="fas fa-birthday-cake"></i> Age: ${data.age || 'N/A'}</span>
-                                <span><i class="fas fa-venus-mars"></i> ${data.gender || 'N/A'}</span>
-                                <span><i class="fas fa-tshirt"></i> Size: ${data.tshirtSize || 'N/A'}</span>
-                                <span><i class="fas fa-calendar"></i> ${formattedDate}</span>
-                            </div>
+            // Render other status records
+            if (otherList) {
+                if (otherRegistrations.length === 0) {
+                    otherList.innerHTML = `
+                        <div class="admin-list-placeholder">
+                            <i class="fas fa-inbox" style="font-size: 3rem; color: var(--gray-400); margin-bottom: 1rem; display: block;"></i>
+                            <p>No other status records found. Only registrations with status not "captured" or "failed" are displayed here.</p>
                         </div>
-                        <div>
-                            <span class="registration-category">${(data.category || 'N/A').toUpperCase()}</span>
-                            <div style="margin-top: 0.5rem; font-weight: var(--font-semibold); color: var(--text-primary);">
-                                ₹${data.amount || 0}
-                            </div>
+                    `;
+                } else {
+                    let htmlOther = '';
+                    htmlOther += `
+                        <div style="margin-bottom: 1rem; font-weight: var(--font-semibold); color: var(--text-secondary);">
+                            Total other status records: ${otherRegistrations.length}
                         </div>
-                    </div>
-                `;
-                index++;
-            });
+                    `;
+                    let otherIndex = 1;
+                    otherRegistrations.forEach((reg) => {
+                        const amount = reg.data.amount;
+                        const docData = reg.data;
+                        const registrationId = reg.id;
 
-            adminList.innerHTML = html;
+                        const data = docData.registrationData || docData || {};
+                        console.log("Other registration doc", registrationId, docData);
+                        console.log("Parsed other registration data", data);
+
+                        let timestamp = docData.createdAt || docData.timestamp || (data && data.timestamp);
+                        if (timestamp) {
+                            timestamp = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
+                        } else {
+                            console.log("Timestamp not found for other", registrationId);
+                            timestamp = new Date();
+                        }
+                        const formattedDate = timestamp.toLocaleString('en-IN', {
+                            day: '2-digit',
+                            month: 'short',
+                            year: 'numeric',
+                            hour: '2-digit',
+                            minute: '2-digit'
+                        });
+
+                        const statusText = docData.status || 'unknown';
+
+                        htmlOther += `
+                            <div class="registration-item">
+                                <div class="registration-number">#${otherIndex}</div>
+                                <div class="registration-details">
+                                    <h3>${data.name || 'N/A'}</h3>
+                                    <div class="registration-meta">
+                                        <span><i class="fas fa-envelope"></i> ${data.email || 'N/A'}</span>
+                                        <span><i class="fas fa-phone"></i> ${data.phone || 'N/A'}</span>
+                                        <span><i class="fas fa-birthday-cake"></i> Age: ${data.age || 'N/A'}</span>
+                                        <span><i class="fas fa-venus-mars"></i> ${data.gender || 'N/A'}</span>
+                                        <span><i class="fas fa-tshirt"></i> Size: ${data.tshirtSize || 'N/A'}</span>
+                                        <span><i class="fas fa-calendar"></i> ${formattedDate}</span>
+                                        <span><i class="fas fa-info-circle" style="color:#f59e0b;"></i> Status: ${statusText}</span>
+                                    </div>
+                                </div>
+                                <div>
+                                    <span class="registration-category" style="background: linear-gradient(135deg,#f59e0b,#d97706);">OTHER</span>
+                                    <div style="margin-top: 0.5rem; font-weight: var(--font-semibold); color: var(--text-primary);">
+                                        ₹${amount}
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                        otherIndex++;
+                    });
+
+                    otherList.innerHTML = htmlOther;
+                }
+            }
         } catch (error) {
             console.error('Error loading registrations:', error);
-            adminList.innerHTML = `
-                <div class="admin-list-placeholder">
-                    <i class="fas fa-exclamation-triangle" style="font-size: 3rem; color: #dc2626; margin-bottom: 1rem; display: block;"></i>
-                    <p>Error loading registrations: ${error.message}</p>
-                </div>
-            `;
+            if (adminList) {
+                adminList.innerHTML = `
+                    <div class="admin-list-placeholder">
+                        <i class="fas fa-exclamation-triangle" style="font-size: 3rem; color: #dc2626; margin-bottom: 1rem; display: block;"></i>
+                        <p>Error loading successful payments: ${error.message}</p>
+                    </div>
+                `;
+            }
+            if (failedList) {
+                failedList.innerHTML = `
+                    <div class="admin-list-placeholder">
+                        <i class="fas fa-exclamation-triangle" style="font-size: 3rem; color: #dc2626; margin-bottom: 1rem; display: block;"></i>
+                        <p>Error loading failed payments: ${error.message}</p>
+                    </div>
+                `;
+            }
+            if (otherList) {
+                otherList.innerHTML = `
+                    <div class="admin-list-placeholder">
+                        <i class="fas fa-exclamation-triangle" style="font-size: 3rem; color: #dc2626; margin-bottom: 1rem; display: block;"></i>
+                        <p>Error loading other status records: ${error.message}</p>
+                    </div>
+                `;
+            }
         }
     }
 
@@ -337,6 +608,122 @@ document.addEventListener('DOMContentLoaded', async () => {
                 alert('Error exporting data: ' + error.message);
                 exportBtn.innerHTML = originalText;
                 exportBtn.disabled = false;
+            }
+        });
+    }
+
+    // Reusable export function
+    function exportRegistrations(registrations, filename, categoryName) {
+        if (!registrations || registrations.length === 0) {
+            alert(`No ${categoryName} to export.`);
+            return;
+        }
+
+        // Convert to CSV
+        let csv = 'Name,Email,Phone,Age,Gender,Category,T-Shirt Size,Amount,Status,Registration Date\n';
+        
+        registrations.forEach((reg) => {
+            const docData = reg.data;
+            const data = docData.registrationData || docData || {};
+            
+            // Format timestamp
+            let timestamp = docData.createdAt || docData.timestamp || (data && data.timestamp);
+            if (timestamp) {
+                timestamp = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
+            } else {
+                timestamp = new Date();
+            }
+            const formattedDate = timestamp.toLocaleString('en-IN');
+            
+            const statusText = docData.status || 'unknown';
+            const amount = docData.amount || data.amount || 0;
+            
+            csv += `"${data.name || ''}","${data.email || ''}","${data.phone || ''}",${data.age || ''},"${data.gender || ''}","${data.category || ''}","${data.tshirtSize || ''}",${amount},"${statusText}","${formattedDate}"\n`;
+        });
+
+        // Download CSV
+        const blob = new Blob([csv], { type: 'text/csv' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+    }
+
+    // Export Successful Payments button handler
+    if (exportSuccessfulBtn) {
+        exportSuccessfulBtn.addEventListener('click', async () => {
+            try {
+                exportSuccessfulBtn.disabled = true;
+                const originalText = exportSuccessfulBtn.innerHTML;
+                exportSuccessfulBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Exporting...';
+                
+                exportRegistrations(
+                    currentSuccessfulRegistrations,
+                    `successful_payments_${new Date().toISOString().split('T')[0]}.csv`,
+                    'successful payments'
+                );
+                
+                exportSuccessfulBtn.innerHTML = originalText;
+                exportSuccessfulBtn.disabled = false;
+            } catch (error) {
+                console.error('Export successful payments error:', error);
+                alert('Error exporting successful payments: ' + error.message);
+                exportSuccessfulBtn.innerHTML = '<i class="fas fa-download"></i> Export Successful Payments';
+                exportSuccessfulBtn.disabled = false;
+            }
+        });
+    }
+
+    // Export Failed Payments button handler
+    if (exportFailedBtn) {
+        exportFailedBtn.addEventListener('click', async () => {
+            try {
+                exportFailedBtn.disabled = true;
+                const originalText = exportFailedBtn.innerHTML;
+                exportFailedBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Exporting...';
+                
+                exportRegistrations(
+                    currentFailedRegistrations,
+                    `failed_payments_${new Date().toISOString().split('T')[0]}.csv`,
+                    'failed payments'
+                );
+                
+                exportFailedBtn.innerHTML = originalText;
+                exportFailedBtn.disabled = false;
+            } catch (error) {
+                console.error('Export failed payments error:', error);
+                alert('Error exporting failed payments: ' + error.message);
+                exportFailedBtn.innerHTML = '<i class="fas fa-download"></i> Export Failed Payments';
+                exportFailedBtn.disabled = false;
+            }
+        });
+    }
+
+    // Export Other Status button handler
+    if (exportOtherBtn) {
+        exportOtherBtn.addEventListener('click', async () => {
+            try {
+                exportOtherBtn.disabled = true;
+                const originalText = exportOtherBtn.innerHTML;
+                exportOtherBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Exporting...';
+                
+                exportRegistrations(
+                    currentOtherRegistrations,
+                    `other_status_${new Date().toISOString().split('T')[0]}.csv`,
+                    'other status records'
+                );
+                
+                exportOtherBtn.innerHTML = originalText;
+                exportOtherBtn.disabled = false;
+            } catch (error) {
+                console.error('Export other status error:', error);
+                alert('Error exporting other status records: ' + error.message);
+                exportOtherBtn.innerHTML = '<i class="fas fa-download"></i> Export Other Status';
+                exportOtherBtn.disabled = false;
             }
         });
     }
