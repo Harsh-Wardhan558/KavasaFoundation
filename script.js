@@ -107,8 +107,8 @@ async function fetchRazorpayKey() {
         const response = await fetch(`${API_BASE_URL}/api/razorpay-key`);
         if (response.ok) {
             const data = await response.json();
-            if (data.keyId) {
-                RAZORPAY_KEY_ID = data.keyId;
+            if (data.key) {
+                RAZORPAY_KEY_ID = data.key;
                 return;
             }
         }
