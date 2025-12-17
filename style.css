@@ -1966,6 +1966,16 @@ textarea.form-control {
     transition: all 0.3s ease;
 }
 
+.challenge-card:hover {
+    border-color: var(--primary) !important;
+    border-width: 2px !important;
+}
+
+.challenge-card:hover button {
+    background: var(--primary) !important;
+    color: white !important;
+}
+
 .challenge-card button:hover {
     background: var(--primary-dark) !important;
 }

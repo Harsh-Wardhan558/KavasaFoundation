@@ -163,6 +163,8 @@ async function fetchPricingFromFirebase() {
     }
 }
 
+let selectedCategoryFromButton = null;
+
 function updateCategoryDropdown() {
     const select = document.getElementById("reg-category");
     if (!select) return;
@@ -177,6 +179,27 @@ function updateCategoryDropdown() {
         opt.textContent = `${label} (₹${price})`;
         select.appendChild(opt);
     });
+
+    // If a category was selected via button click, set it now
+    if (selectedCategoryFromButton && amountMap[selectedCategoryFromButton]) {
+        select.value = selectedCategoryFromButton;
+        selectedCategoryFromButton = null; // Reset after setting
+    }
+}
+
+// Function to set category from button click
+function selectCategory(category) {
+    selectedCategoryFromButton = category;
+    const select = document.getElementById("reg-category");
+    if (select) {
+        // Try to set immediately if option exists
+        const optionExists = Array.from(select.options).some(opt => opt.value === category);
+        if (optionExists) {
+            select.value = category;
+            selectedCategoryFromButton = null; // Reset since we set it
+        }
+        // If options aren't loaded yet, selectedCategoryFromButton will be used when updateCategoryDropdown is called
+    }
 }
 
 fetchPricingFromFirebase();
