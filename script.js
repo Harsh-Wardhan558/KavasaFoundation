@@ -95,7 +95,7 @@ if (contactForm) {
 /* ------------------------------
    BACKEND BASE URL
 ------------------------------ */
-const API_BASE_URL = ' https://razorpay-api-474336699934.asia-south1.run.app';
+const API_BASE_URL = 'https://razorpay-api-474336699934.asia-south1.run.app';
 
 /* ------------------------------
    RAZORPAY KEY

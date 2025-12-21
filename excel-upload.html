@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Excel Upload | Admin Panel | Kavasa Foundation</title>
+    <!-- Favicon -->
+    <link rel="icon" type="image/jpeg" href="image/kavasa.jpg">
+    <link rel="shortcut icon" type="image/jpeg" href="image/kavasa.jpg">
+    <link rel="apple-touch-icon" href="image/kavasa.jpg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- SheetJS library for Excel parsing -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <!-- Firebase SDK -->
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-analytics.js";
+        import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyBMlMgTHAhzFsCSlg3PQHhtFAeUiDvq2jE",
+            authDomain: "kavasa-9cdba.firebaseapp.com",
+            projectId: "kavasa-9cdba",
+            storageBucket: "kavasa-9cdba.firebasestorage.app",
+            messagingSenderId: "474336699934",
+            appId: "1:474336699934:web:b51b450970f66a4f63700f",
+            measurementId: "G-PKTEY6ZL2R"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+        const auth = getAuth(app);
+
+        // Make Firebase available globally
+        window.firebaseAuth = auth;
+        window.firebaseSignOut = signOut;
+        window.firebaseOnAuthStateChanged = onAuthStateChanged;
+        
+        // Signal that Firebase is ready
+        window.firebaseReady = true;
+        window.dispatchEvent(new Event('firebaseReady'));
+    </script>
+    <style>
+        .admin-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+            padding-top: 100px;
+        }
+
+        .admin-header {
+            background: var(--gradient-primary);
+            color: white;
+            padding: 2rem;
+            border-radius: var(--radius-xl);
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .admin-header h1 {
+            color: white;
+            margin: 0;
+            font-size: 2.5rem;
+        }
+
+        .admin-header p {
+            color: rgba(255, 255, 255, 0.9);
+            margin: 0.5rem 0 0;
+        }
+
+        .admin-content {
+            background: var(--white);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-lg);
+            padding: 2rem;
+            border: 1px solid var(--border);
+        }
+
+        .admin-section {
+            margin-bottom: 3rem;
+        }
+
+        .admin-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .admin-section h2 {
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--border);
+            font-size: 1.75rem;
+        }
+
+        .admin-btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--radius-lg);
+            border: none;
+            font-weight: var(--font-semibold);
+            cursor: pointer;
+            transition: var(--transition-all);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-family: inherit;
+            font-size: var(--text-base);
+        }
+
+        .admin-btn-primary {
+            background: var(--gradient-primary);
+            color: white;
+        }
+
+        .admin-btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .admin-btn-secondary {
+            background: var(--gray-100);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+        }
+
+        .admin-btn-secondary:hover {
+            background: var(--gray-200);
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--primary);
+            text-decoration: none;
+            margin-bottom: 2rem;
+            font-weight: var(--font-medium);
+            transition: var(--transition-colors);
+        }
+
+        .back-link:hover {
+            color: var(--primary-dark);
+        }
+
+        .logout-btn {
+            position: fixed;
+            top: 90px;
+            right: 2rem;
+            z-index: 100;
+        }
+
+        .file-upload-area {
+            border: 2px dashed var(--border);
+            border-radius: var(--radius-xl);
+            padding: 3rem;
+            text-align: center;
+            background: var(--gray-50);
+            transition: var(--transition-all);
+            cursor: pointer;
+            margin-bottom: 2rem;
+        }
+
+        .file-upload-area:hover {
+            border-color: var(--primary);
+            background: var(--white);
+        }
+
+        .file-upload-area.dragover {
+            border-color: var(--primary);
+            background: var(--gradient-soft);
+        }
+
+        .file-upload-area input[type="file"] {
+            display: none;
+        }
+
+        .file-upload-icon {
+            font-size: 3rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .file-upload-text {
+            color: var(--text-primary);
+            font-size: var(--text-lg);
+            font-weight: var(--font-semibold);
+            margin-bottom: 0.5rem;
+        }
+
+        .file-upload-hint {
+            color: var(--text-secondary);
+            font-size: var(--text-sm);
+        }
+
+        .file-info {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border);
+            display: none;
+        }
+
+        .file-info.show {
+            display: block;
+        }
+
+        .file-info-icon {
+            color: var(--primary);
+            margin-right: 0.5rem;
+        }
+
+        .excel-table-container {
+            overflow-x: auto;
+            margin-top: 2rem;
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border);
+            background: var(--white);
+            display: none;
+        }
+
+        .excel-table-container.show {
+            display: block;
+        }
+
+        .excel-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: var(--text-sm);
+        }
+
+        .excel-table thead {
+            background: var(--gradient-primary);
+            color: white;
+        }
+
+        .excel-table th {
+            padding: 1rem;
+            text-align: left;
+            font-weight: var(--font-semibold);
+            white-space: nowrap;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .excel-table td {
+            padding: 0.875rem 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .excel-table tbody tr {
+            transition: var(--transition-all);
+        }
+
+        .excel-table tbody tr:hover {
+            background: var(--gray-50);
+        }
+
+        .excel-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-secondary);
+        }
+
+        .empty-state-icon {
+            font-size: 4rem;
+            color: var(--gray-400);
+            margin-bottom: 1rem;
+        }
+
+        .table-info {
+            padding: 1rem;
+            background: var(--gray-50);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .table-info-text {
+            color: var(--text-primary);
+            font-weight: var(--font-semibold);
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .loading.show {
+            display: block;
+        }
+
+        .loading-icon {
+            font-size: 3rem;
+            color: var(--primary);
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .error-message {
+            background: #fee2e2;
+            color: #dc2626;
+            padding: 1rem;
+            border-radius: var(--radius-lg);
+            border: 1px solid #fecaca;
+            font-size: var(--text-sm);
+            margin-bottom: 1rem;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .result-item {
+            padding: 0.75rem;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border);
+            background: var(--white);
+            font-size: var(--text-sm);
+        }
+
+        .result-item.success {
+            background: #f0fdf4;
+            border-color: #10b981;
+        }
+
+        .result-item.failed {
+            background: #fef2f2;
+            border-color: #dc2626;
+        }
+
+        .result-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.25rem;
+        }
+
+        .result-item-email {
+            font-weight: var(--font-semibold);
+            color: var(--text-primary);
+        }
+
+        .result-item-message {
+            color: var(--text-secondary);
+            font-size: var(--text-xs);
+        }
+
+        @media (max-width: 768px) {
+            .admin-container {
+                padding: 1rem;
+                padding-top: 90px;
+            }
+
+            .admin-header h1 {
+                font-size: 2rem;
+            }
+
+            .admin-content {
+                padding: 1.5rem;
+            }
+
+            .file-upload-area {
+                padding: 2rem 1rem;
+            }
+
+            .logout-btn {
+                position: relative;
+                top: auto;
+                right: auto;
+                margin-bottom: 1rem;
+                width: 100%;
+            }
+
+            .admin-btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .excel-table {
+                font-size: var(--text-xs);
+            }
+
+            .excel-table th,
+            .excel-table td {
+                padding: 0.5rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container nav-container">
+            <a href="index.html" class="logo">
+                <img src="image/kavasa.jpg" alt="Kavasa Foundation" style="height: 60px; vertical-align: middle;">
+            </a>
+            <button class="mobile-menu-toggle" aria-label="Toggle menu">
+                <i class="fas fa-bars"></i>
+            </button>
+            <ul class="nav-links">
+                <li><a href="index.html" class="nav-link">Home</a></li>
+                <li><a href="about.html" class="nav-link">About Us</a></li>
+                <li><a href="contact.html" class="nav-link">Contact</a></li>
+                <li><a href="#register" class="btn btn-primary">Register Now</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Admin Panel -->
+    <div id="adminPanel" class="admin-container hidden">
+        <button id="logoutBtn" class="admin-btn admin-btn-secondary logout-btn">
+            <i class="fas fa-sign-out-alt"></i>
+            Logout
+        </button>
+        
+        <a href="admin.html" class="back-link">
+            <i class="fas fa-arrow-left"></i>
+            Back to Admin Panel
+        </a>
+
+        <div class="admin-header">
+            <h1><i class="fas fa-file-excel" style="margin-right: 0.5rem;"></i>Excel Upload</h1>
+            <p>Upload and view Excel data in a structured table format</p>
+        </div>
+
+        <div class="admin-content">
+            <div class="admin-section">
+                <h2>
+                    <i class="fas fa-upload" style="color: var(--primary); margin-right: 0.5rem;"></i>
+                    Upload Excel File
+                </h2>
+                
+                <div id="errorMessage" class="error-message"></div>
+                
+                <div class="file-upload-area" id="fileUploadArea">
+                    <div class="file-upload-icon">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                    </div>
+                    <div class="file-upload-text">Click to upload or drag and drop</div>
+                    <div class="file-upload-hint">Supports .xlsx, .xls, .csv files</div>
+                    <input type="file" id="fileInput" accept=".xlsx,.xls,.csv">
+                </div>
+
+                <div id="fileInfo" class="file-info">
+                    <i class="fas fa-file-excel file-info-icon"></i>
+                    <span id="fileName"></span>
+                    <button id="clearFileBtn" class="admin-btn admin-btn-secondary" style="margin-left: 1rem;">
+                        <i class="fas fa-times"></i>
+                        Clear
+                    </button>
+                </div>
+
+                <div id="loading" class="loading">
+                    <i class="fas fa-spinner loading-icon"></i>
+                    <p>Processing Excel file...</p>
+                </div>
+            </div>
+
+            <div class="admin-section">
+                <!-- Email Sending Progress Section -->
+                <div id="emailProgressSection" style="display: none; background: var(--gray-50); padding: 2rem; border-radius: var(--radius-lg); border: 1px solid var(--border); margin-bottom: 2rem;">
+                    <h3 style="margin-top: 0; margin-bottom: 1rem; color: var(--text-primary);">
+                        <i class="fas fa-paper-plane" style="color: var(--primary); margin-right: 0.5rem;"></i>
+                        Sending Emails
+                    </h3>
+                    <div style="margin-bottom: 1rem;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                            <span style="font-weight: var(--font-semibold); color: var(--text-primary);">
+                                Progress: <span id="progressText">0%</span>
+                            </span>
+                            <span style="color: var(--text-secondary); font-size: var(--text-sm);">
+                                <span id="processedCount">0</span> / <span id="totalCount">0</span>
+                            </span>
+                        </div>
+                        <div style="background: var(--white); border-radius: var(--radius-full); height: 30px; overflow: hidden; border: 1px solid var(--border);">
+                            <div id="progressBar" style="background: var(--gradient-primary); height: 100%; width: 0%; transition: width 0.3s ease; display: flex; align-items: center; justify-content: center; color: white; font-weight: var(--font-semibold); font-size: var(--text-sm);"></div>
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 1.5rem; flex-wrap: wrap;">
+                        <div style="display: flex; align-items: center; gap: 0.5rem;">
+                            <i class="fas fa-check-circle" style="color: #10b981;"></i>
+                            <span style="color: var(--text-primary);">
+                                Success: <strong id="successCount">0</strong>
+                            </span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 0.5rem;">
+                            <i class="fas fa-times-circle" style="color: #dc2626;"></i>
+                            <span style="color: var(--text-primary);">
+                                Failed: <strong id="failedCount">0</strong>
+                            </span>
+                        </div>
+                    </div>
+                    <div id="emailResults" style="margin-top: 1.5rem; max-height: 300px; overflow-y: auto; display: none;">
+                        <h4 style="margin-bottom: 1rem; color: var(--text-primary); font-size: var(--text-lg);">Results:</h4>
+                        <div id="emailResultsList" style="display: flex; flex-direction: column; gap: 0.5rem;"></div>
+                    </div>
+                </div>
+
+                <div id="excelTableContainer" class="excel-table-container">
+                    <div class="table-info">
+                        <span class="table-info-text">
+                            <i class="fas fa-table"></i>
+                            <span id="rowCount">0</span> rows loaded
+                        </span>
+                        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                            <button id="sendEmailsBtn" class="admin-btn admin-btn-primary">
+                                <i class="fas fa-envelope"></i>
+                                Send Emails
+                            </button>
+                            <button id="exportCsvBtn" class="admin-btn admin-btn-secondary">
+                                <i class="fas fa-download"></i>
+                                Export as CSV
+                            </button>
+                        </div>
+                    </div>
+                    <div style="overflow-x: auto;">
+                        <table id="excelTable" class="excel-table">
+                            <thead id="tableHead"></thead>
+                            <tbody id="tableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div id="emptyState" class="empty-state">
+                    <div class="empty-state-icon">
+                        <i class="fas fa-file-excel"></i>
+                    </div>
+                    <p>No Excel file uploaded yet. Please upload an Excel file to view its data.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script type="module" src="excel-upload-script.js"></script>
+</body>
+
+</html>
+
