@@ -818,6 +818,240 @@
         </div>
     </footer>
 
+    <!-- Coupon Modal -->
+    <div id="couponModal" class="coupon-modal" style="display: none;">
+        <div class="coupon-modal-overlay"></div>
+        <div class="coupon-modal-content">
+            <div class="coupon-modal-header">
+                <div class="coupon-success-icon">🎉</div>
+                <h2>Congratulations! Coupon Applied Successfully</h2>
+                <p>Your discount has been applied. Review the details below and proceed to payment.</p>
+            </div>
+            <div class="coupon-modal-body">
+                <div class="coupon-code-display">
+                    <span class="coupon-label">Coupon Code:</span>
+                    <span id="modalCouponCode" class="coupon-code-value"></span>
+                </div>
+                <div class="coupon-pricing-breakdown">
+                    <div class="price-row">
+                        <span>Original Price:</span>
+                        <span id="modalOriginalPrice" class="original-price"></span>
+                    </div>
+                    <div class="price-row">
+                        <span>Discount:</span>
+                        <span id="modalDiscount" class="discount-amount"></span>
+                    </div>
+                    <div class="price-row final-price-row">
+                        <span>Final Price:</span>
+                        <span id="modalFinalPrice" class="final-price"></span>
+                    </div>
+                </div>
+                <div id="modalErrorMessage" class="modal-error-message" style="display: none;"></div>
+            </div>
+            <div class="coupon-modal-footer">
+                <button id="modalCancelBtn" class="btn btn-secondary">Cancel</button>
+                <button id="modalPayBtn" class="btn btn-primary">
+                    <i class="fas fa-lock" style="margin-right: 0.5rem;"></i>
+                    Proceed to Payment
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .coupon-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .coupon-modal-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(4px);
+        }
+
+        .coupon-modal-content {
+            position: relative;
+            background: var(--white);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-2xl);
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            z-index: 10001;
+            animation: modalSlideIn 0.3s ease-out;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .coupon-modal-header {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+            border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+        }
+
+        .coupon-success-icon {
+            font-size: 3.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .coupon-modal-header h2 {
+            margin: 0.5rem 0;
+            font-size: 1.5rem;
+            font-weight: var(--font-bold);
+            color: white;
+        }
+
+        .coupon-modal-header p {
+            margin: 0.5rem 0 0;
+            opacity: 0.95;
+            font-size: var(--text-base);
+        }
+
+        .coupon-modal-body {
+            padding: 2rem;
+        }
+
+        .coupon-code-display {
+            background: var(--gray-50);
+            padding: 1.5rem;
+            border-radius: var(--radius-lg);
+            text-align: center;
+            margin-bottom: 1.5rem;
+            border: 2px dashed var(--border);
+        }
+
+        .coupon-label {
+            display: block;
+            font-size: var(--text-sm);
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+            font-weight: var(--font-medium);
+        }
+
+        .coupon-code-value {
+            display: block;
+            font-size: 1.75rem;
+            font-weight: var(--font-bold);
+            color: var(--primary);
+            letter-spacing: 0.1em;
+            font-family: 'Courier New', monospace;
+        }
+
+        .coupon-pricing-breakdown {
+            background: var(--gray-50);
+            padding: 1.5rem;
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border);
+        }
+
+        .price-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 0;
+            font-size: var(--text-base);
+            color: var(--text-primary);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .price-row:last-child {
+            border-bottom: none;
+        }
+
+        .final-price-row {
+            margin-top: 0.5rem;
+            padding-top: 1rem;
+            border-top: 2px solid var(--border);
+            font-size: var(--text-lg);
+            font-weight: var(--font-bold);
+        }
+
+        .original-price {
+            text-decoration: line-through;
+            color: var(--text-secondary);
+        }
+
+        .discount-amount {
+            color: #10b981;
+            font-weight: var(--font-semibold);
+        }
+
+        .final-price {
+            color: var(--primary);
+            font-size: 1.5rem;
+        }
+
+        .coupon-modal-footer {
+            padding: 1.5rem 2rem;
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+            border-top: 1px solid var(--border);
+        }
+
+        .modal-error-message {
+            background: #fee2e2;
+            color: #dc2626;
+            padding: 1rem;
+            border-radius: var(--radius-lg);
+            border: 1px solid #fecaca;
+            margin-top: 1rem;
+            font-size: var(--text-sm);
+        }
+
+        @media (max-width: 768px) {
+            .coupon-modal-content {
+                width: 95%;
+                max-width: none;
+            }
+
+            .coupon-modal-header {
+                padding: 1.5rem;
+            }
+
+            .coupon-modal-header h2 {
+                font-size: 1.25rem;
+            }
+
+            .coupon-modal-body {
+                padding: 1.5rem;
+            }
+
+            .coupon-modal-footer {
+                padding: 1rem 1.5rem;
+                flex-direction: column-reverse;
+            }
+
+            .coupon-modal-footer .btn {
+                width: 100%;
+            }
+        }
+    </style>
+
     <script src="script.js"></script>
 </body>
 
