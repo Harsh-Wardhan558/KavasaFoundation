@@ -205,6 +205,17 @@ function selectCategory(category) {
 fetchPricingFromFirebase();
 
 /* ------------------------------
+   GET URL PARAMETERS
+------------------------------ */
+function getUrlParameter(name) {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get(name);
+}
+
+// Get coupon code from URL parameter
+const couponCode = getUrlParameter('couponCode') || null;
+
+/* ------------------------------
    REGISTRATION + RAZORPAY PROCESS
 ------------------------------ */
 const registrationForm = document.getElementById('registrationForm');
@@ -212,9 +223,111 @@ const registrationSuccessBox = document.getElementById('registrationSuccess');
 const downloadReceiptBtn = document.getElementById('downloadReceiptBtn');
 let lastSuccessfulOrderId = null;
 
+// Coupon modal elements
+const couponModal = document.getElementById('couponModal');
+const modalCancelBtn = document.getElementById('modalCancelBtn');
+const modalPayBtn = document.getElementById('modalPayBtn');
+const modalCouponCode = document.getElementById('modalCouponCode');
+const modalOriginalPrice = document.getElementById('modalOriginalPrice');
+const modalDiscount = document.getElementById('modalDiscount');
+const modalFinalPrice = document.getElementById('modalFinalPrice');
+const modalErrorMessage = document.getElementById('modalErrorMessage');
+
+// Store pending order data for modal payment
+let pendingOrderData = null;
+
+// Function to show coupon modal
+function showCouponModal(data) {
+    if (!couponModal) return;
+    
+    modalCouponCode.textContent = data.couponCode;
+    modalOriginalPrice.textContent = `₹${data.originalAmount.toFixed(2)}`;
+    
+    const discountText = `-₹${data.discount.toFixed(2)}`;
+    modalDiscount.textContent = discountText;
+    modalDiscount.style.color = '#10b981';
+    
+    modalFinalPrice.textContent = `₹${data.finalAmount.toFixed(2)}`;
+    modalErrorMessage.style.display = 'none';
+    
+    // Store data for payment
+    pendingOrderData = data;
+    
+    // Show modal
+    couponModal.style.display = 'flex';
+    document.body.style.overflow = 'hidden'; // Prevent background scrolling
+}
+
+// Function to show error in modal
+function showCouponModalError(message) {
+    if (modalErrorMessage) {
+        modalErrorMessage.textContent = message;
+        modalErrorMessage.style.display = 'block';
+    }
+    // Still show modal but with error
+    if (couponModal) {
+        couponModal.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+    }
+}
+
+// Function to hide coupon modal
+function hideCouponModal() {
+    if (couponModal) {
+        couponModal.style.display = 'none';
+        document.body.style.overflow = ''; // Restore scrolling
+    }
+    pendingOrderData = null;
+}
+
+// Modal cancel button
+if (modalCancelBtn) {
+    modalCancelBtn.addEventListener('click', () => {
+        hideCouponModal();
+    });
+}
+
+// Close modal on overlay click
+if (couponModal) {
+    const overlay = couponModal.querySelector('.coupon-modal-overlay');
+    if (overlay) {
+        overlay.addEventListener('click', () => {
+            hideCouponModal();
+        });
+    }
+}
+
+// Modal pay button - create order and open Razorpay
+if (modalPayBtn) {
+    modalPayBtn.addEventListener('click', async () => {
+        if (!pendingOrderData) return;
+        
+        const btn = modalPayBtn;
+        const oldText = btn.innerHTML;
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin" style="margin-right: 0.5rem;"></i>Processing...';
+        
+        try {
+            await createOrderAndOpenRazorpay(
+                pendingOrderData.formData,
+                pendingOrderData.originalAmount,
+                pendingOrderData.couponCode,
+                pendingOrderData.finalAmount
+            );
+            hideCouponModal();
+        } catch (error) {
+            console.error('Error creating order:', error);
+            showCouponModalError(`Error: ${error.message}`);
+            btn.disabled = false;
+            btn.innerHTML = oldText;
+        }
+    });
+}
+
+// Registration form submit handler
 if (registrationForm) {
     registrationForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
+        e.preventDefault(); // Prevent form submission and page reload
 
         // Collect form values
         const name = document.getElementById('reg-name').value.trim();
@@ -235,7 +348,20 @@ if (registrationForm) {
             return;
         }
 
-        const amount = amountMap[category];
+        let amount = amountMap[category];
+        let finalAmount = amount;
+        let couponDiscount = 0;
+
+        // Store form data for later use
+        const formData = {
+            name,
+            age,
+            gender,
+            category,
+            phone,
+            email,
+            tshirtSize
+        };
 
         // Hide previous success message when starting a new payment
         if (registrationSuccessBox) {
@@ -246,110 +372,58 @@ if (registrationForm) {
         const old = btn.innerText;
 
         try {
-            btn.innerText = "Creating Order...";
+            btn.innerText = "Validating Coupon...";
             btn.disabled = true;
 
             /* ------------------------------
-               CREATE ORDER (FULL FORM DATA)
+               VALIDATE COUPON CODE (if present)
             ------------------------------ */
-            const orderRes = await fetch(`${API_BASE_URL}/api/create-order`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    amount,
-                    currency: "INR",
-                    receipt: `marathon_${Date.now()}`,
-                    formData: {
-                        name,
-                        age,
-                        gender,
-                        category,
-                        phone,
-                        email,
-                        tshirtSize
-                    }
-                })
-            });
-
-            const orderData = await orderRes.json();
-            if (!orderData.success) throw new Error(orderData.error);
-
-            /* ------------------------------
-               PREPARE CHECKOUT
-            ------------------------------ */
-            const options = {
-                key: RAZORPAY_KEY_ID,
-                amount: orderData.amount,
-                currency: "INR",
-                name: "Madras Marathon 2026 - Kavasa Foundation",
-                description: `Registration for ${category.toUpperCase()}`,
-                order_id: orderData.orderId,
-
-                handler: async function (response) {
-                    btn.innerText = "Verifying...";
-
-                    const verifyRes = await fetch(`${API_BASE_URL}/api/verify-payment`, {
+            if (couponCode) {
+                try {
+                    const validateRes = await fetch(`${API_BASE_URL}/api/validate-coupon`, {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
                         body: JSON.stringify({
-                            ...response,
-                            formData: {
-                                name,
-                                age,
-                                gender,
-                                category,
-                                phone,
-                                email,
-                                tshirtSize,
-                                amount
-                            }
+                            couponCode: couponCode,
+                            amount: amount
                         })
                     });
 
-                    const verify = await verifyRes.json();
+                    const validateData = await validateRes.json();
 
-                    if (verify.success) {
-                        const orderId = verify.orderId || response.razorpay_order_id || options.order_id;
-                        lastSuccessfulOrderId = orderId;
+                    if (validateData.valid) {
+                        // Store coupon data
+                        couponDiscount = validateData.discount;
+                        finalAmount = validateData.finalAmount;
+                        
+                        // Show modal with coupon details
+                        showCouponModal({
+                            couponCode: validateData.couponCode,
+                            originalAmount: amount,
+                            discount: couponDiscount,
+                            finalAmount: finalAmount,
+                            discountType: validateData.couponDetails.discountType,
+                            formData: formData
+                        });
 
-                        console.log(`Payment Success! Order ID: ${orderId}`);
-                        registrationForm.reset();
-
-                        if (registrationSuccessBox && downloadReceiptBtn && lastSuccessfulOrderId) {
-                            registrationSuccessBox.style.display = 'block';
-
-                            downloadReceiptBtn.onclick = () => {
-                                const url = `${API_BASE_URL}/api/download-pdf/${lastSuccessfulOrderId}`;
-                                window.open(url, '_blank');
-                            };
-                        }
-                    } else {
-                        console.log("Payment verification failed.");
-                    }
-
-                    btn.innerText = old;
-                    btn.disabled = false;
-                },
-
-                prefill: { name, email, contact: phone },
-                theme: { color: "#2563eb" },
-
-                modal: {
-                    ondismiss: function () {
                         btn.innerText = old;
                         btn.disabled = false;
+                        return; // Don't proceed to payment yet, wait for modal button click
+                    } else {
+                        // Show error in modal
+                        showCouponModalError(validateData.message || 'Invalid coupon code');
+                        // Continue with original amount
+                        console.log('Coupon validation failed:', validateData.message);
                     }
+                } catch (error) {
+                    console.error('Error validating coupon:', error);
+                    showCouponModalError('Could not validate coupon code. Proceeding with original price.');
                 }
-            };
+            }
 
-            const rzp = new Razorpay(options);
-            rzp.open();
-
-            rzp.on("payment.failed", function (resp) {
-                console.log("Payment failed: " + resp.error.description);
-                btn.innerText = old;
-                btn.disabled = false;
-            });
+            // If no coupon or coupon validation failed, proceed directly to payment
+            btn.innerText = "Creating Order...";
+            await createOrderAndOpenRazorpay(formData, amount, couponCode, finalAmount);
 
         } catch (err) {
             console.log("Error: " + err.message);
@@ -357,6 +431,119 @@ if (registrationForm) {
             btn.disabled = false;
         }
     });
+}
+
+// Function to create order and open Razorpay
+async function createOrderAndOpenRazorpay(formData, amount, couponCode, finalAmount) {
+    const btn = registrationForm.querySelector("button[type=submit]");
+    const old = btn.innerText;
+    
+    try {
+        btn.innerText = "Creating Order...";
+        btn.disabled = true;
+
+        /* ------------------------------
+           CREATE ORDER (FULL FORM DATA)
+        ------------------------------ */
+        // Send original amount - backend will apply coupon discount
+        const orderPayload = {
+            amount: amount, // Original amount, backend will apply discount
+            currency: "INR",
+            receipt: `marathon_${Date.now()}`,
+            formData: {
+                ...formData,
+                couponCode: couponCode || null // Pass couponCode in formData as backend expects
+            }
+        };
+
+        const orderRes = await fetch(`${API_BASE_URL}/api/create-order`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(orderPayload)
+        });
+
+        const orderData = await orderRes.json();
+        if (!orderData.success) throw new Error(orderData.error);
+
+        /* ------------------------------
+           PREPARE CHECKOUT
+        ------------------------------ */
+        // Use the finalAmount from backend (after discount applied)
+        const options = {
+            key: RAZORPAY_KEY_ID,
+            amount: Math.round(orderData.finalAmount * 100), // Convert to paise, use finalAmount from backend
+            currency: "INR",
+            name: "Madras Marathon 2026 - Kavasa Foundation",
+            description: `Registration for ${formData.category.toUpperCase()}${couponCode && finalAmount < amount ? ` (Coupon: ${couponCode})` : ''}`,
+            order_id: orderData.orderId,
+
+            handler: async function (response) {
+                btn.innerText = "Verifying...";
+
+                const verifyRes = await fetch(`${API_BASE_URL}/api/verify-payment`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        ...response,
+                        formData: {
+                            ...formData,
+                            amount: finalAmount,
+                            couponCode: couponCode || null
+                        }
+                    })
+                });
+
+                    const verify = await verifyRes.json();
+
+                if (verify.success) {
+                    const orderId = verify.orderId || response.razorpay_order_id || options.order_id;
+                    lastSuccessfulOrderId = orderId;
+
+                    console.log(`Payment Success! Order ID: ${orderId}`);
+                    registrationForm.reset();
+
+                    if (registrationSuccessBox && downloadReceiptBtn && lastSuccessfulOrderId) {
+                        registrationSuccessBox.style.display = 'block';
+
+                        downloadReceiptBtn.onclick = () => {
+                            const url = `${API_BASE_URL}/api/download-pdf/${lastSuccessfulOrderId}`;
+                            window.open(url, '_blank');
+                        };
+                    }
+                } else {
+                    console.log("Payment verification failed.");
+                }
+
+                btn.innerText = old;
+                btn.disabled = false;
+            },
+
+            prefill: { name: formData.name, email: formData.email, contact: formData.phone },
+            theme: { color: "#2563eb" },
+
+            modal: {
+                ondismiss: function () {
+                    btn.innerText = old;
+                    btn.disabled = false;
+                }
+            }
+        };
+
+        const rzp = new Razorpay(options);
+        rzp.open();
+
+        rzp.on("payment.failed", function (resp) {
+            console.log("Payment failed: " + resp.error.description);
+            btn.innerText = old;
+            btn.disabled = false;
+        });
+
+    } catch (err) {
+        console.log("Error: " + err.message);
+        btn.innerText = old;
+        btn.disabled = false;
+        throw err; // Re-throw so modal can handle it
+    }
 }
 
 /* ------------------------------
