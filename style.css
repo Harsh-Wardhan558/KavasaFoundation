@@ -1857,12 +1857,12 @@ textarea.form-control {
     transition: var(--transition-all);
     width: 100%;
     max-width: 300px;
-    height: 200px;
+    min-height: 200px;
     display: flex;
     align-items: center;
     justify-content: center;
     position: relative;
-    overflow: hidden;
+    overflow: visible;
 }
 
 .sponsor-item::before {
@@ -1910,7 +1910,7 @@ textarea.form-control {
     }
     
     .sponsor-item {
-        height: 160px;
+        min-height: 160px;
         padding: var(--space-6);
     }
     
