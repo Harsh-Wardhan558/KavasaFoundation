@@ -342,6 +342,8 @@ function initializeExcelUpload() {
 
         const headers = currentSheetData[0].map(h => String(h || '').toLowerCase().trim());
         const rows = currentSheetData.slice(1);
+        const nameIndex = headers.indexOf('name');
+
 
         // Find column indices - match Excel column names
         const columnMap = {
@@ -414,7 +416,7 @@ function initializeExcelUpload() {
                     email: email,
                     orderId: orderId,
                     registrationData: {
-                        name: getCellValue(columnMap.name, 'N/A'),
+                        name: nameIndex !== -1 ? String(row[nameIndex]).trim() : 'N/A',
                         email: email,
                         phone: getCellValue(columnMap.phone, 'N/A'),
                         category: getCellValue(columnMap.category, 'N/A'),
