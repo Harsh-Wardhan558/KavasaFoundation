@@ -213,7 +213,17 @@ function getUrlParameter(name) {
 }
 
 // Get coupon code from URL parameter
-const couponCode = getUrlParameter('couponCode') || null;
+const urlCouponCode = getUrlParameter('couponCode') || null;
+
+// Pre-fill coupon field if URL param exists
+if (urlCouponCode) {
+    window.addEventListener('DOMContentLoaded', () => {
+        const couponInput = document.getElementById('reg-coupon');
+        if (couponInput) {
+            couponInput.value = urlCouponCode;
+        }
+    });
+}
 
 /* ------------------------------
    REGISTRATION + RAZORPAY PROCESS
@@ -239,20 +249,20 @@ let pendingOrderData = null;
 // Function to show coupon modal
 function showCouponModal(data) {
     if (!couponModal) return;
-    
+
     modalCouponCode.textContent = data.couponCode;
     modalOriginalPrice.textContent = `₹${data.originalAmount.toFixed(2)}`;
-    
+
     const discountText = `-₹${data.discount.toFixed(2)}`;
     modalDiscount.textContent = discountText;
     modalDiscount.style.color = '#10b981';
-    
+
     modalFinalPrice.textContent = `₹${data.finalAmount.toFixed(2)}`;
     modalErrorMessage.style.display = 'none';
-    
+
     // Store data for payment
     pendingOrderData = data;
-    
+
     // Show modal
     couponModal.style.display = 'flex';
     document.body.style.overflow = 'hidden'; // Prevent background scrolling
@@ -301,12 +311,12 @@ if (couponModal) {
 if (modalPayBtn) {
     modalPayBtn.addEventListener('click', async () => {
         if (!pendingOrderData) return;
-        
+
         const btn = modalPayBtn;
         const oldText = btn.innerHTML;
         btn.disabled = true;
         btn.innerHTML = '<i class="fas fa-spinner fa-spin" style="margin-right: 0.5rem;"></i>Processing...';
-        
+
         try {
             await createOrderAndOpenRazorpay(
                 pendingOrderData.formData,
@@ -378,13 +388,16 @@ if (registrationForm) {
             /* ------------------------------
                VALIDATE COUPON CODE (if present)
             ------------------------------ */
-            if (couponCode) {
+            const couponInput = document.getElementById('reg-coupon');
+            const enteredCouponCode = couponInput ? couponInput.value.trim().toUpperCase() : null;
+
+            if (enteredCouponCode) {
                 try {
                     const validateRes = await fetch(`${API_BASE_URL}/api/validate-coupon`, {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
                         body: JSON.stringify({
-                            couponCode: couponCode,
+                            couponCode: enteredCouponCode,
                             amount: amount
                         })
                     });
@@ -395,7 +408,7 @@ if (registrationForm) {
                         // Store coupon data
                         couponDiscount = validateData.discount;
                         finalAmount = validateData.finalAmount;
-                        
+
                         // Show modal with coupon details
                         showCouponModal({
                             couponCode: validateData.couponCode,
@@ -423,7 +436,7 @@ if (registrationForm) {
 
             // If no coupon or coupon validation failed, proceed directly to payment
             btn.innerText = "Creating Order...";
-            await createOrderAndOpenRazorpay(formData, amount, couponCode, finalAmount);
+            await createOrderAndOpenRazorpay(formData, amount, enteredCouponCode, finalAmount);
 
         } catch (err) {
             console.log("Error: " + err.message);
@@ -437,7 +450,7 @@ if (registrationForm) {
 async function createOrderAndOpenRazorpay(formData, amount, couponCode, finalAmount) {
     const btn = registrationForm.querySelector("button[type=submit]");
     const old = btn.innerText;
-    
+
     try {
         btn.innerText = "Creating Order...";
         btn.disabled = true;
@@ -493,7 +506,7 @@ async function createOrderAndOpenRazorpay(formData, amount, couponCode, finalAmo
                     })
                 });
 
-                    const verify = await verifyRes.json();
+                const verify = await verifyRes.json();
 
                 if (verify.success) {
                     const orderId = verify.orderId || response.razorpay_order_id || options.order_id;
