@@ -146,6 +146,57 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     }
 
+    //Resend Email
+    window.resendEmail =  async function (email, orderId, paymentId, registrationData, amount) {
+    try {
+        const payload = {
+            email: email,
+            orderId: orderId,
+            registrationData: {
+                name: registrationData.name || 'N/A',
+                email: email,
+                phone: registrationData.phone || 'N/A',
+                category: registrationData.category || 'N/A',
+                age: registrationData.age || 0,
+                gender: registrationData.gender || 'N/A',
+                tshirtSize: registrationData.tshirtSize || 'N/A'
+            },
+            paymentData: {
+                razorpay_payment_id: paymentId || 'N/A',
+                status: 'success',
+                amount: amount,
+                finalAmount: amount
+            },
+            eventInfo: {
+                title: 'Agilisium Madras Marathon 2026',
+                date: '8th February 2026',
+                location: 'Presidency College, Chennai'
+            }
+        };
+
+        const response = await fetch(
+            'https://generateandsendpdf-3c2ivlmw3a-uc.a.run.app',
+            {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            }
+        );
+
+        if (response.ok) {
+            alert(`✅ Email resent to ${email}`);
+        } else {
+            const err = await response.text();
+            alert(`❌ Failed to resend email\n${err}`);
+        }
+    } catch (error) {
+        console.error('Resend email error:', error);
+        alert(`❌ Error: ${error.message}`);
+    }
+}
+
+
+
     // Load registrations from Firestore (successful + failed + other statuses)
     async function loadRegistrations() {
         try {
@@ -303,6 +354,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                         const amount = reg.data.amount;
                         const docData = reg.data;
                         const registrationId = reg.id;
+                        const orderId = docData.razorpay_order_id ;
+                        const paymentId = docData.razorpay_payment_id ;
+                        console.log("Order ID:", orderId, "Payment ID:", paymentId);
 
                         // Get registration data from registrationData field (fallback to document root)
                         const data = docData.registrationData || docData || {};
@@ -340,11 +394,25 @@ document.addEventListener('DOMContentLoaded', async () => {
                                     </div>
                                 </div>
                                 <div>
-                                    <span class="registration-category">${(data.category || 'N/A').toUpperCase()}</span>
-                                    <div style="margin-top: 0.5rem; font-weight: var(--font-semibold); color: var(--text-primary);">
-                                        ₹${amount}
-                                    </div>
-                                </div>
+    <span class="registration-category">${(data.category || 'N/A').toUpperCase()}</span>
+
+    <div style="margin-top: 0.5rem; font-weight: var(--font-semibold); color: var(--text-primary);">
+        ₹${amount}
+    </div>
+
+    <button
+        class="resend-btn"
+        onclick="resendEmail(
+            '${data.email}',
+            '${orderId}',
+            '${paymentId}',
+            ${JSON.stringify(data).replace(/"/g, '&quot;')},
+            ${amount}
+        )">
+        📧 Resend Email
+    </button>
+</div>
+
                             </div>
                         `;
                         index++;
