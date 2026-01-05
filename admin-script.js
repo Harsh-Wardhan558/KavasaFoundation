@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             setTimeout(resolve, 5000);
         });
     }
-    
+
     // Additional small delay to ensure everything is loaded
     await new Promise(resolve => setTimeout(resolve, 100));
 
@@ -41,7 +41,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     const adminDoc = await window.firebaseGetDoc(
                         window.firebaseDoc(window.firebaseDb, 'users', 'admin')
                     );
-                    
+
                     if (adminDoc.exists() && adminDoc.data().email === user.email) {
                         // User is admin, show admin panel
                         loginContainer.classList.add('hidden');
@@ -147,55 +147,135 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     //Resend Email
-    window.resendEmail =  async function (email, orderId, paymentId, registrationData, amount) {
-    try {
-        const payload = {
-            email: email,
-            orderId: orderId,
-            registrationData: {
-                name: registrationData.name || 'N/A',
+    window.resendEmail = async function (email, orderId, paymentId, registrationData, amount) {
+        try {
+            const payload = {
                 email: email,
-                phone: registrationData.phone || 'N/A',
-                category: registrationData.category || 'N/A',
-                age: registrationData.age || 0,
-                gender: registrationData.gender || 'N/A',
-                tshirtSize: registrationData.tshirtSize || 'N/A'
-            },
-            paymentData: {
-                razorpay_payment_id: paymentId || 'N/A',
-                status: 'success',
-                amount: amount,
-                finalAmount: amount
-            },
-            eventInfo: {
-                title: 'Agilisium Madras Marathon 2026',
-                date: '8th February 2026',
-                location: 'Presidency College, Chennai'
-            }
-        };
+                orderId: orderId,
+                registrationData: {
+                    name: registrationData.name || 'N/A',
+                    email: email,
+                    phone: registrationData.phone || 'N/A',
+                    category: registrationData.category || 'N/A',
+                    age: registrationData.age || 0,
+                    gender: registrationData.gender || 'N/A',
+                    tshirtSize: registrationData.tshirtSize || 'N/A'
+                },
+                paymentData: {
+                    razorpay_payment_id: paymentId || 'N/A',
+                    status: 'success',
+                    amount: amount,
+                    finalAmount: amount
+                },
+                eventInfo: {
+                    title: 'Agilisium Madras Marathon 2026',
+                    date: '8th February 2026',
+                    location: 'Presidency College, Chennai'
+                }
+            };
 
-        const response = await fetch(
-            'https://generateandsendpdf-3c2ivlmw3a-uc.a.run.app',
-            {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            }
-        );
+            const response = await fetch(
+                'https://generateandsendpdf-3c2ivlmw3a-uc.a.run.app',
+                {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                }
+            );
 
-        if (response.ok) {
-            alert(`✅ Email resent to ${email}`);
-        } else {
-            const err = await response.text();
-            alert(`❌ Failed to resend email\n${err}`);
+            if (response.ok) {
+                alert(`✅ Email resent to ${email}`);
+            } else {
+                const err = await response.text();
+                alert(`❌ Failed to resend email\n${err}`);
+            }
+        } catch (error) {
+            console.error('Resend email error:', error);
+            alert(`❌ Error: ${error.message}`);
         }
-    } catch (error) {
-        console.error('Resend email error:', error);
-        alert(`❌ Error: ${error.message}`);
     }
-}
 
 
+
+    // Helper function to handle authorized payment and send email
+    window.handleAuthorizedPayment = async function (registrationId, paymentId, amount, registrationDataStr, buttonId) {
+        const button = document.getElementById(buttonId);
+        const originalContent = button.innerHTML;
+
+        try {
+            // Show loader
+            button.disabled = true;
+            button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+
+            const registrationData = JSON.parse(decodeURIComponent(registrationDataStr));
+            const email = registrationData.email;
+
+            // 1. Update Firestore status to 'captured'
+            const docRef = window.firebaseDoc(window.firebaseDb, 'marathon_registrations', registrationId);
+            await window.firebaseUpdateDoc(docRef, {
+                status: 'captured',
+                updatedAt: new Date(),
+                statusUpdatedBy: 'admin_panel'
+            });
+
+            // 2. Send Email
+            // Construct payload similar to resendEmail but we handle the response differently
+            const payload = {
+                email: email,
+                orderId: registrationData.razorpay_order_id || 'N/A', // Assuming it's in registrationData or we might need to pass it
+                registrationData: {
+                    name: registrationData.name || 'N/A',
+                    email: email,
+                    phone: registrationData.phone || 'N/A',
+                    category: registrationData.category || 'N/A',
+                    age: registrationData.age || 0,
+                    gender: registrationData.gender || 'N/A',
+                    tshirtSize: registrationData.tshirtSize || 'N/A'
+                },
+                paymentData: {
+                    razorpay_payment_id: paymentId || 'N/A',
+                    status: 'success',
+                    amount: amount,
+                    finalAmount: amount
+                },
+                eventInfo: {
+                    title: 'Agilisium Madras Marathon 2026',
+                    date: '8th February 2026',
+                    location: 'Presidency College, Chennai'
+                }
+            };
+
+            console.log('Sending email payload:', payload);
+
+            const response = await fetch(
+                'https://generateandsendpdf-3c2ivlmw3a-uc.a.run.app',
+                {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                }
+            );
+
+            if (!response.ok) {
+                const err = await response.text();
+                throw new Error(`Email sending failed: ${err}`);
+            }
+
+            // Success
+            alert(`✅ Payment captured and email sent to ${email} successfully!`);
+
+            // Refresh the list to move the item
+            const refreshBtn = document.getElementById('refreshBtn');
+            if (refreshBtn) refreshBtn.click();
+
+        } catch (error) {
+            console.error('Error handling authorized payment:', error);
+            alert(`❌ Error: ${error.message}`);
+            // Revert button
+            button.disabled = false;
+            button.innerHTML = originalContent;
+        }
+    };
 
     // Load registrations from Firestore (successful + failed + other statuses)
     async function loadRegistrations() {
@@ -231,7 +311,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             // Fetch all documents without ordering (we'll sort client-side)
             // This avoids Firestore errors if timestamp field is missing or inconsistent
             const querySnapshot = await window.firebaseGetDocs(registrationsRef);
-            console.log("Query Snapshot",querySnapshot);
+            console.log("Query Snapshot", querySnapshot);
 
             if (querySnapshot.empty) {
                 // Reset arrays when no data
@@ -319,7 +399,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             const sortByTimestampDesc = (a, b) => {
                 const timestampA = a.data.timestamp || (a.data.registrationData && a.data.registrationData.timestamp);
                 const timestampB = b.data.timestamp || (b.data.registrationData && b.data.registrationData.timestamp);
-                
+
                 if (timestampA && timestampB) {
                     const dateA = timestampA.toDate ? timestampA.toDate() : new Date(timestampA);
                     const dateB = timestampB.toDate ? timestampB.toDate() : new Date(timestampB);
@@ -354,8 +434,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                         const amount = reg.data.amount;
                         const docData = reg.data;
                         const registrationId = reg.id;
-                        const orderId = docData.razorpay_order_id ;
-                        const paymentId = docData.razorpay_payment_id ;
+                        const orderId = docData.razorpay_order_id;
+                        const paymentId = docData.razorpay_payment_id;
                         console.log("Order ID:", orderId, "Payment ID:", paymentId);
 
                         // Get registration data from registrationData field (fallback to document root)
@@ -535,6 +615,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                         });
 
                         const statusText = docData.status || 'unknown';
+                        const btnId = `btn-${registrationId}`;
 
                         htmlOther += `
                             <div class="registration-item">
@@ -556,6 +637,21 @@ document.addEventListener('DOMContentLoaded', async () => {
                                     <div style="margin-top: 0.5rem; font-weight: var(--font-semibold); color: var(--text-primary);">
                                         ₹${amount}
                                     </div>
+                                    ${statusText === 'authorized' ? `
+                                    <button 
+                                        id="${btnId}"
+                                        class="resend-btn"
+                                        style="background: #059669; margin-top: 0.5rem; width: 100%;"
+                                        onclick="handleAuthorizedPayment(
+                                            '${registrationId}', 
+                                            '${docData.razorpay_payment_id || ''}', 
+                                            '${amount}',
+                                            '${encodeURIComponent(JSON.stringify(data))}',
+                                            '${btnId}'
+                                        )">
+                                        <i class="fas fa-check-circle"></i> Approve & Send Email
+                                    </button>
+                                    ` : ''}
                                 </div>
                             </div>
                         `;
@@ -629,7 +725,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 // Convert to CSV - filter by status "captured"
                 let csv = 'Name,Email,Phone,Age,Gender,Category,T-Shirt Size,Amount,Registration Date\n';
                 let hasCapturedData = false;
-                
+
                 querySnapshot.forEach((doc) => {
                     const docData = doc.data();
                     // Only export registrations with status "captured"
@@ -637,7 +733,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                         hasCapturedData = true;
                         // Get registration data from registrationData field
                         const data = docData.registrationData || docData;
-                        
+
                         // Format timestamp - check both document level and registrationData level
                         let timestamp = docData.timestamp || data.timestamp;
                         if (timestamp) {
@@ -646,11 +742,11 @@ document.addEventListener('DOMContentLoaded', async () => {
                             timestamp = new Date();
                         }
                         const formattedDate = timestamp.toLocaleString('en-IN');
-                        
+
                         csv += `"${data.name || ''}","${data.email || ''}","${data.phone || ''}",${data.age || ''},"${data.gender || ''}","${data.category || ''}","${data.tshirtSize || ''}",${data.amount || 0},"${formattedDate}"\n`;
                     }
                 });
-                
+
                 if (!hasCapturedData) {
                     alert('No captured registrations to export.');
                     exportBtn.innerHTML = originalText;
@@ -689,11 +785,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         // Convert to CSV
         let csv = 'Name,Email,Phone,Age,Gender,Category,T-Shirt Size,Amount,Status,Registration Date\n';
-        
+
         registrations.forEach((reg) => {
             const docData = reg.data;
             const data = docData.registrationData || docData || {};
-            
+
             // Format timestamp
             let timestamp = docData.createdAt || docData.timestamp || (data && data.timestamp);
             if (timestamp) {
@@ -702,10 +798,10 @@ document.addEventListener('DOMContentLoaded', async () => {
                 timestamp = new Date();
             }
             const formattedDate = timestamp.toLocaleString('en-IN');
-            
+
             const statusText = docData.status || 'unknown';
             const amount = docData.amount || data.amount || 0;
-            
+
             csv += `"${data.name || ''}","${data.email || ''}","${data.phone || ''}",${data.age || ''},"${data.gender || ''}","${data.category || ''}","${data.tshirtSize || ''}",${amount},"${statusText}","${formattedDate}"\n`;
         });
 
@@ -728,13 +824,13 @@ document.addEventListener('DOMContentLoaded', async () => {
                 exportSuccessfulBtn.disabled = true;
                 const originalText = exportSuccessfulBtn.innerHTML;
                 exportSuccessfulBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Exporting...';
-                
+
                 exportRegistrations(
                     currentSuccessfulRegistrations,
                     `successful_payments_${new Date().toISOString().split('T')[0]}.csv`,
                     'successful payments'
                 );
-                
+
                 exportSuccessfulBtn.innerHTML = originalText;
                 exportSuccessfulBtn.disabled = false;
             } catch (error) {
@@ -753,13 +849,13 @@ document.addEventListener('DOMContentLoaded', async () => {
                 exportFailedBtn.disabled = true;
                 const originalText = exportFailedBtn.innerHTML;
                 exportFailedBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Exporting...';
-                
+
                 exportRegistrations(
                     currentFailedRegistrations,
                     `failed_payments_${new Date().toISOString().split('T')[0]}.csv`,
                     'failed payments'
                 );
-                
+
                 exportFailedBtn.innerHTML = originalText;
                 exportFailedBtn.disabled = false;
             } catch (error) {
@@ -778,13 +874,13 @@ document.addEventListener('DOMContentLoaded', async () => {
                 exportOtherBtn.disabled = true;
                 const originalText = exportOtherBtn.innerHTML;
                 exportOtherBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Exporting...';
-                
+
                 exportRegistrations(
                     currentOtherRegistrations,
                     `other_status_${new Date().toISOString().split('T')[0]}.csv`,
                     'other status records'
                 );
-                
+
                 exportOtherBtn.innerHTML = originalText;
                 exportOtherBtn.disabled = false;
             } catch (error) {

@@ -21,7 +21,7 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-analytics.js";
         import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { getFirestore, doc, getDoc, collection, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, doc, getDoc, collection, getDocs, query, orderBy, updateDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         // Your web app's Firebase configuration
         // For Firebase JS SDK v7.20.0 and later, measurementId is optional
@@ -48,12 +48,13 @@
         window.firebaseSignOut = signOut;
         window.firebaseOnAuthStateChanged = onAuthStateChanged;
         window.firebaseGetDoc = getDoc;
+        window.firebaseUpdateDoc = updateDoc;
         window.firebaseDoc = doc;
         window.firebaseCollection = collection;
         window.firebaseGetDocs = getDocs;
         window.firebaseQuery = query;
         window.firebaseOrderBy = orderBy;
-        
+
         // Signal that Firebase is ready
         window.firebaseReady = true;
         window.dispatchEvent(new Event('firebaseReady'));
@@ -215,187 +216,187 @@
                 flex-direction: column;
             }
 
-        .admin-btn {
-            width: 100%;
-            justify-content: center;
+            .admin-btn {
+                width: 100%;
+                justify-content: center;
+            }
         }
-    }
 
-    /* Login Form Styles */
-    .login-container {
-        max-width: 450px;
-        margin: 100px auto;
-        padding: 2rem;
-        background: var(--white);
-        border-radius: var(--radius-xl);
-        box-shadow: var(--shadow-xl);
-        border: 1px solid var(--border);
-    }
+        /* Login Form Styles */
+        .login-container {
+            max-width: 450px;
+            margin: 100px auto;
+            padding: 2rem;
+            background: var(--white);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-xl);
+            border: 1px solid var(--border);
+        }
 
-    .login-header {
-        text-align: center;
-        margin-bottom: 2rem;
-    }
+        .login-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
 
-    .login-header h1 {
-        color: var(--text-primary);
-        margin-bottom: 0.5rem;
-    }
+        .login-header h1 {
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
 
-    .login-header p {
-        color: var(--text-secondary);
-        margin: 0;
-    }
+        .login-header p {
+            color: var(--text-secondary);
+            margin: 0;
+        }
 
-    .login-form {
-        display: flex;
-        flex-direction: column;
-        gap: 1.5rem;
-    }
+        .login-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
 
-    .form-group {
-        display: flex;
-        flex-direction: column;
-        gap: 0.5rem;
-    }
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
 
-    .form-label {
-        font-weight: var(--font-semibold);
-        color: var(--text-primary);
-        font-size: var(--text-sm);
-    }
+        .form-label {
+            font-weight: var(--font-semibold);
+            color: var(--text-primary);
+            font-size: var(--text-sm);
+        }
 
-    .form-input {
-        padding: 0.875rem 1rem;
-        border: 1.5px solid var(--border);
-        border-radius: var(--radius-lg);
-        font-size: var(--text-base);
-        font-family: inherit;
-        transition: var(--transition-all);
-    }
+        .form-input {
+            padding: 0.875rem 1rem;
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius-lg);
+            font-size: var(--text-base);
+            font-family: inherit;
+            transition: var(--transition-all);
+        }
 
-    .form-input:focus {
-        outline: none;
-        border-color: var(--primary);
-        box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.1);
-    }
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.1);
+        }
 
-    .error-message {
-        background: #fee2e2;
-        color: #dc2626;
-        padding: 1rem;
-        border-radius: var(--radius-lg);
-        border: 1px solid #fecaca;
-        font-size: var(--text-sm);
-        display: none;
-    }
+        .error-message {
+            background: #fee2e2;
+            color: #dc2626;
+            padding: 1rem;
+            border-radius: var(--radius-lg);
+            border: 1px solid #fecaca;
+            font-size: var(--text-sm);
+            display: none;
+        }
 
-    .error-message.show {
-        display: block;
-    }
+        .error-message.show {
+            display: block;
+        }
 
-    .loading {
-        opacity: 0.6;
-        pointer-events: none;
-    }
+        .loading {
+            opacity: 0.6;
+            pointer-events: none;
+        }
 
-    .registration-item {
-        display: grid;
-        grid-template-columns: auto 1fr auto;
-        gap: 1.5rem;
-        align-items: start;
-        padding: 1.5rem;
-        background: var(--gray-50);
-        border-radius: var(--radius-lg);
-        border: 1px solid var(--border);
-        margin-bottom: 1rem;
-        transition: var(--transition-all);
-    }
-
-    .registration-item:hover {
-        background: var(--white);
-        box-shadow: var(--shadow-md);
-        border-color: var(--primary);
-    }
-
-    .registration-number {
-        font-size: 1.5rem;
-        font-weight: var(--font-bold);
-        color: var(--primary);
-        min-width: 40px;
-    }
-
-    .registration-details {
-        flex: 1;
-    }
-
-    .resend-btn {
-    margin-top: 0.6rem;
-    padding: 6px 12px;
-    font-size: 0.85rem;
-    border-radius: 6px;
-    border: none;
-    cursor: pointer;
-    background: #2563eb;
-    color: white;
-}
-
-.resend-btn:hover {
-    background: #1e40af;
-}
-
-
-    .registration-details h3 {
-        margin: 0 0 0.5rem 0;
-        color: var(--text-primary);
-        font-size: var(--text-lg);
-    }
-
-    .registration-meta {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 1rem;
-        margin-top: 0.75rem;
-        font-size: var(--text-sm);
-        color: var(--text-secondary);
-    }
-
-    .registration-meta span {
-        display: flex;
-        align-items: center;
-        gap: 0.25rem;
-    }
-
-    .registration-category {
-        background: var(--gradient-primary);
-        color: white;
-        padding: 0.5rem 1rem;
-        border-radius: var(--radius-full);
-        font-size: var(--text-sm);
-        font-weight: var(--font-semibold);
-        white-space: nowrap;
-    }
-
-    .logout-btn {
-        position: fixed;
-        top: 90px;
-        right: 2rem;
-        z-index: 100;
-    }
-
-    @media (max-width: 768px) {
-        .logout-btn {
-            position: relative;
-            top: auto;
-            right: auto;
+        .registration-item {
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+            gap: 1.5rem;
+            align-items: start;
+            padding: 1.5rem;
+            background: var(--gray-50);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border);
             margin-bottom: 1rem;
-            width: 100%;
+            transition: var(--transition-all);
         }
-    }
 
-    .hidden {
-        display: none !important;
-    }
+        .registration-item:hover {
+            background: var(--white);
+            box-shadow: var(--shadow-md);
+            border-color: var(--primary);
+        }
+
+        .registration-number {
+            font-size: 1.5rem;
+            font-weight: var(--font-bold);
+            color: var(--primary);
+            min-width: 40px;
+        }
+
+        .registration-details {
+            flex: 1;
+        }
+
+        .resend-btn {
+            margin-top: 0.6rem;
+            padding: 6px 12px;
+            font-size: 0.85rem;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            background: #2563eb;
+            color: white;
+        }
+
+        .resend-btn:hover {
+            background: #1e40af;
+        }
+
+
+        .registration-details h3 {
+            margin: 0 0 0.5rem 0;
+            color: var(--text-primary);
+            font-size: var(--text-lg);
+        }
+
+        .registration-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-top: 0.75rem;
+            font-size: var(--text-sm);
+            color: var(--text-secondary);
+        }
+
+        .registration-meta span {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .registration-category {
+            background: var(--gradient-primary);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius-full);
+            font-size: var(--text-sm);
+            font-weight: var(--font-semibold);
+            white-space: nowrap;
+        }
+
+        .logout-btn {
+            position: fixed;
+            top: 90px;
+            right: 2rem;
+            z-index: 100;
+        }
+
+        @media (max-width: 768px) {
+            .logout-btn {
+                position: relative;
+                top: auto;
+                right: auto;
+                margin-bottom: 1rem;
+                width: 100%;
+            }
+        }
+
+        .hidden {
+            display: none !important;
+        }
     </style>
 </head>
 
@@ -447,7 +448,7 @@
             <i class="fas fa-sign-out-alt"></i>
             Logout
         </button>
-        
+
         <a href="index.html" class="back-link">
             <i class="fas fa-arrow-left"></i>
             Back to Home
@@ -466,9 +467,11 @@
                     Payment Summary
                 </h2>
                 <div style="display: flex; flex-wrap: wrap; gap: 1.5rem;">
-                    <div style="flex: 1 1 260px; background: var(--gray-50); border-radius: var(--radius-xl); padding: 1.5rem 1.75rem; border: 1px solid var(--border); box-shadow: var(--shadow-sm); display: flex; align-items: center; justify-content: space-between;">
+                    <div
+                        style="flex: 1 1 260px; background: var(--gray-50); border-radius: var(--radius-xl); padding: 1.5rem 1.75rem; border: 1px solid var(--border); box-shadow: var(--shadow-sm); display: flex; align-items: center; justify-content: space-between;">
                         <div>
-                            <div style="font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-secondary); font-weight: var(--font-semibold); margin-bottom: 0.25rem;">
+                            <div
+                                style="font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-secondary); font-weight: var(--font-semibold); margin-bottom: 0.25rem;">
                                 Successful Payments Collected
                             </div>
                             <div style="font-size: 0.8rem; color: var(--text-secondary);">
@@ -476,7 +479,8 @@
                             </div>
                         </div>
                         <div style="text-align: right;">
-                            <div id="successfulTotalAmount" style="font-size: 1.75rem; font-weight: var(--font-bold); color: var(--primary);">
+                            <div id="successfulTotalAmount"
+                                style="font-size: 1.75rem; font-weight: var(--font-bold); color: var(--primary);">
                                 ₹0
                             </div>
                         </div>
@@ -485,10 +489,12 @@
             </div>
 
             <div class="admin-section">
-                <h2><i class="fas fa-list" style="color: var(--primary); margin-right: 0.5rem;"></i>Successful Payments</h2>
+                <h2><i class="fas fa-list" style="color: var(--primary); margin-right: 0.5rem;"></i>Successful Payments
+                </h2>
                 <div id="adminList" class="admin-list">
                     <div class="admin-list-placeholder">
-                        <i class="fas fa-spinner fa-spin" style="font-size: 3rem; color: var(--gray-400); margin-bottom: 1rem; display: block;"></i>
+                        <i class="fas fa-spinner fa-spin"
+                            style="font-size: 3rem; color: var(--gray-400); margin-bottom: 1rem; display: block;"></i>
                         <p>Loading successful payments...</p>
                     </div>
                 </div>
@@ -501,15 +507,18 @@
             </div>
 
             <div class="admin-section">
-                <h2><i class="fas fa-times-circle" style="color: #dc2626; margin-right: 0.5rem;"></i>Failed Payments</h2>
+                <h2><i class="fas fa-times-circle" style="color: #dc2626; margin-right: 0.5rem;"></i>Failed Payments
+                </h2>
                 <div id="failedList" class="admin-list">
                     <div class="admin-list-placeholder">
-                        <i class="fas fa-spinner fa-spin" style="font-size: 3rem; color: var(--gray-400); margin-bottom: 1rem; display: block;"></i>
+                        <i class="fas fa-spinner fa-spin"
+                            style="font-size: 3rem; color: var(--gray-400); margin-bottom: 1rem; display: block;"></i>
                         <p>Loading failed payments...</p>
                     </div>
                 </div>
                 <div style="margin-top: 1.5rem; text-align: center;">
-                    <button id="exportFailedBtn" class="admin-btn admin-btn-secondary" style="background: linear-gradient(135deg,#dc2626,#b91c1c); color: white;">
+                    <button id="exportFailedBtn" class="admin-btn admin-btn-secondary"
+                        style="background: linear-gradient(135deg,#dc2626,#b91c1c); color: white;">
                         <i class="fas fa-download"></i>
                         Export Failed Payments
                     </button>
@@ -517,15 +526,18 @@
             </div>
 
             <div class="admin-section">
-                <h2><i class="fas fa-question-circle" style="color: #f59e0b; margin-right: 0.5rem;"></i>Other Status</h2>
+                <h2><i class="fas fa-question-circle" style="color: #f59e0b; margin-right: 0.5rem;"></i>Other Status
+                </h2>
                 <div id="otherList" class="admin-list">
                     <div class="admin-list-placeholder">
-                        <i class="fas fa-spinner fa-spin" style="font-size: 3rem; color: var(--gray-400); margin-bottom: 1rem; display: block;"></i>
+                        <i class="fas fa-spinner fa-spin"
+                            style="font-size: 3rem; color: var(--gray-400); margin-bottom: 1rem; display: block;"></i>
                         <p>Loading other status records...</p>
                     </div>
                 </div>
                 <div style="margin-top: 1.5rem; text-align: center;">
-                    <button id="exportOtherBtn" class="admin-btn admin-btn-secondary" style="background: linear-gradient(135deg,#f59e0b,#d97706); color: white;">
+                    <button id="exportOtherBtn" class="admin-btn admin-btn-secondary"
+                        style="background: linear-gradient(135deg,#f59e0b,#d97706); color: white;">
                         <i class="fas fa-download"></i>
                         Export Other Status
                     </button>
@@ -533,9 +545,12 @@
             </div>
 
             <div class="admin-section">
-                <h2><i class="fas fa-file-excel" style="color: var(--primary); margin-right: 0.5rem;"></i>Excel Upload</h2>
-                <div style="background: var(--gray-50); padding: 2rem; border-radius: var(--radius-lg); border: 1px solid var(--border); text-align: center;">
-                    <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">Upload and view Excel data in a structured table format</p>
+                <h2><i class="fas fa-file-excel" style="color: var(--primary); margin-right: 0.5rem;"></i>Excel Upload
+                </h2>
+                <div
+                    style="background: var(--gray-50); padding: 2rem; border-radius: var(--radius-lg); border: 1px solid var(--border); text-align: center;">
+                    <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">Upload and view Excel data in a
+                        structured table format</p>
                     <a href="excel-upload.html" class="admin-btn admin-btn-primary">
                         <i class="fas fa-file-upload"></i>
                         Go to Excel Upload Page
@@ -561,4 +576,3 @@
 </body>
 
 </html>
-
