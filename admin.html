@@ -21,7 +21,7 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-analytics.js";
         import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { getFirestore, doc, getDoc, collection, getDocs, query, orderBy, updateDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, doc, getDoc, collection, getDocs, query, orderBy, updateDoc, addDoc, setDoc, deleteDoc, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         // Your web app's Firebase configuration
         // For Firebase JS SDK v7.20.0 and later, measurementId is optional
@@ -44,16 +44,21 @@
         // Make Firebase available globally
         window.firebaseAuth = auth;
         window.firebaseDb = db;
+
         window.firebaseSignIn = signInWithEmailAndPassword;
         window.firebaseSignOut = signOut;
         window.firebaseOnAuthStateChanged = onAuthStateChanged;
         window.firebaseGetDoc = getDoc;
         window.firebaseUpdateDoc = updateDoc;
+        window.firebaseAddDoc = addDoc;
+        window.firebaseSetDoc = setDoc;
+        window.firebaseDeleteDoc = deleteDoc;
         window.firebaseDoc = doc;
         window.firebaseCollection = collection;
         window.firebaseGetDocs = getDocs;
         window.firebaseQuery = query;
         window.firebaseOrderBy = orderBy;
+        window.firebaseWhere = where;
 
         // Signal that Firebase is ready
         window.firebaseReady = true;
@@ -545,6 +550,79 @@
             </div>
 
             <div class="admin-section">
+                <div
+                    style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; border-bottom: 2px solid var(--border); padding-bottom: 1rem;">
+                    <h2 style="margin-bottom: 0; border: none; padding-bottom: 0;">
+                        <i class="fas fa-ticket-alt" style="color: var(--primary); margin-right: 0.5rem;"></i>
+                        Coupon Management
+                    </h2>
+                    <button id="addCouponBtn" class="admin-btn admin-btn-primary">
+                        <i class="fas fa-plus"></i> Add Coupon
+                    </button>
+                </div>
+
+                <div
+                    style="background: var(--gray-50); padding: 1.5rem; border-radius: var(--radius-lg); border: 1px solid var(--border); margin-bottom: 1.5rem;">
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label for="couponFilter" class="form-label" style="margin-bottom: 0.5rem;">Filter
+                            Coupons</label>
+                        <div style="position: relative;">
+                            <i class="fas fa-search"
+                                style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--text-secondary);"></i>
+                            <input type="text" id="couponFilter" class="form-input"
+                                placeholder="Search by coupon name..." style="padding-left: 2.5rem; width: 100%;">
+                        </div>
+                    </div>
+                </div>
+
+                <div id="couponList" class="admin-list">
+                    <div class="admin-list-placeholder">
+                        <i class="fas fa-spinner fa-spin"
+                            style="font-size: 3rem; color: var(--gray-400); margin-bottom: 1rem; display: block;"></i>
+                        <p>Loading coupons...</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="admin-section">
+                <h2>
+                    <i class="fas fa-tags" style="color: var(--primary); margin-right: 0.5rem;"></i>
+                    Coupon Applied Entries
+                </h2>
+
+                <div
+                    style="background: var(--gray-50); padding: 1.5rem; border-radius: var(--radius-lg); border: 1px solid var(--border); margin-bottom: 1.5rem;">
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label for="couponEntriesFilter" class="form-label" style="margin-bottom: 0.5rem;">Filter
+                            Entries</label>
+                        <div style="position: relative;">
+                            <i class="fas fa-search"
+                                style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--text-secondary);"></i>
+                            <input type="text" id="couponEntriesFilter" class="form-input"
+                                placeholder="Search by name, email or coupon code..."
+                                style="padding-left: 2.5rem; width: 100%;">
+                        </div>
+                    </div>
+                </div>
+
+                <div id="couponAppliedList" class="admin-list">
+                    <div class="admin-list-placeholder">
+                        <i class="fas fa-spinner fa-spin"
+                            style="font-size: 3rem; color: var(--gray-400); margin-bottom: 1rem; display: block;"></i>
+                        <p>Loading coupon entries...</p>
+                    </div>
+                </div>
+
+                <div style="margin-top: 1.5rem; text-align: center;">
+                    <button id="exportCouponEntriesBtn" class="admin-btn admin-btn-secondary"
+                        style="background: var(--primary); color: white;">
+                        <i class="fas fa-download"></i>
+                        Export Coupon Entries
+                    </button>
+                </div>
+            </div>
+
+            <div class="admin-section">
                 <h2><i class="fas fa-file-excel" style="color: var(--primary); margin-right: 0.5rem;"></i>Excel Upload
                 </h2>
                 <div
@@ -569,6 +647,40 @@
                 </button>
             </div>
         </div>
+    </div>
+
+    <!-- Add Coupon Modal -->
+    <div id="addCouponModal" class="login-container"
+        style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 1000; margin: 0; display: none; width: 90%; max-width: 500px;">
+        <div class="login-header">
+            <h3><i class="fas fa-ticket-alt" style="color: var(--primary); margin-right: 0.5rem;"></i>Add New Coupon
+            </h3>
+        </div>
+        <div id="couponError" class="error-message"></div>
+        <form id="addCouponForm" class="login-form">
+            <div class="form-group">
+                <label for="couponName" class="form-label">Coupon Code (Name)</label>
+                <input type="text" id="couponName" class="form-input" placeholder="e.g. SUMMER2024" required
+                    style="text-transform: uppercase;">
+            </div>
+            <div class="form-group">
+                <label for="couponDiscount" class="form-label">Discount Percentage (%)</label>
+                <input type="number" id="couponDiscount" class="form-input" placeholder="e.g. 20" min="0" max="100"
+                    required>
+            </div>
+            <div class="form-group">
+                <label for="couponLimit" class="form-label">Usage Limit (Max Users)</label>
+                <input type="number" id="couponLimit" class="form-input" placeholder="e.g. 100" min="1">
+            </div>
+            <div class="admin-actions" style="margin-top: 1rem; justify-content: flex-end;">
+                <button type="button" id="cancelCouponBtn" class="admin-btn admin-btn-secondary">Cancel</button>
+                <button type="submit" class="admin-btn admin-btn-primary">Save Coupon</button>
+            </div>
+        </form>
+    </div>
+    <!-- Modal Overlay -->
+    <div id="modalOverlay"
+        style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 999; display: none;">
     </div>
 
     <script src="script.js"></script>

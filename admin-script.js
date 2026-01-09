@@ -27,10 +27,27 @@ document.addEventListener('DOMContentLoaded', async () => {
     const exportOtherBtn = document.getElementById('exportOtherBtn');
     const successfulTotalAmountEl = document.getElementById('successfulTotalAmount');
 
+    // Coupon Management Elements
+    const couponList = document.getElementById('couponList');
+    const addCouponBtn = document.getElementById('addCouponBtn');
+    const addCouponModal = document.getElementById('addCouponModal');
+    const modalOverlay = document.getElementById('modalOverlay');
+    const addCouponForm = document.getElementById('addCouponForm');
+    const cancelCouponBtn = document.getElementById('cancelCouponBtn');
+    const couponFilter = document.getElementById('couponFilter');
+    const couponError = document.getElementById('couponError');
+
+    // Coupon Entries Elements
+    const couponAppliedList = document.getElementById('couponAppliedList');
+    const couponEntriesFilter = document.getElementById('couponEntriesFilter');
+    const exportCouponEntriesBtn = document.getElementById('exportCouponEntriesBtn');
+
     // Store registration arrays globally for export functions
     let currentSuccessfulRegistrations = [];
     let currentFailedRegistrations = [];
     let currentOtherRegistrations = [];
+    let currentCoupons = [];
+    let currentCouponAppliedRegistrations = [];
 
     // Check authentication state
     if (window.firebaseOnAuthStateChanged) {
@@ -47,6 +64,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                         loginContainer.classList.add('hidden');
                         adminPanel.classList.remove('hidden');
                         await loadRegistrations();
+                        await loadCoupons();
                     } else {
                         // User is not admin, sign them out
                         await window.firebaseSignOut(window.firebaseAuth);
@@ -307,6 +325,15 @@ document.addEventListener('DOMContentLoaded', async () => {
                 `;
             }
 
+            if (couponAppliedList) {
+                couponAppliedList.innerHTML = `
+                    <div class="admin-list-placeholder">
+                        <i class="fas fa-spinner fa-spin" style="font-size: 3rem; color: var(--gray-400); margin-bottom: 1rem; display: block;"></i>
+                        <p>Loading coupon entries...</p>
+                    </div>
+                `;
+            }
+
             const registrationsRef = window.firebaseCollection(window.firebaseDb, 'marathon_registrations');
             // Fetch all documents without ordering (we'll sort client-side)
             // This avoids Firestore errors if timestamp field is missing or inconsistent
@@ -318,6 +345,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 currentSuccessfulRegistrations = [];
                 currentFailedRegistrations = [];
                 currentOtherRegistrations = [];
+                currentCouponAppliedRegistrations = [];
 
                 // Reset total amount display
                 if (successfulTotalAmountEl) {
@@ -350,6 +378,14 @@ document.addEventListener('DOMContentLoaded', async () => {
                         </div>
                     `;
                 }
+                if (couponAppliedList) {
+                    couponAppliedList.innerHTML = `
+                        <div class="admin-list-placeholder">
+                            <i class="fas fa-ticket-alt" style="font-size: 3rem; color: var(--gray-400); margin-bottom: 1rem; display: block;"></i>
+                            <p>No coupon entries found yet.</p>
+                        </div>
+                    `;
+                }
                 return;
             }
 
@@ -357,10 +393,15 @@ document.addEventListener('DOMContentLoaded', async () => {
             const successfulRegistrations = [];
             const failedRegistrations = [];
             const otherRegistrations = [];
+            const couponAppliedRegistrations = [];
+
             querySnapshot.forEach((doc) => {
                 const docData = doc.data();
                 if (docData.status === 'captured') {
                     successfulRegistrations.push({ id: doc.id, data: docData });
+                    if (docData.couponApplied) {
+                        couponAppliedRegistrations.push({ id: doc.id, data: docData });
+                    }
                 } else if (docData.status === 'failed') {
                     failedRegistrations.push({ id: doc.id, data: docData });
                 } else {
@@ -412,6 +453,11 @@ document.addEventListener('DOMContentLoaded', async () => {
             successfulRegistrations.sort(sortByTimestampDesc);
             failedRegistrations.sort(sortByTimestampDesc);
             otherRegistrations.sort(sortByTimestampDesc);
+            couponAppliedRegistrations.sort(sortByTimestampDesc);
+
+            // Store in global variables with logic for render
+            currentCouponAppliedRegistrations = couponAppliedRegistrations;
+            renderCouponAppliedList(couponAppliedRegistrations);
 
             // Render successful payments
             if (adminList) {
@@ -436,6 +482,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                         const registrationId = reg.id;
                         const orderId = docData.razorpay_order_id;
                         const paymentId = docData.razorpay_payment_id;
+                        const couponCode = reg.data.couponApplied || '-';
                         console.log("Order ID:", orderId, "Payment ID:", paymentId);
 
                         // Get registration data from registrationData field (fallback to document root)
@@ -470,6 +517,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                                         <span><i class="fas fa-birthday-cake"></i> Age: ${data.age || 'N/A'}</span>
                                         <span><i class="fas fa-venus-mars"></i> ${data.gender || 'N/A'}</span>
                                         <span><i class="fas fa-tshirt"></i> Size: ${data.tshirtSize || 'N/A'}</span>
+                                           <span><i class="fas fa-tag"></i> Coupon: ${couponCode || 'N/A'}</span>
                                         <span><i class="fas fa-calendar"></i> ${formattedDate}</span>
                                     </div>
                                 </div>
@@ -697,6 +745,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             const originalText = refreshBtn.innerHTML;
             refreshBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Refreshing...';
             await loadRegistrations();
+            await loadCoupons();
             refreshBtn.innerHTML = originalText;
             refreshBtn.disabled = false;
         });
@@ -890,6 +939,341 @@ document.addEventListener('DOMContentLoaded', async () => {
                 exportOtherBtn.disabled = false;
             }
         });
+    }
+
+    /* ------------------------------
+       COUPON MANAGEMENT LOGIC
+    ------------------------------ */
+
+    // Show Modal
+    if (addCouponBtn) {
+        addCouponBtn.addEventListener('click', () => {
+            addCouponModal.style.display = 'block';
+            modalOverlay.style.display = 'block';
+            addCouponForm.reset();
+            couponError.style.display = 'none';
+        });
+    }
+
+    // Hide Modal function
+    function hideCouponModal() {
+        if (addCouponModal) addCouponModal.style.display = 'none';
+        if (modalOverlay) modalOverlay.style.display = 'none';
+    }
+
+    // Cancel Button
+    if (cancelCouponBtn) {
+        cancelCouponBtn.addEventListener('click', hideCouponModal);
+    }
+
+    // Overlay Click
+    if (modalOverlay) {
+        modalOverlay.addEventListener('click', hideCouponModal);
+    }
+
+    // Add Coupon Form Submit
+    if (addCouponForm) {
+        addCouponForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const nameField = document.getElementById('couponName');
+            const discountField = document.getElementById('couponDiscount');
+            const limitField = document.getElementById('couponLimit');
+
+            const name = nameField.value.trim().toUpperCase();
+            const discount = parseFloat(discountField.value);
+            const limit = limitField.value ? parseInt(limitField.value) : null;
+
+            if (!name) {
+                showCouponError('Please enter a coupon code.');
+                return;
+            }
+
+            if (isNaN(discount) || discount < 0 || discount > 100) {
+                showCouponError('Please enter a valid discount percentage (0-100).');
+                return;
+            }
+
+            try {
+                const btn = addCouponForm.querySelector('button[type="submit"]');
+                const originalText = btn.innerHTML;
+                btn.innerHTML = 'Saving...';
+                btn.disabled = true;
+
+                // Check if coupon already exists in DB by ID (name is ID)
+                const couponDocRef = window.firebaseDoc(window.firebaseDb, 'coupons', name);
+                const couponDoc = await window.firebaseGetDoc(couponDocRef);
+
+                if (couponDoc.exists()) {
+                    throw new Error('Coupon code already exists.');
+                }
+
+                await window.firebaseSetDoc(couponDocRef, {
+                    code: name, // Store redundantly just in case
+                    discount: discount,
+                    discountType: 'percentage', // New field
+                    limit: limit,
+                    usedCount: 0,
+                    active: true, // Renamed from isActive
+                    createdAt: new Date()
+                });
+
+                hideCouponModal();
+                alert('✅ Coupon added successfully!');
+                await loadCoupons(); // Refresh list
+
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            } catch (error) {
+                console.error('Error adding coupon:', error);
+                showCouponError(error.message);
+                const btn = addCouponForm.querySelector('button[type="submit"]');
+                if (btn) {
+                    btn.innerHTML = 'Save Coupon';
+                    btn.disabled = false;
+                }
+            }
+        });
+    }
+
+    function showCouponError(msg) {
+        if (couponError) {
+            couponError.textContent = msg;
+            couponError.style.display = 'block';
+        }
+    }
+
+    // Load Coupons
+    async function loadCoupons() {
+        if (!couponList) return;
+
+        try {
+            couponList.innerHTML = `
+                <div class="admin-list-placeholder">
+                    <i class="fas fa-spinner fa-spin" style="font-size: 3rem; color: var(--gray-400); margin-bottom: 1rem; display: block;"></i>
+                    <p>Loading coupons...</p>
+                </div>
+            `;
+
+            const couponsRef = window.firebaseCollection(window.firebaseDb, 'coupons');
+            // Fetch all directly, ignoring sort order initially to ensure no filtering by field existence
+            const querySnapshot = await window.firebaseGetDocs(couponsRef);
+
+            const coupons = [];
+            querySnapshot.forEach(doc => {
+                coupons.push({ id: doc.id, data: doc.data() });
+            });
+
+            // Client side sort
+            coupons.sort((a, b) => {
+                const da = a.data.createdAt ? (a.data.createdAt.toDate ? a.data.createdAt.toDate() : new Date(a.data.createdAt)) : new Date(0);
+                const db = b.data.createdAt ? (b.data.createdAt.toDate ? b.data.createdAt.toDate() : new Date(b.data.createdAt)) : new Date(0);
+                return db - da;
+            });
+
+            currentCoupons = coupons;
+            renderCoupons(coupons);
+
+        } catch (error) {
+            console.error('Error loading coupons:', error);
+            couponList.innerHTML = `
+                <div class="admin-list-placeholder">
+                    <i class="fas fa-exclamation-triangle" style="font-size: 3rem; color: #dc2626; margin-bottom: 1rem; display: block;"></i>
+                    <p>Error loading coupons: ${error.message}</p>
+                </div>
+            `;
+        }
+    }
+
+    // Render Coupons
+    function renderCoupons(coupons) {
+        if (!couponList) return;
+
+        if (coupons.length === 0) {
+            couponList.innerHTML = `
+                <div class="admin-list-placeholder">
+                    <i class="fas fa-ticket-alt" style="font-size: 3rem; color: var(--gray-400); margin-bottom: 1rem; display: block;"></i>
+                    <p>No coupons found. Create one to get started.</p>
+                </div>
+            `;
+            return;
+        }
+
+        let html = '';
+        coupons.forEach(coupon => {
+            const data = coupon.data;
+            const limitText = data.limit ? `${data.usedCount || 0} / ${data.limit}` : `${data.usedCount || 0} (No User Limit)`;
+            const couponCode = coupon.id; // Use ID as the Code
+
+            html += `
+                <div class="registration-item" style="align-items: center; grid-template-columns: auto 1fr auto;">
+                    <div class="registration-number" style="font-size: 1.2rem; color: var(--primary);">
+                        <i class="fas fa-tag"></i>
+                    </div>
+                    <div class="registration-details">
+                        <h3 style="margin-bottom: 0.25rem;">
+                            ${couponCode} 
+                            <span style="font-size: 0.75rem; color: #fff; background: ${data.active ? '#10b981' : '#6b7280'}; padding: 2px 8px; border-radius: 999px; margin-left: 0.5rem; vertical-align: middle;">
+                                ${data.active ? 'ACTIVE' : 'INACTIVE'}
+                            </span>
+                        </h3>
+                        <div class="registration-meta">
+                            <span><i class="fas fa-percentage"></i> ${data.discount}% OFF</span>
+                            <span><i class="fas fa-users"></i> Used: ${limitText}</span>
+                            ${data.createdAt ? `<span><i class="fas fa-clock"></i> Created: ${data.createdAt.toDate ? data.createdAt.toDate().toLocaleDateString() : new Date(data.createdAt).toLocaleDateString()}</span>` : ''}
+                        </div>
+                    </div>
+                    <div>
+                         <button onclick="deleteCoupon('${coupon.id}')" class="resend-btn" style="background: #ef4444; margin-left: 0.5rem; width: auto; font-size: 0.8rem; padding: 0.4rem 0.8rem;">
+                            <i class="fas fa-trash"></i> Delete
+                        </button>
+                    </div>
+                </div>
+             `;
+        });
+
+        couponList.innerHTML = html;
+    }
+
+    // Filter Logic for Coupons
+    if (couponFilter) {
+        couponFilter.addEventListener('input', (e) => {
+            const term = e.target.value.trim().toUpperCase();
+            if (!term) {
+                renderCoupons(currentCoupons);
+                return;
+            }
+            // Filter by ID instead of data.code
+            const filtered = currentCoupons.filter(c => c.id.includes(term));
+            renderCoupons(filtered);
+        });
+    }
+
+    /* ------------------------------
+       COUPON ENTRIES LIST LOGIC
+    ------------------------------ */
+
+    function renderCouponAppliedList(list) {
+        if (!couponAppliedList) return;
+
+        if (list.length === 0) {
+            couponAppliedList.innerHTML = `
+                <div class="admin-list-placeholder">
+                    <i class="fas fa-ticket-alt" style="font-size: 3rem; color: var(--gray-400); margin-bottom: 1rem; display: block;"></i>
+                    <p>No entries with coupons found.</p>
+                </div>
+            `;
+            return;
+        }
+
+        let html = '';
+        html += `
+            <div style="margin-bottom: 1rem; font-weight: var(--font-semibold); color: var(--text-secondary);">
+                Total entries with coupons: ${list.length}
+            </div>
+        `;
+        let index = 1;
+        list.forEach((reg) => {
+            const amount = reg.data.amount;
+            const docData = reg.data;
+            const registrationId = reg.id;
+            const couponCode = docData.couponApplied || '-';
+
+            // Get registration data
+            const data = docData.registrationData || docData || {};
+
+            // Format timestamp matching other lists
+            let timestamp = docData.createdAt || docData.timestamp || (data && data.timestamp);
+            if (timestamp) {
+                timestamp = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
+            } else {
+                timestamp = new Date();
+            }
+            const formattedDate = timestamp.toLocaleString('en-IN', {
+                day: '2-digit',
+                month: 'short',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+
+            html += `
+                <div class="registration-item">
+                    <div class="registration-number" style="color: var(--primary);">#${index}</div>
+                    <div class="registration-details">
+                        <h3>${data.name || 'N/A'} <span style="font-size: 0.8rem; background: #e0f2fe; color: #0284c7; padding: 2px 8px; border-radius: 6px; margin-left: 0.5rem;"><i class="fas fa-ticket-alt"></i> ${couponCode}</span></h3>
+                        <div class="registration-meta">
+                            <span><i class="fas fa-envelope"></i> ${data.email || 'N/A'}</span>
+                            <span><i class="fas fa-phone"></i> ${data.phone || 'N/A'}</span>
+                            <span><i class="fas fa-calendar"></i> ${formattedDate}</span>
+                        </div>
+                    </div>
+                    <div>
+                        <span class="registration-category">${(data.category || 'N/A').toUpperCase()}</span>
+                        <div style="margin-top: 0.5rem; font-weight: var(--font-semibold); color: var(--text-primary);">
+                            ₹${amount}
+                        </div>
+                    </div>
+                </div>
+            `;
+            index++;
+        });
+
+        couponAppliedList.innerHTML = html;
+    }
+
+    // Filter Coupon Entries using the new filtered logic
+    if (couponEntriesFilter) {
+        couponEntriesFilter.addEventListener('input', (e) => {
+            const term = e.target.value.toLowerCase().trim();
+            if (!term) {
+                renderCouponAppliedList(currentCouponAppliedRegistrations);
+                return;
+            }
+
+            const filtered = currentCouponAppliedRegistrations.filter(reg => {
+                const data = reg.data.registrationData || reg.data;
+                const name = (data.name || '').toLowerCase();
+                const email = (data.email || '').toLowerCase();
+                const coupon = (reg.data.couponApplied || '').toLowerCase();
+                return name.includes(term) || email.includes(term) || coupon.includes(term);
+            });
+            renderCouponAppliedList(filtered);
+        });
+    }
+
+    // Export Coupon Entries
+    if (exportCouponEntriesBtn) {
+        exportCouponEntriesBtn.addEventListener('click', async () => {
+            exportRegistrations(
+                currentCouponAppliedRegistrations,
+                'coupon_entries',
+                'Coupon Entries'
+            );
+        });
+    }
+
+    // Delete Coupon (Expose to window)
+    window.deleteCoupon = async function (id) {
+        if (!confirm('Are you sure you want to delete this coupon? This cannot be undone.')) return;
+
+        try {
+            await window.firebaseDeleteDoc(window.firebaseDoc(window.firebaseDb, 'coupons', id));
+            // Remove from local list
+            currentCoupons = currentCoupons.filter(c => c.id !== id);
+            // Re-render
+            const term = couponFilter ? couponFilter.value.trim().toUpperCase() : '';
+            if (term) {
+                const filtered = currentCoupons.filter(c => c.id.includes(term));
+                renderCoupons(filtered);
+            } else {
+                renderCoupons(currentCoupons);
+            }
+            alert('Coupon deleted.');
+        } catch (error) {
+            console.error('Error deleting coupon:', error);
+            alert('Error deleting coupon: ' + error.message);
+        }
     }
 
     // Helper functions
