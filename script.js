@@ -423,20 +423,24 @@ if (registrationForm) {
                         btn.disabled = false;
                         return; // Don't proceed to payment yet, wait for modal button click
                     } else {
-                        // Show error in modal
-                        showCouponModalError(validateData.message || 'Invalid coupon code');
-                        // Continue with original amount
-                        console.log('Coupon validation failed:', validateData.message);
+                        // Invalid coupon - Stop and alert
+                        alert(validateData.message || 'Invalid coupon code. Please check and try again.');
+                        btn.innerText = old;
+                        btn.disabled = false;
+                        return; // Stop! Do not proceed to payment
                     }
                 } catch (error) {
                     console.error('Error validating coupon:', error);
-                    showCouponModalError('Could not validate coupon code. Proceeding with original price.');
+                    alert('Error validating coupon code. Please check your internet connection and try again.');
+                    btn.innerText = old;
+                    btn.disabled = false;
+                    return; // Stop!
                 }
             }
 
-            // If no coupon or coupon validation failed, proceed directly to payment
+            // If no coupon was entered, proceed directly to payment
             btn.innerText = "Creating Order...";
-            await createOrderAndOpenRazorpay(formData, amount, enteredCouponCode, finalAmount);
+            await createOrderAndOpenRazorpay(formData, amount, null, finalAmount);
 
         } catch (err) {
             console.log("Error: " + err.message);
