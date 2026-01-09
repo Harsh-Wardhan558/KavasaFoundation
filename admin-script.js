@@ -1,4 +1,4 @@
-// Wait for Firebase to be initialized
+﻿// Wait for Firebase to be initialized
 document.addEventListener('DOMContentLoaded', async () => {
     // Wait for Firebase to be ready
     if (!window.firebaseReady) {
@@ -202,14 +202,14 @@ document.addEventListener('DOMContentLoaded', async () => {
             );
 
             if (response.ok) {
-                alert(`✅ Email resent to ${email}`);
+                alert(`… Email resent to ${email}`);
             } else {
                 const err = await response.text();
-                alert(`❌ Failed to resend email\n${err}`);
+                alert(`âŒ Failed to resend email\n${err}`);
             }
         } catch (error) {
             console.error('Resend email error:', error);
-            alert(`❌ Error: ${error.message}`);
+            alert(`âŒ Error: ${error.message}`);
         }
     }
 
@@ -280,7 +280,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
 
             // Success
-            alert(`✅ Payment captured and email sent to ${email} successfully!`);
+            alert(`… Payment captured and email sent to ${email} successfully!`);
 
             // Refresh the list to move the item
             const refreshBtn = document.getElementById('refreshBtn');
@@ -288,12 +288,193 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         } catch (error) {
             console.error('Error handling authorized payment:', error);
-            alert(`❌ Error: ${error.message}`);
+            alert(`âŒ Error: ${error.message}`);
             // Revert button
             button.disabled = false;
             button.innerHTML = originalContent;
         }
     };
+
+    // Pagination State
+    let pageSuccessful = 1;
+    let pageFailed = 1;
+    let pageOther = 1;
+    let pageCouponEntries = 1;
+    const ITEMS_PER_PAGE = 100;
+
+    // Generic Render with Pagination
+    function renderPaginatedList(data, container, page, setPageCallback, renderItemFn, emptyMsg, type) {
+        if (!container) return;
+        if (data.length === 0) {
+            container.innerHTML = `
+                <div class="admin-list-placeholder">
+                    <i class="fas fa-inbox" style="font-size: 3rem; color: var(--gray-400); margin-bottom: 1rem; display: block;"></i>
+                    <p>${emptyMsg}</p>
+                </div>
+            `;
+            return;
+        }
+
+        const totalPages = Math.ceil(data.length / ITEMS_PER_PAGE);
+        // Ensure current page is valid
+        if (page < 1) page = 1;
+        if (page > totalPages) page = totalPages;
+
+        const start = (page - 1) * ITEMS_PER_PAGE;
+        const end = Math.min(start + ITEMS_PER_PAGE, data.length);
+        const slice = data.slice(start, end);
+
+        let html = `
+            <div style="margin-bottom: 1rem; font-weight: var(--font-semibold); color: var(--text-secondary); display: flex; justify-content: space-between; align-items: center;">
+                <span>Total: ${data.length} records</span>
+                <span>Showing ${start + 1}-${end}</span>
+            </div>
+        `;
+
+        slice.forEach((item, idx) => {
+            html += renderItemFn(item, start + idx + 1);
+        });
+
+        // Pagination Controls
+        if (totalPages > 1) {
+            html += `
+                <div class="pagination-controls" style="display: flex; justify-content: center; align-items: center; gap: 1rem; margin-top: 2rem; padding-top: 1rem; border-top: 1px solid var(--gray-200);">
+                    <button class="pagination-btn prev-btn" ${page === 1 ? 'disabled' : ''} style="padding: 0.5rem 1.5rem; background: var(--primary); color: white; border: none; border-radius: 6px; cursor: pointer; opacity: ${page === 1 ? '0.5' : '1'}; transition: opacity 0.2s;">
+                        <i class="fas fa-chevron-left"></i> Previous
+                    </button>
+                    <span style="font-weight: 500; color: var(--text-primary);">Page ${page} of ${totalPages}</span>
+                    <button class="pagination-btn next-btn" ${page === totalPages ? 'disabled' : ''} style="padding: 0.5rem 1.5rem; background: var(--primary); color: white; border: none; border-radius: 6px; cursor: pointer; opacity: ${page === totalPages ? '0.5' : '1'}; transition: opacity 0.2s;">
+                        Next <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            `;
+        }
+
+        container.innerHTML = html;
+
+        // Attach event listeners using closure for callback
+        const prevBtn = container.querySelector('.prev-btn');
+        const nextBtn = container.querySelector('.next-btn');
+
+        if (prevBtn) {
+            prevBtn.onclick = () => setPageCallback(page - 1);
+        }
+        if (nextBtn) {
+            nextBtn.onclick = () => setPageCallback(page + 1);
+        }
+    }
+
+    // Item Renderers
+    function getTimestamp(docData) {
+        let timestamp = docData.createdAt || docData.timestamp || (docData.registrationData && docData.registrationData.timestamp);
+        if (timestamp) {
+            return timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
+        }
+        return new Date();
+    }
+
+    function formatDate(date) {
+        return date.toLocaleString('en-IN', {
+            day: '2-digit', month: 'short', year: 'numeric',
+            hour: '2-digit', minute: '2-digit'
+        });
+    }
+
+    function renderSuccessfulItem(reg, index) {
+        const docData = reg.data;
+        const data = docData.registrationData || docData || {};
+        const amount = docData.amount != null ? docData.amount : (data.amount != null ? data.amount : 0);
+        const registrationId = reg.id;
+        const orderId = docData.razorpay_order_id;
+        const paymentId = docData.razorpay_payment_id;
+        const couponCode = docData.couponApplied || '-';
+        const formattedDate = formatDate(getTimestamp(docData));
+
+        return `
+            <div class="registration-item">
+                <div class="registration-number">#${index}</div>
+                <div class="registration-details">
+                    <h3>${data.name || 'N/A'}</h3>
+                    <div class="registration-meta">
+                        <span><i class="fas fa-envelope"></i> ${data.email || 'N/A'}</span>
+                        <span><i class="fas fa-phone"></i> ${data.phone || 'N/A'}</span>
+                        <span><i class="fas fa-birthday-cake"></i> Age: ${data.age || 'N/A'}</span>
+                        <span><i class="fas fa-venus-mars"></i> ${data.gender || 'N/A'}</span>
+                        <span><i class="fas fa-tshirt"></i> Size: ${data.tshirtSize || 'N/A'}</span>
+                        <span><i class="fas fa-tag"></i> Coupon: ${couponCode}</span>
+                        <span><i class="fas fa-calendar"></i> ${formattedDate}</span>
+                    </div>
+                </div>
+                <div>
+                    <span class="registration-category">${(data.category || 'N/A').toUpperCase()}</span>
+                    <div style="margin-top: 0.5rem; font-weight: var(--font-semibold); color: var(--text-primary);">₹${amount}</div>
+                    <button class="resend-btn" onclick="resendEmail('${data.email}', '${orderId}', '${paymentId}', ${JSON.stringify(data).replace(/"/g, '&quot;')}, ${amount})">
+                        <i class="fas fa-envelope"></i> Resend Email
+                    </button>
+                </div>
+            </div>
+        `;
+    }
+
+    function renderFailedItem(reg, index) {
+        const docData = reg.data;
+        const data = docData.registrationData || docData || {};
+        const amount = docData.amount != null ? docData.amount : (data.amount != null ? data.amount : 0);
+        const formattedDate = formatDate(getTimestamp(docData));
+
+        return `
+            <div class="registration-item">
+                <div class="registration-number">#${index}</div>
+                <div class="registration-details">
+                    <h3>${data.name || 'N/A'}</h3>
+                    <div class="registration-meta">
+                        <span><i class="fas fa-envelope"></i> ${data.email || 'N/A'}</span>
+                        <span><i class="fas fa-phone"></i> ${data.phone || 'N/A'}</span>
+                        <span><i class="fas fa-tshirt"></i> Size: ${data.tshirtSize || 'N/A'}</span>
+                        <span><i class="fas fa-calendar"></i> ${formattedDate}</span>
+                        <span><i class="fas fa-exclamation-circle" style="color:#dc2626;"></i> Status: ${docData.status || 'failed'}</span>
+                    </div>
+                </div>
+                <div>
+                    <span class="registration-category" style="background: linear-gradient(135deg,#dc2626,#b91c1c);">FAILED</span>
+                    <div style="margin-top: 0.5rem; font-weight: var(--font-semibold); color: var(--text-primary);">₹${amount}</div>
+                </div>
+            </div>
+        `;
+    }
+
+    function renderOtherItem(reg, index) {
+        const docData = reg.data;
+        const data = docData.registrationData || docData || {};
+        const amount = docData.amount != null ? docData.amount : (data.amount != null ? data.amount : 0);
+        const formattedDate = formatDate(getTimestamp(docData));
+        const statusText = docData.status || 'unknown';
+        const btnId = `btn-${reg.id}`;
+
+        return `
+            <div class="registration-item">
+                <div class="registration-number">#${index}</div>
+                <div class="registration-details">
+                    <h3>${data.name || 'N/A'}</h3>
+                    <div class="registration-meta">
+                        <span><i class="fas fa-envelope"></i> ${data.email || 'N/A'}</span>
+                        <span><i class="fas fa-phone"></i> ${data.phone || 'N/A'}</span>
+                        <span><i class="fas fa-calendar"></i> ${formattedDate}</span>
+                        <span><i class="fas fa-info-circle" style="color:#f59e0b;"></i> Status: ${statusText}</span>
+                    </div>
+                </div>
+                <div>
+                    <span class="registration-category" style="background: linear-gradient(135deg,#f59e0b,#d97706);">OTHER</span>
+                    <div style="margin-top: 0.5rem; font-weight: var(--font-semibold); color: var(--text-primary);">₹${amount}</div>
+                    ${statusText === 'authorized' ? `
+                    <button id="${btnId}" class="resend-btn" style="background: #059669; margin-top: 0.5rem; width: 100%;"
+                        onclick="handleAuthorizedPayment('${reg.id}', '${docData.razorpay_payment_id || ''}', '${amount}', '${encodeURIComponent(JSON.stringify(data))}', '${btnId}')">
+                        <i class="fas fa-check-circle"></i> Approve & Send Email
+                    </button>` : ''}
+                </div>
+            </div>
+        `;
+    }
 
     // Load registrations from Firestore (successful + failed + other statuses)
     async function loadRegistrations() {
@@ -459,213 +640,74 @@ document.addEventListener('DOMContentLoaded', async () => {
             currentCouponAppliedRegistrations = couponAppliedRegistrations;
             renderCouponAppliedList(couponAppliedRegistrations);
 
-            // Render successful payments
-            if (adminList) {
-                if (successfulRegistrations.length === 0) {
-                    adminList.innerHTML = `
-                        <div class="admin-list-placeholder">
-                            <i class="fas fa-inbox" style="font-size: 3rem; color: var(--gray-400); margin-bottom: 1rem; display: block;"></i>
-                            <p>No successful payments found. Only registrations with status "captured" are displayed here.</p>
-                        </div>
-                    `;
-                } else {
-                    let html = '';
-                    html += `
-                        <div style="margin-bottom: 1rem; font-weight: var(--font-semibold); color: var(--text-secondary);">
-                            Total successful payments: ${successfulRegistrations.length}
-                        </div>
-                    `;
-                    let index = 1;
-                    successfulRegistrations.forEach((reg) => {
-                        const amount = reg.data.amount;
-                        const docData = reg.data;
-                        const registrationId = reg.id;
-                        const orderId = docData.razorpay_order_id;
-                        const paymentId = docData.razorpay_payment_id;
-                        const couponCode = reg.data.couponApplied || '-';
-                        console.log("Order ID:", orderId, "Payment ID:", paymentId);
+            // Generic update wrappers for closures to handle state updates
+            const updateSuccessful = () => {
+                renderPaginatedList(
+                    successfulRegistrations,
+                    adminList,
+                    pageSuccessful,
+                    (p) => { pageSuccessful = p; updateSuccessful(); },
+                    renderSuccessfulItem,
+                    'No successful payments found. Only registrations with status "captured" are displayed here.',
+                    'successful'
+                );
+            };
 
-                        // Get registration data from registrationData field (fallback to document root)
-                        const data = docData.registrationData || docData || {};
-                        console.log("Successful registration doc", registrationId, docData);
-                        console.log("Parsed successful registration data", data);
+            const updateFailed = () => {
+                renderPaginatedList(
+                    failedRegistrations,
+                    failedList,
+                    pageFailed,
+                    (p) => { pageFailed = p; updateFailed(); },
+                    renderFailedItem,
+                    'No failed payments found. Only registrations with status "failed" are displayed here.',
+                    'failed'
+                );
+            };
 
-                        // Format timestamp - prefer createdAt, fall back to timestamp fields
-                        let timestamp = docData.createdAt || docData.timestamp || (data && data.timestamp);
-                        if (timestamp) {
-                            timestamp = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
-                        } else {
-                            console.log("Timestamp not found for", registrationId);
-                            timestamp = new Date();
-                        }
-                        const formattedDate = timestamp.toLocaleString('en-IN', {
-                            day: '2-digit',
-                            month: 'short',
-                            year: 'numeric',
-                            hour: '2-digit',
-                            minute: '2-digit'
-                        });
-
-                        html += `
-                            <div class="registration-item">
-                                <div class="registration-number">#${index}</div>
-                                <div class="registration-details">
-                                    <h3>${data.name || 'N/A'}</h3>
-                                    <div class="registration-meta">
-                                        <span><i class="fas fa-envelope"></i> ${data.email || 'N/A'}</span>
-                                        <span><i class="fas fa-phone"></i> ${data.phone || 'N/A'}</span>
-                                        <span><i class="fas fa-birthday-cake"></i> Age: ${data.age || 'N/A'}</span>
-                                        <span><i class="fas fa-venus-mars"></i> ${data.gender || 'N/A'}</span>
-                                        <span><i class="fas fa-tshirt"></i> Size: ${data.tshirtSize || 'N/A'}</span>
-                                           <span><i class="fas fa-tag"></i> Coupon: ${couponCode || 'N/A'}</span>
-                                        <span><i class="fas fa-calendar"></i> ${formattedDate}</span>
-                                    </div>
-                                </div>
-                                <div>
-    <span class="registration-category">${(data.category || 'N/A').toUpperCase()}</span>
-
-    <div style="margin-top: 0.5rem; font-weight: var(--font-semibold); color: var(--text-primary);">
-        ₹${amount}
-    </div>
-
-    <button
-        class="resend-btn"
-        onclick="resendEmail(
-            '${data.email}',
-            '${orderId}',
-            '${paymentId}',
-            ${JSON.stringify(data).replace(/"/g, '&quot;')},
-            ${amount}
-        )">
-        📧 Resend Email
-    </button>
-</div>
-
-                            </div>
-                        `;
-                        index++;
-                    });
-
-                    adminList.innerHTML = html;
-                }
-            }
-
-            // Render failed payments
-            if (failedList) {
-                if (failedRegistrations.length === 0) {
-                    failedList.innerHTML = `
-                        <div class="admin-list-placeholder">
-                            <i class="fas fa-inbox" style="font-size: 3rem; color: var(--gray-400); margin-bottom: 1rem; display: block;"></i>
-                            <p>No failed payments found. Only registrations with status "failed" are displayed here.</p>
-                        </div>
-                    `;
-                } else {
-                    let htmlFailed = '';
-                    htmlFailed += `
-                        <div style="margin-bottom: 1rem; font-weight: var(--font-semibold); color: var(--text-secondary);">
-                            Total failed payments: ${failedRegistrations.length}
-                        </div>
-                    `;
-                    let failedIndex = 1;
-                    failedRegistrations.forEach((reg) => {
-                        const amount = reg.data.amount;
-                        const docData = reg.data;
-                        const registrationId = reg.id;
-
-                        const data = docData.registrationData || docData || {};
-                        console.log("Failed registration doc", registrationId, docData);
-                        console.log("Parsed failed registration data", data);
-
-                        let timestamp = docData.createdAt || docData.timestamp || (data && data.timestamp);
-                        if (timestamp) {
-                            timestamp = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
-                        } else {
-                            console.log("Timestamp not found for failed", registrationId);
-                            timestamp = new Date();
-                        }
-                        const formattedDate = timestamp.toLocaleString('en-IN', {
-                            day: '2-digit',
-                            month: 'short',
-                            year: 'numeric',
-                            hour: '2-digit',
-                            minute: '2-digit'
-                        });
-
-                        htmlFailed += `
-                            <div class="registration-item">
-                                <div class="registration-number">#${failedIndex}</div>
-                                <div class="registration-details">
-                                    <h3>${data.name || 'N/A'}</h3>
-                                    <div class="registration-meta">
-                                        <span><i class="fas fa-envelope"></i> ${data.email || 'N/A'}</span>
-                                        <span><i class="fas fa-phone"></i> ${data.phone || 'N/A'}</span>
-                                        <span><i class="fas fa-birthday-cake"></i> Age: ${data.age || 'N/A'}</span>
-                                        <span><i class="fas fa-venus-mars"></i> ${data.gender || 'N/A'}</span>
-                                        <span><i class="fas fa-tshirt"></i> Size: ${data.tshirtSize || 'N/A'}</span>
-                                        <span><i class="fas fa-calendar"></i> ${formattedDate}</span>
-                                        <span><i class="fas fa-exclamation-circle" style="color:#dc2626;"></i> Status: ${docData.status || 'failed'}</span>
-                                    </div>
-                                </div>
-                                <div>
-                                    <span class="registration-category" style="background: linear-gradient(135deg,#dc2626,#b91c1c);">FAILED</span>
-                                    <div style="margin-top: 0.5rem; font-weight: var(--font-semibold); color: var(--text-primary);">
-                                        ₹${amount}
-                                    </div>
-                                </div>
-                            </div>
-                        `;
-                        failedIndex++;
-                    });
-
-                    failedList.innerHTML = htmlFailed;
-                }
-            }
-
-            // Render other status records
-            if (otherList) {
-                if (otherRegistrations.length === 0) {
-                    otherList.innerHTML = `
+            const updateOther = () => {
+                // Render other status records (Original Logic)
+                if (otherList) {
+                    if (otherRegistrations.length === 0) {
+                        otherList.innerHTML = `
                         <div class="admin-list-placeholder">
                             <i class="fas fa-inbox" style="font-size: 3rem; color: var(--gray-400); margin-bottom: 1rem; display: block;"></i>
                             <p>No other status records found. Only registrations with status not "captured" or "failed" are displayed here.</p>
                         </div>
                     `;
-                } else {
-                    let htmlOther = '';
-                    htmlOther += `
+                    } else {
+                        let htmlOther = '';
+                        htmlOther += `
                         <div style="margin-bottom: 1rem; font-weight: var(--font-semibold); color: var(--text-secondary);">
                             Total other status records: ${otherRegistrations.length}
                         </div>
                     `;
-                    let otherIndex = 1;
-                    otherRegistrations.forEach((reg) => {
-                        const amount = reg.data.amount;
-                        const docData = reg.data;
-                        const registrationId = reg.id;
+                        let otherIndex = 1;
+                        otherRegistrations.forEach((reg) => {
+                            const amount = reg.data.amount;
+                            const docData = reg.data;
+                            const registrationId = reg.id;
 
-                        const data = docData.registrationData || docData || {};
-                        console.log("Other registration doc", registrationId, docData);
-                        console.log("Parsed other registration data", data);
+                            const data = docData.registrationData || docData || {};
 
-                        let timestamp = docData.createdAt || docData.timestamp || (data && data.timestamp);
-                        if (timestamp) {
-                            timestamp = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
-                        } else {
-                            console.log("Timestamp not found for other", registrationId);
-                            timestamp = new Date();
-                        }
-                        const formattedDate = timestamp.toLocaleString('en-IN', {
-                            day: '2-digit',
-                            month: 'short',
-                            year: 'numeric',
-                            hour: '2-digit',
-                            minute: '2-digit'
-                        });
+                            let timestamp = docData.createdAt || docData.timestamp || (data && data.timestamp);
+                            if (timestamp) {
+                                timestamp = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
+                            } else {
+                                timestamp = new Date();
+                            }
+                            const formattedDate = timestamp.toLocaleString('en-IN', {
+                                day: '2-digit',
+                                month: 'short',
+                                year: 'numeric',
+                                hour: '2-digit',
+                                minute: '2-digit'
+                            });
 
-                        const statusText = docData.status || 'unknown';
-                        const btnId = `btn-${registrationId}`;
+                            const statusText = docData.status || 'unknown';
+                            const btnId = `btn-${registrationId}`;
 
-                        htmlOther += `
+                            htmlOther += `
                             <div class="registration-item">
                                 <div class="registration-number">#${otherIndex}</div>
                                 <div class="registration-details">
@@ -703,12 +745,18 @@ document.addEventListener('DOMContentLoaded', async () => {
                                 </div>
                             </div>
                         `;
-                        otherIndex++;
-                    });
+                            otherIndex++;
+                        });
 
-                    otherList.innerHTML = htmlOther;
+                        otherList.innerHTML = htmlOther;
+                    }
                 }
-            }
+            };
+
+            // Initial Render
+            updateSuccessful();
+            updateFailed();
+            updateOther();
         } catch (error) {
             console.error('Error loading registrations:', error);
             if (adminList) {
@@ -833,7 +881,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
 
         // Convert to CSV
-        let csv = 'Name,Email,Phone,Age,Gender,Category,T-Shirt Size,Amount,Status,Registration Date\n';
+        let csv = 'Name,Email,Phone,Age,Gender,Category,T-Shirt Size,Amount,Status,Coupon Code,Registration Date\n';
 
         registrations.forEach((reg) => {
             const docData = reg.data;
@@ -850,8 +898,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             const statusText = docData.status || 'unknown';
             const amount = docData.amount || data.amount || 0;
+            const couponCode = docData.couponApplied || '';
 
-            csv += `"${data.name || ''}","${data.email || ''}","${data.phone || ''}",${data.age || ''},"${data.gender || ''}","${data.category || ''}","${data.tshirtSize || ''}",${amount},"${statusText}","${formattedDate}"\n`;
+            csv += `"${data.name || ''}","${data.email || ''}","${data.phone || ''}",${data.age || ''},"${data.gender || ''}","${data.category || ''}","${data.tshirtSize || ''}",${amount},"${statusText}","${couponCode}","${formattedDate}"\n`;
         });
 
         // Download CSV
@@ -1019,7 +1068,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 });
 
                 hideCouponModal();
-                alert('✅ Coupon added successfully!');
+                alert('… Coupon added successfully!');
                 await loadCoupons(); // Refresh list
 
                 btn.innerHTML = originalText;
@@ -1153,74 +1202,50 @@ document.addEventListener('DOMContentLoaded', async () => {
        COUPON ENTRIES LIST LOGIC
     ------------------------------ */
 
-    function renderCouponAppliedList(list) {
-        if (!couponAppliedList) return;
+    function renderCouponAppliedItem(reg, index) {
+        const docData = reg.data;
+        const data = docData.registrationData || docData || {};
+        const amount = docData.amount || data.amount || 0;
+        const couponCode = docData.couponApplied || '-';
+        const formattedDate = formatDate(getTimestamp(docData));
 
-        if (list.length === 0) {
-            couponAppliedList.innerHTML = `
-                <div class="admin-list-placeholder">
-                    <i class="fas fa-ticket-alt" style="font-size: 3rem; color: var(--gray-400); margin-bottom: 1rem; display: block;"></i>
-                    <p>No entries with coupons found.</p>
+        return `
+            <div class="registration-item">
+                <div class="registration-number" style="color: var(--primary);">#${index}</div>
+                <div class="registration-details">
+                    <h3>${data.name || 'N/A'} <span style="font-size: 0.8rem; background: #e0f2fe; color: #0284c7; padding: 2px 8px; border-radius: 6px; margin-left: 0.5rem;"><i class="fas fa-ticket-alt"></i> ${couponCode}</span></h3>
+                    <div class="registration-meta">
+                        <span><i class="fas fa-envelope"></i> ${data.email || 'N/A'}</span>
+                        <span><i class="fas fa-phone"></i> ${data.phone || 'N/A'}</span>
+                        <span><i class="fas fa-calendar"></i> ${formattedDate}</span>
+                    </div>
                 </div>
-            `;
-            return;
-        }
-
-        let html = '';
-        html += `
-            <div style="margin-bottom: 1rem; font-weight: var(--font-semibold); color: var(--text-secondary);">
-                Total entries with coupons: ${list.length}
+                <div>
+                    <span class="registration-category">${(data.category || 'N/A').toUpperCase()}</span>
+                    <div style="margin-top: 0.5rem; font-weight: var(--font-semibold); color: var(--text-primary);">
+                        ₹${amount}
+                    </div>
+                </div>
             </div>
         `;
-        let index = 1;
-        list.forEach((reg) => {
-            const amount = reg.data.amount;
-            const docData = reg.data;
-            const registrationId = reg.id;
-            const couponCode = docData.couponApplied || '-';
-
-            // Get registration data
-            const data = docData.registrationData || docData || {};
-
-            // Format timestamp matching other lists
-            let timestamp = docData.createdAt || docData.timestamp || (data && data.timestamp);
-            if (timestamp) {
-                timestamp = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
-            } else {
-                timestamp = new Date();
-            }
-            const formattedDate = timestamp.toLocaleString('en-IN', {
-                day: '2-digit',
-                month: 'short',
-                year: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit'
-            });
-
-            html += `
-                <div class="registration-item">
-                    <div class="registration-number" style="color: var(--primary);">#${index}</div>
-                    <div class="registration-details">
-                        <h3>${data.name || 'N/A'} <span style="font-size: 0.8rem; background: #e0f2fe; color: #0284c7; padding: 2px 8px; border-radius: 6px; margin-left: 0.5rem;"><i class="fas fa-ticket-alt"></i> ${couponCode}</span></h3>
-                        <div class="registration-meta">
-                            <span><i class="fas fa-envelope"></i> ${data.email || 'N/A'}</span>
-                            <span><i class="fas fa-phone"></i> ${data.phone || 'N/A'}</span>
-                            <span><i class="fas fa-calendar"></i> ${formattedDate}</span>
-                        </div>
-                    </div>
-                    <div>
-                        <span class="registration-category">${(data.category || 'N/A').toUpperCase()}</span>
-                        <div style="margin-top: 0.5rem; font-weight: var(--font-semibold); color: var(--text-primary);">
-                            ₹${amount}
-                        </div>
-                    </div>
-                </div>
-            `;
-            index++;
-        });
-
-        couponAppliedList.innerHTML = html;
     }
+
+    function renderCouponAppliedList(list) {
+        renderPaginatedList(
+            list,
+            couponAppliedList,
+            pageCouponEntries,
+            (p) => {
+                pageCouponEntries = p;
+                renderCouponAppliedList(list);
+            },
+            renderCouponAppliedItem,
+            'No entries with coupons found.',
+            'coupon_entries'
+        );
+    }
+
+
 
     // Filter Coupon Entries using the new filtered logic
     if (couponEntriesFilter) {
@@ -1287,4 +1312,5 @@ document.addEventListener('DOMContentLoaded', async () => {
         errorMessage.textContent = '';
     }
 });
+
 
