@@ -60,7 +60,6 @@
                 <li><a href="index.html" class="nav-link active">Home</a></li>
                 <li><a href="about.html" class="nav-link">About Us</a></li>
                 <li><a href="contact.html" class="nav-link">Contact</a></li>
-                <li><a href="#register" class="btn btn-primary">Register Now</a></li>
             </ul>
         </div>
     </nav>
@@ -102,9 +101,6 @@
                     difference.
                 </p>
                 <div style="margin-bottom: 4rem; display: flex; gap: 1.5rem; justify-content: center; flex-wrap: wrap;">
-                    <a href="#register" class="btn btn-primary" style="font-size: 1.8rem; padding: 1.1rem 2.5rem;">
-                        <i class="fas fa-user-plus" style="margin-right: 0.5rem;"></i>Register Now
-                    </a>
                     <a href="about.html" class="btn btn-secondary" style="font-size: 1.8rem; padding: 1.1rem 2.5rem;">
                         <i class="fas fa-book-open" style="margin-right: 0.5rem;"></i>Learn More
                     </a>
@@ -567,10 +563,9 @@
                                 <span style="color: var(--text-secondary); font-size: 1.4rem;">E-Certificate</span>
                             </div>
                         </div>
-                        <button
-                            onclick="selectCategory('3km'); document.getElementById('register').scrollIntoView({behavior: 'smooth'});"
-                            style="width: 100%; padding: 1rem; background: #e5e7eb; color: #1a1a1a; border: none; border-radius: var(--radius-md); font-weight: 600; font-size: 1.45rem; cursor: pointer; transition: all 0.3s ease;">
-                            Select Category
+                        <button disabled
+                            style="width: 100%; padding: 1rem; background: #f3f4f6; color: #9ca3af; border: none; border-radius: var(--radius-md); font-weight: 600; font-size: 1.45rem; cursor: not-allowed; transition: all 0.3s ease;">
+                            Registration Closed
                         </button>
                     </div>
 
@@ -710,91 +705,42 @@
         </div>
     </section>
 
-    <!-- Registration Section -->
+    <!-- Registration Closed Section -->
     <section id="register" class="section-padding" style="background: #ffffff;">
         <div class="container">
-            <div class="contact-form-container" style="box-shadow: var(--shadow-xl);">
-                <div style="text-align: center; margin-bottom: 3.5rem;">
-                    <h2 style="color: #1a1a1a; margin-bottom: 1rem;">
-                        <i class="fas fa-user-plus" style="color: var(--primary); margin-right: 0.75rem;"></i>
-                        Register Now
-                    </h2>
+            <div class="contact-form-container"
+                style="box-shadow: var(--shadow-xl); text-align: center; padding: 5rem 2rem;">
+                <div style="margin-bottom: 2.5rem;">
+                    <div
+                        style="width: 100px; height: 100px; background: rgba(239, 68, 68, 0.1); color: #ef4444; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 2rem; border: 2px solid rgba(239, 68, 68, 0.2);">
+                        <i class="fas fa-calendar-times" style="font-size: 3.5rem;"></i>
+                    </div>
+                    <h2 style="color: #1a1a1a; margin-bottom: 1.5rem; font-size: 3rem;">Registration is Closed</h2>
                     <div class="section-divider" style="max-width: 150px; margin: 1.5rem auto;"></div>
-                    <p style="font-size: 1.4rem; color: var(--text-secondary);">Join the movement. Fill in your details
-                        below.</p>
+                    <p
+                        style="font-size: 1.8rem; color: var(--text-secondary); max-width: 700px; margin: 0 auto 2.5rem; line-height: 1.6;">
+                        See you! Let's run for a better cause.
+                    </p>
                 </div>
-                <form id="registrationForm">
-                    <div class="form-group">
-                        <label for="reg-name" class="form-label">Full Name</label>
-                        <input type="text" id="reg-name" class="form-control" required>
-                    </div>
-                    <div class="form-group" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
-                        <div>
-                            <label for="reg-age" class="form-label">Age</label>
-                            <input type="number" id="reg-age" class="form-control" required>
+
+                <div
+                    style="background: #f8f9fa; padding: 3rem; border-radius: var(--radius-xl); border: 1px solid var(--border); max-width: 600px; margin: 0 auto;">
+                    <h3 style="font-size: 1.8rem; margin-bottom: 2rem; color: #1a1a1a;">Event Details Reminder</h3>
+                    <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+                        <div style="display: flex; align-items: center; justify-content: center; gap: 1rem;">
+                            <i class="fas fa-calendar-alt" style="color: var(--primary); font-size: 1.6rem;"></i>
+                            <span style="font-size: 1.6rem; font-weight: 600; color: #1a1a1a;">8th Feb 2026</span>
                         </div>
-                        <div>
-                            <label for="reg-gender" class="form-label">Gender</label>
-                            <select id="reg-gender" class="form-control" required>
-                                <option value="">Select</option>
-                                <option value="male">Male</option>
-                                <option value="female">Female</option>
-                                <option value="other">Other</option>
-                            </select>
+                        <div style="display: flex; align-items: center; justify-content: center; gap: 1rem;">
+                            <i class="fas fa-map-marker-alt" style="color: #fb923c; font-size: 1.6rem;"></i>
+                            <span style="font-size: 1.6rem; font-weight: 600; color: #1a1a1a;">Swami Sivanadha Salai,
+                                Chennai</span>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label for="reg-phone" class="form-label">Phone Number</label>
-                        <input type="tel" id="reg-phone" class="form-control" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="reg-email" class="form-label">Email Address</label>
-                        <input type="email" id="reg-email" class="form-control" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="reg-category" class="form-label">Run Category</label>
-                        <select id="reg-category" class="form-control" required>
-                            <option value="">Loading categories...</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="reg-tshirt" class="form-label">T-Shirt Size</label>
-                        <select id="reg-tshirt" class="form-control" required>
-                            <option value="">Select Size</option>
-                            <option value="XS">XS</option>
-                            <option value="S">S</option>
-                            <option value="M">M</option>
-                            <option value="L">L</option>
-                            <option value="XL">XL</option>
-                            <option value="2XL">2XL</option>
-                            <option value="3XL">3XL</option>
-                        </select>
-                        <small style="color: #666;">*Size once selected cannot be changed.</small>
-                    </div>
-
-                    <!-- Coupon Code Field -->
-                    <div class="form-group">
-                        <label for="reg-coupon" class="form-label">Coupon Code (Optional)</label>
-                        <input type="text" id="reg-coupon" class="form-control" placeholder="Enter coupon code"
-                            style="text-transform: uppercase;">
-                    </div>
-
-                    <div style="text-align: center; margin-top: 2rem;">
-                        <button type="submit" class="btn btn-primary">Proceed to Pay</button>
-                    </div>
-                </form>
-
-                <!-- Success message & receipt download -->
-                <div id="registrationSuccess" style="display: none; margin-top: 2rem; text-align: center;">
-                    <div style="margin-bottom: 1rem; font-size: 1.45rem; color: var(--text-secondary);">
-                        Payment successful! Your registration is confirmed.
-                    </div>
-                    <button id="downloadReceiptBtn" class="btn btn-secondary">
-                        <i class="fas fa-file-download" style="margin-right: 0.5rem;"></i>
-                        Download Receipt (PDF)
-                    </button>
                 </div>
+
             </div>
+        </div>
         </div>
     </section>
 
